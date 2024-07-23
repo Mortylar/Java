@@ -1,8 +1,31 @@
 package number;
 
+import java.util.Scanner;
+
 public class Number {
 
-  private int number_ = 479599;
+  private int number_;
+
+	public Number() {
+	  SetNumber(0);
+	}
+
+	public Number(int number) {
+	  SetNumber(number);
+	}
+
+	public void SetNumber(int number) {
+	  number_ = number;
+	}
+
+	public int ReadNumber() {
+	  Scanner scanner = new Scanner(System.in);
+		return scanner.nextInt();
+	}
+
+	public void WriteNumber(int number) {
+	  System.out.println(number);
+	}
 
 	public int DigitsSum() {
 		int tmp = number_;
