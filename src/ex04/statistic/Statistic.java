@@ -2,6 +2,7 @@ package statistic;
 
 import java.util.ArrayList;
 import java.util.Scanner;
+import cursor.Cursor;
 
 public class Statistic {
   public Statistic() {
@@ -9,7 +10,7 @@ public class Statistic {
 		letter_frequency_ = new ArrayList<>(ascii_max_capasity_);
 		letters_order_ = new ArrayList<>(ascii_max_capasity_);
 		frequency_order_ = new ArrayList<>(ascii_max_capasity_);
-		//TODO
+		cursor_ = new Cursor();
 	}
 
   private ArrayList<Integer> letter_frequency_; //size() <= 65535
@@ -20,6 +21,7 @@ public class Statistic {
 	private static final int top_number_ = 10;
   
 	private Scanner scanner_;
+	private Cursor cursor_;
 
   private String ReadString() {
 	  return scanner_.nextLine();
@@ -65,11 +67,33 @@ public class Statistic {
 	public void PrintStatistic() {
 		CalculateFrequency(ReadString());
 		Sort();
-		
-		for (int i = 0; (i < top_number_) && (i < letters_order_.size()); ++i) {
-		  System.out.printf("\n letter = %c frequency = %d\n",
-			                    letters_order_.get(i), frequency_order_.get(i));
+
+		int top_length = (letters_order_.size() < top_number_) ? letters_order_.size() : top_number_;
+		float scale = (10.f / (frequency_order_.get(0)));
+		int graph_height = 10 + 1 + 1;
+
+		for (int i = 0; i < top_length; ++i) {
+			if (frequency_order_.get(i) != 0) {
+        cursor_.MoveDown(graph_height);
+			  char[] letter = Character.toChars(letters_order_.get(i));
+			  System.out.print(letter[0]);
+				cursor_.MoveBackward(1);
+
+        graph_height = 1;
+			  for (int j = 1; j <= (scale * frequency_order_.get(i)); ++j) {
+					cursor_.MoveUp(1);
+			    System.out.print("#");
+				  cursor_.MoveBackward(1);
+					++graph_height;
+			  }
+        cursor_.MoveUp(1);
+			  System.out.print(frequency_order_.get(i));
+				cursor_.MoveForward(2);
+			}
+
+      while((0 == frequency_order_.get(i)) && (i+1 < frequency_order_.size())) {++i;}
 		}
+		cursor_.MoveDown(graph_height);
 	}
 
 }

@@ -1,8 +1,7 @@
 
 
 J_SOURCE=$(wildcard *.java)
-PACKAGE=statistic
-PACKAGE_SOURCE=$(wildcard $(PACKAGE)/*.java)
+PACKAGE_SOURCE=$(wildcard statistic/*.java cursor/*.java)
 TARGET=Program
 
 build:
@@ -13,4 +12,4 @@ run: build
 
 clean:
 	-rm *.class
-	-rm $(PACKAGE)/*.class
+	-rm cursor/*.class statistic/*.class
