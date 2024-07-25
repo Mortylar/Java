@@ -62,7 +62,7 @@ public class Statistic {
 		}
 	}
 
-	public void PrintTop() {
+	public void PrintStatistic() {
 		CalculateFrequency(ReadString());
 		Sort();
 		
