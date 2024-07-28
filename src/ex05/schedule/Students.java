@@ -58,6 +58,10 @@ public class Students {
     return -1;
 	}
 
+	public String GetName(int id) {
+	  return students_list_.get(id);
+	}
+
 
 	public void Print() {
 		if (students_count_ == 0) {
