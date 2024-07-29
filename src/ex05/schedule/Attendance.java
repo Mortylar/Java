@@ -1,4 +1,6 @@
+package schedule;
 
+import java.utils.*;
 
 public class Attendance {
 
@@ -38,6 +40,8 @@ public class Attendance {
 			name = student_list_.GetName(++key);
 		}
 	}
+
+
 
 
   class IndividualAttendance {

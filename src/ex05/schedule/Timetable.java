@@ -17,6 +17,8 @@ public class Timetable {
 		Collections.sort(date_time_);
 	}
 
+	public void AddClass(String day_of_week, int hour) // TODO
+
   ArrayList<DateTime> date_time_;
 	private static final int total_classes_per_week_ = 10;
 
