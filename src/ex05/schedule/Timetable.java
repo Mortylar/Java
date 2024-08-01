@@ -20,7 +20,6 @@ public class Timetable {
 	public void AddClass(String day_of_week, int hour) {
 		GregorianCalendar calendar = new GregorianCalendar(2020, Calendar.SEPTEMBER, 1);
 		int week_code = GetNumberDayOfWeek(day_of_week);
-	//	System.out.println("\n week_code = " + week_code);
 		
 		for (int i = 1; i < 29; ++i) {
 			if (calendar.get(Calendar.DAY_OF_WEEK) == week_code) {
@@ -28,9 +27,20 @@ public class Timetable {
 				calendar.add(Calendar.DAY_OF_WEEK, 6);
 				i += 6;
 			}
-		//	System.out.println("\n i; day_of_week;" + i + " " + calendar.get(Calendar.DAY_OF_WEEK));
 		  calendar.add(Calendar.DAY_OF_MONTH, 1);
 		}
+	}
+
+	public int GetClassDay(int class_id) {
+	  return date_time_.get(class_id).GetDay();
+	}
+
+	public int GetClassTime(int class_id) {
+	  return date_time_.get(class_id).GetHour();
+	}
+
+  public int GetClassesCount() {
+	  return date_time_.size();
 	}
 
   ArrayList<DateTime> date_time_;

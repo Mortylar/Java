@@ -1,11 +1,12 @@
 package schedule;
 
-import java.utils.*;
+import java.util.*;
 
 public class Attendance {
 
 	public Attendance(Students students_list) {
 	  students_list_ = students_list;
+		attendance_ = new ArrayList<IndividualAttendance>();
 		InitAttendanceList();
 	}
 
@@ -15,8 +16,15 @@ public class Attendance {
 	}
 
 	public int GetStatus(String name, int day, int time) { 
-		return (attendance_.get(GetStudentID(name))).GetStatus(GetAbsHours(day, hours));
+		return (attendance_.get(GetStudentID(name))).GetStatus(GetAbsHours(day, time));
 	}
+
+//	public void Print() {
+//		for (int i = 0; i < students_list_.GetStudentsCount(); ++i) {
+//		  String name = students_list_.GetName(i);
+//
+//		}
+	  
 
 	Students students_list_;
 	ArrayList<IndividualAttendance> attendance_;
@@ -34,10 +42,10 @@ public class Attendance {
 
 	private void InitAttendanceList() {
 	  int key = 0;
-		String name = student_list_.GetName(key);
+		String name = students_list_.GetName(key);
 		while (name != null) {
 		  attendance_.add(new IndividualAttendance(name));
-			name = student_list_.GetName(++key);
+			name = students_list_.GetName(++key);
 		}
 	}
 
@@ -56,7 +64,10 @@ public class Attendance {
 
     public int GetStatus(int date_time) {
 		  int status = 0;
-			if (attendance_.containsKey(date_time)) status = attendance_.get(date_time);
+	  	if (attendance_.containsKey(date_time)) {
+				status = attendance_.get(date_time);
+				//System.out.printf("Get: st = %d get = %d\n", status, attendance_.get(date_time));
+			}
 			return status;
 		}
 

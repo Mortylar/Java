@@ -31,6 +31,11 @@ public class Students {
 		}
 	}
 
+
+  public int GetStudentsCount() {
+	  return students_count_;
+	}
+
 	public int Enrollment(String name) {
 	  if ((students_count_ < max_students_count_) && (!students_list_.containsValue(name))) {
 		  students_list_.put(students_count_++, name);
