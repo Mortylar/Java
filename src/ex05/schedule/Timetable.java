@@ -44,7 +44,15 @@ public class Timetable {
     public int getClassTime(int classID) {
         return dateTime_.get(classID).getHour();
     }
+//TODO
+		public int getClassMinute(int classID) {
+		    return dateTime_.get(classID).getMinute();
+		}
 
+		public String getClassDayOfWeek(int classID) {
+		    return dateTime_.get(classID).getDayOfWeekName();
+		}
+//TODO
     public int getClassesCount() {
         return dateTime_.size();
     }
@@ -136,6 +144,10 @@ public class Timetable {
             return calendar_.get(Calendar.DAY_OF_WEEK);
         }
 
+				//public String getDayOfWeekString() {
+				//
+				//}
+
         public int getHour() {
             return calendar_.get(Calendar.HOUR_OF_DAY);
         }
@@ -148,7 +160,7 @@ public class Timetable {
             System.out.printf("%d  %s\n", getDay(), getDayOfWeekName());
         }
 
-        private String getDayOfWeekName() {
+        public String getDayOfWeekName() {
             int dayOfWeek = getDayOfWeek();
             String dayName = new String();
             if (dayOfWeek == Calendar.MONDAY) {

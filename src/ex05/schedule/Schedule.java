@@ -43,10 +43,10 @@ public class Schedule {
     private void CreateTimetable() {
         timetable_.addClass("Monday", 13);
         timetable_.addClass("Thursday", 16);
-        timetable_.addClass("Tuesday", 13);
-        timetable_.addClass("Saturday", 17);
-        timetable_.addClass("Friday", 13);
-        timetable_.addClass("Friday", 15);
+       // timetable_.addClass("Tuesday", 13);
+       // timetable_.addClass("Saturday", 17);
+       // timetable_.addClass("Friday", 13);
+       // timetable_.addClass("Friday", 15);
     }
 
     private void printAttendance() {
@@ -66,9 +66,22 @@ public class Schedule {
     }
 
     private void printFullSchedule() {
-        //printHeader();
+        printHeader();
         //TODO
     }
+
+    private void printHeader() {
+		    System.out.print("          ");
+				//System.out.printf("|%2d:%02d %s %2d|", 13, 15, "MO", 21);
+
+        for (int classID = 0; classID < timetable_.getClassesCount(); ++classID) {
+            int day = timetable_.getClassDay(classID);
+						int hour = timetable_.getClassTime(classID);
+						int minute = timetable_.getClassMinute(classID);
+						String dayOfWeek = timetable_.getClassDayOfWeek(classID);
+            System.out.printf("%2d:%02d %s %2d|", hour, minute, dayOfWeek, day);
+				}
+		}
 
     private void createAttendance() {
         attendance_ = new Attendance(students_);
