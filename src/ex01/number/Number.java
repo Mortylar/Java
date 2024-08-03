@@ -5,56 +5,59 @@ import static java.lang.Math.sqrt;
 
 public class Number {
 
-  private int number_;
-	private int iteration_count_;
+    private int number_;
+	  private int iterationCount_;
 
-	public Number() {
-	  SetNumber(0);
-	}
+	  public Number() {
+	    setNumber(0);
+	  }
 
-	public Number(int number) {
-	  SetNumber(number);
-	}
+	  public Number(int number) {
+	    setNumber(number);
+	  }
 
-	public void SetNumber(int number) {
-	  number_ = number;
-		iteration_count_ = 0;
-	}
+	  public void setNumber(int number) {
+	    number_ = number;
+		  iterationCount_ = 0;
+	  }
 
-	public int ReadNumber() {
-	  Scanner scanner = new Scanner(System.in);
-		return scanner.nextInt();
-	}
+	  public int readNumber() {
+	    Scanner scanner = new Scanner(System.in);
+		  return scanner.nextInt();
+	  }
 
-	public void WriteNumber(int number) {
-	  System.out.println(number);
-	}
+	  public void writeNumber(int number) {
+	    System.out.println(number);
+	  }
 
-  public int GetIterationCount() {
-	  return iteration_count_;
-	}
+    public int getIterationCount() {
+	    return iterationCount_;
+	  }
 
-	public boolean IsPrime() {
-	  boolean is_prime = true;
-		iteration_count_ = 0;
-		int div = 2;
+	  public boolean isPrime() {
+	    boolean isPrime = true;
+		  int div = 2;
+		  iterationCount_ = 0;
 
-		while ((div <= sqrt(number_ )) && (is_prime)) {
-			if ((number_ % div) == 0) is_prime = false;
-		  ++div;
-			++iteration_count_;
-		}
-		return is_prime;
-	}
+		  while ((div <= sqrt(number_ )) && (isPrime)) {
+			  if ((number_ % div) == 0) {
+          isPrime = false;
+        }
+		    ++div;
+			  ++iterationCount_;
+		  }
+		  return isPrime;
+    }
 
-	public int DigitsSum() {
-		int tmp = number_;
-		int result = 0;
-		while (tmp > 0) {
-		  result += tmp%10;
-			tmp = tmp/10;
-		}
-	  return result;
-	}
+	  public int digitsSum() {
+		  int tmp = number_;
+		  int result = 0;
+
+		  while (tmp > 0) {
+		    result += tmp % 10;
+			  tmp = tmp / 10;
+		  }
+	    return result;
+	  }
 
 }
