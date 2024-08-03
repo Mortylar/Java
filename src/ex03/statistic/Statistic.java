@@ -5,11 +5,11 @@ import java.util.Scanner;
 
 public class Statistic {
 
-    private static final int maxGrade_ = 9;
-    private static final int minGrade_ = 1;
-    private static final int gradeInWeek_ = 5;
-    private static final int maxWeekNumber_ = 18;
-    private static final int endInput_ = 42;
+    private static final int MAX_GRADE = 9;
+    private static final int MIN_GRADE = 1;
+    private static final int GRADE_IN_WEEK = 5;
+    private static final int MAX_WEEK_NUMBER = 18;
+    private static final int END_INPUT = 42;
 
     private ArrayList<Integer> minimumGrade_;
     private Scanner scanner_;
@@ -23,14 +23,14 @@ public class Statistic {
 
     private int readWeekPreamble(int weekId) {
         String targetStr = "Week " + weekId;
-		    String endStr = String.valueOf(endInput_);
+		    String endStr = String.valueOf(END_INPUT);
         String inputString = scanner_.nextLine();
 
 		    if (inputString.equals(endStr)) {
-					return endInput_;
+					return END_INPUT;
 				}
 
-		    if ((!inputString.equals(targetStr)) || (weekId > maxWeekNumber_)) {
+		    if ((!inputString.equals(targetStr)) || (weekId > MAX_WEEK_NUMBER)) {
 		        System.err.println("Illegal Argument");
 			      System.exit(-1);
 		    }
@@ -39,7 +39,7 @@ public class Statistic {
 
     private int readGradeAndGetMinimum() {
         int minGrade = 9;
-		    for (int i = 0; i < gradeInWeek_; ++i) {
+		    for (int i = 0; i < GRADE_IN_WEEK; ++i) {
 		        int thisGrade = scanner_.nextInt();
 			      if (thisGrade < minGrade) minGrade = thisGrade;
 		    }
@@ -49,7 +49,7 @@ public class Statistic {
 
     private void collectStatistic() {
         int weekId = 1;
-	      while(readWeekPreamble(weekId) != endInput_) {
+	      while(readWeekPreamble(weekId) != END_INPUT) {
 		        minimumGrade_.add(readGradeAndGetMinimum());
 			      ++weekId;
 		    }
