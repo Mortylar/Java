@@ -7,9 +7,9 @@ import cursor.Cursor;
 public class Statistic {
 
 
-    private static final int asciiMaxCapasity_ = 127;
-    private static final int maxFrequency_ = 999;
-    private static final int topNumber_ = 10;
+    private static final int ASCII_MAX_CAPASITY = 127;
+    private static final int MAX_FREQUENCY = 999;
+    private static final int TOP_NUMBER = 10;
 
     private Scanner scanner_;
     private Cursor cursor_;
@@ -20,9 +20,9 @@ public class Statistic {
 
     public Statistic() {
 	      scanner_ = new Scanner(System.in);
-		    letterFrequency_ = new ArrayList<>(asciiMaxCapasity_);
-		    lettersOrder_ = new ArrayList<>(asciiMaxCapasity_);
-		    frequencyOrder_ = new ArrayList<>(asciiMaxCapasity_);
+		    letterFrequency_ = new ArrayList<>(ASCII_MAX_CAPASITY);
+		    lettersOrder_ = new ArrayList<>(ASCII_MAX_CAPASITY);
+		    frequencyOrder_ = new ArrayList<>(ASCII_MAX_CAPASITY);
 		    cursor_ = new Cursor();
 	  }
 
@@ -57,9 +57,9 @@ public class Statistic {
 
 
     private void sort() {
-		    int thisMax = maxFrequency_ + 1;
+		    int thisMax = MAX_FREQUENCY + 1;
 
-		    for (int top = 0; top < topNumber_; ++top) {
+		    for (int top = 0; top < TOP_NUMBER; ++top) {
 		        thisMax = getMaxFrequencyBelowTheBorder(thisMax);
 		        for (int i = 0; i < letterFrequency_.size(); ++i) {
 		            if (thisMax == letterFrequency_.get(i)) {
@@ -74,8 +74,8 @@ public class Statistic {
 		    calculateFrequency(readString());
 		    sort();
 
-		    int topLength = (lettersOrder_.size() < topNumber_) ? lettersOrder_.size() 
-                                                            : topNumber_;
+		    int topLength = (lettersOrder_.size() < TOP_NUMBER) ? lettersOrder_.size() 
+                                                            : TOP_NUMBER;
 		    float scale = (10.f / (frequencyOrder_.get(0)));
 		    int graphHeight = 10 + 1 + 1;
 
