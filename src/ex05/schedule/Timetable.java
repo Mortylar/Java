@@ -4,173 +4,171 @@ import java.util.*;
 
 public class Timetable {
 
-	public Timetable() {
-		date_time_ = new ArrayList<DateTime>();
-	}
+    private static final int TOTAL_CLASSES_PER_WEEK = 10;
 
-	public void AddClass(int day, int hour, int minute) throws IllegalArgumentException {
-	  if (IsValidData(day, hour, minute)) {
-		  date_time_.add(new DateTime(day, hour, minute));
-    } else {
-		  throw new IllegalArgumentException("Invalid date");
-		}
-		Collections.sort(date_time_);
-	}
+    ArrayList<DateTime> dateTime_;
 
-	public void AddClass(String day_of_week, int hour) {
-		GregorianCalendar calendar = new GregorianCalendar(2020, Calendar.SEPTEMBER, 1);
-		int week_code = GetNumberDayOfWeek(day_of_week);
+    public Timetable() {
+        dateTime_ = new ArrayList<DateTime>();
+    }
+
+    public void addClass(int day, int hour, int minute) throws IllegalArgumentException {
+        if (isValidData(day, hour, minute)) {
+            dateTime_.add(new DateTime(day, hour, minute));
+        } else {
+            throw new IllegalArgumentException("Invalid date");
+        }
+        Collections.sort(dateTime_);
+    }
+
+    public void addClass(String dayOfWeek, int hour) {
+        GregorianCalendar calendar = new GregorianCalendar(2020, Calendar.SEPTEMBER, 1);
+        int weekCode = getNumberDayOfWeek(dayOfWeek);
+				final int SEPTEMBER_DAYS_LIMIT = 30;
+				final int DAYS_IN_WEEK = 7;
 		
-		for (int i = 1; i < 29; ++i) {
-			if (calendar.get(Calendar.DAY_OF_WEEK) == week_code) {
-			  AddClass(i, hour, 0);
-				calendar.add(Calendar.DAY_OF_WEEK, 6);
-				i += 6;
-			}
-		  calendar.add(Calendar.DAY_OF_MONTH, 1);
-		}
-	}
+        for (int i = 1; i < SEPTEMBER_DAYS_LIMIT - 1; ++i) {
+            if (calendar.get(Calendar.DAY_OF_WEEK) == weekCode) {
+                addClass(i, hour, 0);
+                calendar.add(Calendar.DAY_OF_WEEK, DAYS_IN_WEEK - 1);
+                i += (DAYS_IN_WEEK - 1);
+            }
+            calendar.add(Calendar.DAY_OF_MONTH, 1);
+        }
+    }
 
-	public int GetClassDay(int class_id) {
-	  return date_time_.get(class_id).GetDay();
-	}
+    public int getClassDay(int classID) {
+        return dateTime_.get(classID).getDay();
+    }
 
-	public int GetClassTime(int class_id) {
-	  return date_time_.get(class_id).GetHour();
-	}
+    public int getClassTime(int classID) {
+        return dateTime_.get(classID).getHour();
+    }
 
-  public int GetClassesCount() {
-	  return date_time_.size();
-	}
+    public int getClassesCount() {
+        return dateTime_.size();
+    }
 
-  ArrayList<DateTime> date_time_;
-	private static final int total_classes_per_week_ = 10;
+    public void print() {
+        for(int i = 0; i < dateTime_.size(); ++i) {
+            dateTime_.get(i).print();
+        }
+    }
 
-	public void Print() {
-	  for(int i = 0; i < date_time_.size(); ++i) {
-		  date_time_.get(i).Print();
-		}
-	}
+    private boolean isValidData(int day, int hour, int minute) {
+        boolean isValid = true;
+        if ((day < 1) || (day > 30)) {
+            isValid = false;
+        }
+        if ((hour < 13) || (hour > 18)) {
+            isValid = false;
+        }
+        if ((minute < 0) || (minute > 59)) {
+            isValid = false;
+        }
+        return isValid;
+    }
 
-	private boolean IsValidData(int day, int hour, int minute) {
-	  boolean is_valid = true;
-		if ((day < 1) || (day > 30)) is_valid = false;
-		if ((hour < 13) || (hour > 18)) is_valid = false; //TODO add class length
-		if ((minute < 0) || (minute > 59)) is_valid = false;
-		return is_valid;
-	}
-
-	private int GetNumberDayOfWeek(String day_of_week) {
-	  int res = 0;
-		if (day_of_week == "Monday") {
-			res = GregorianCalendar.MONDAY;
-		} else if (day_of_week == "Tuesday") {
-			res = GregorianCalendar.TUESDAY;
-		} else if (day_of_week == "Wednesday") {
-			res = GregorianCalendar.WEDNESDAY;
-		} else if (day_of_week == "Thursday") {
-			res = GregorianCalendar.THURSDAY;
-		} else if (day_of_week == "Friday") {
-			res = GregorianCalendar.FRIDAY;
-		} else if (day_of_week == "Saturday") {
-			res = GregorianCalendar.SATURDAY;
-		} else if (day_of_week == "Sunday") {
-			res = GregorianCalendar.SUNDAY;
-		} 
-  return res;
-	}
-
-
+    private int getNumberDayOfWeek(String dayOfWeek) {
+        int res = 0;
+        if (dayOfWeek == "Monday") {
+            res = GregorianCalendar.MONDAY;
+        } else if (dayOfWeek == "Tuesday") {
+            res = GregorianCalendar.TUESDAY;
+        } else if (dayOfWeek == "Wednesday") {
+            res = GregorianCalendar.WEDNESDAY;
+        } else if (dayOfWeek == "Thursday") {
+            res = GregorianCalendar.THURSDAY;
+        } else if (dayOfWeek == "Friday") {
+            res = GregorianCalendar.FRIDAY;
+        } else if (dayOfWeek == "Saturday") {
+            res = GregorianCalendar.SATURDAY;
+        } else if (dayOfWeek == "Sunday") {
+            res = GregorianCalendar.SUNDAY;
+        }
+        return res;
+    }
 
 
 
-  public class DateTime implements Comparable<DateTime>{
+    public class DateTime implements Comparable<DateTime>{
 	  
-		public DateTime(int day, int hour, int minute) {
-		  calendar_ = new GregorianCalendar(2020, Calendar.SEPTEMBER, 1);
-      calendar_.add(Calendar.DAY_OF_MONTH, day - 1);
-			calendar_.set(Calendar.HOUR_OF_DAY, hour);
-			calendar_.set(Calendar.MINUTE, minute);
-      abs_minute_data_ = minute + minute_in_hour_ * hour + minute_in_day_ * day;
-		}
-
-		//public DateTime(int day_of_week, int hour) {
-		//  
-		//}
-
-		private GregorianCalendar calendar_;
-		static final int minute_in_hour_ = 60;
-		static final int minute_in_day_ = 60*24;
-		private int abs_minute_data_;
+        static final int MINUTE_IN_HOUR = 60;
+        static final int MINUTE_IN_DAY = 60*24;
+		
+        private GregorianCalendar calendar_;
+        private int absMinuteData_;
 
 
 
-    public int compareTo(DateTime other) {
-		  int compare_number = -1;
-			if (this.abs_minute_data_ > other.abs_minute_data_) {
-			  compare_number = 1;
-			} else if (this.abs_minute_data_ == other.abs_minute_data_) {
-			
-			  compare_number = 0;
-			}
-			return compare_number;
-		}
+        public DateTime(int day, int hour, int minute) {
+            calendar_ = new GregorianCalendar(2020, Calendar.SEPTEMBER, 1);
+            calendar_.add(Calendar.DAY_OF_MONTH, day - 1);
+            calendar_.set(Calendar.HOUR_OF_DAY, hour);
+            calendar_.set(Calendar.MINUTE, minute);
+            absMinuteData_ = minute + MINUTE_IN_HOUR * hour + MINUTE_IN_DAY * day;
+        }
+
+        public int compareTo(DateTime other) {
+            int compare_number = -1;
+            if (this.absMinuteData_ > other.absMinuteData_) {
+                compare_number = 1;
+            } else if (this.absMinuteData_ == other.absMinuteData_) {
+                compare_number = 0;
+            }
+            return compare_number;
+        }
 
 
-		public int GetYear() {
-		  return calendar_.get(Calendar.YEAR);
-		}
+        public int getYear() {
+            return calendar_.get(Calendar.YEAR);
+        }
 
-		public int GetMonth() {
-		  return calendar_.get(Calendar.MONTH);
-		}
+        public int getMonth() {
+            return calendar_.get(Calendar.MONTH);
+        }
 
-		public int GetDay() {
-		  return calendar_.get(Calendar.DAY_OF_MONTH);
-		}
+        public int getDay() {
+            return calendar_.get(Calendar.DAY_OF_MONTH);
+        }
 
-		public int GetDayOfWeek() {
-		  return calendar_.get(Calendar.DAY_OF_WEEK);
-		}
+        public int getDayOfWeek() {
+            return calendar_.get(Calendar.DAY_OF_WEEK);
+        }
 
-		public int GetHour() {
-		  return calendar_.get(Calendar.HOUR_OF_DAY);
-		}
+        public int getHour() {
+            return calendar_.get(Calendar.HOUR_OF_DAY);
+        }
 
-		public int GetMinute() {
-		  return calendar_.get(Calendar.MINUTE);
-		}
+        public int getMinute() {
+            return calendar_.get(Calendar.MINUTE);
+        }
 
-		public void Print() {
+        public void print() {
+            System.out.printf("%d  %s\n", getDay(), getDayOfWeekName());
+        }
 
-		  System.out.printf("%d  %s\n", GetDay(), GetDayOfWeekName());
-		}
+        private String getDayOfWeekName() {
+            int dayOfWeek = getDayOfWeek();
+            String dayName = new String();
+            if (dayOfWeek == Calendar.MONDAY) {
+                dayName = "MO";
+            } else if (dayOfWeek == Calendar.TUESDAY) {
+                dayName = "TU";
+            } else if (dayOfWeek == Calendar.WEDNESDAY) {
+                dayName = "WE";
+            } else if (dayOfWeek == Calendar.THURSDAY) {
+                dayName = "TH";
+            } else if (dayOfWeek == Calendar.FRIDAY) {
+                dayName = "FR";
+            } else if (dayOfWeek == Calendar.SATURDAY) {
+                dayName = "SA";
+            } else if (dayOfWeek == Calendar.SUNDAY) {
+                dayName = "SU";
+            }
+            return dayName;
+        }
 
-		private String GetDayOfWeekName() {
-			int day_of_week = GetDayOfWeek();
-			String day_name = new String();
-		  if (day_of_week == Calendar.MONDAY) {
-			  day_name = "MO";
-			} else if (day_of_week == Calendar.TUESDAY) {
-			  day_name = "TU";
-			} else if (day_of_week == Calendar.WEDNESDAY) {
-			  day_name = "WE";
-			} else if (day_of_week == Calendar.THURSDAY) {
-			  day_name = "TH";
-			} else if (day_of_week == Calendar.FRIDAY) {
-			  day_name = "FR";
-			} else if (day_of_week == Calendar.SATURDAY) {
-			  day_name = "SA";
-			} else if (day_of_week == Calendar.SUNDAY) {
-			  day_name = "SU";
-			}
-			return day_name;
-		}
-
-
-
-
-  }
-
+    }
 
 }

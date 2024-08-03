@@ -3,90 +3,95 @@ package schedule;
 import java.util.*;
 
 public class Students {
-	public Students() {
-	  BaseInitialization();
-	}
+	
+    private static final int MAX_STUDENTS_COUNT = 10;
 
-	public Students(List<String> names) {
-		BaseInitialization();
-	  int size = names.size();
-		if (size >= max_students_count_) size = max_students_count_;
-		Iterator<String> it = names.iterator();
-		while (size > 0) {
-		  students_list_.put(students_count_, it.next());
-			++students_count_;
-			--size;
-		}
-	}
+    private Map<Integer, String> studentsList_ ;
+    private int studentsCount_;
 
-	public Students(Collection<String> names) {
-	  BaseInitialization();
-		int size = names.size();
-		if (size > max_students_count_) size = max_students_count_;
-		Iterator<String> it = names.iterator();
-		while (size > 0) {
-		  students_list_.put(students_count_, it.next());
-			++students_count_;
-			--size;
-		}
-	}
+    public Students() {
+        baseInitialization();
+    }
 
+    public Students(List<String> names) {
+        baseInitialization();
+        int size = names.size();
+        if (size >= MAX_STUDENTS_COUNT) {
+            size = MAX_STUDENTS_COUNT;
+        }
+        Iterator<String> it = names.iterator();
+        while (size > 0) {
+            studentsList_.put(studentsCount_, it.next());
+            ++studentsCount_;
+            --size;
+        }
+    }
 
-  public int GetStudentsCount() {
-	  return students_count_;
-	}
+    public Students(Collection<String> names) {
+        baseInitialization();
+        int size = names.size();
+        if (size > MAX_STUDENTS_COUNT) {
+            size = MAX_STUDENTS_COUNT;
+        }
+        Iterator<String> it = names.iterator();
+        while (size > 0) {
+            studentsList_.put(studentsCount_, it.next());
+            ++studentsCount_;
+            --size;
+        }
+    }
 
-	public int Enrollment(String name) {
-	  if ((students_count_ < max_students_count_) && (!students_list_.containsValue(name))) {
-		  students_list_.put(students_count_++, name);
-		}
-		return students_count_;
-	}
+    public int getStudentsCount() {
+        return studentsCount_;
+    }
 
-	public void Expulsion(String name) {
-		Expulsion(GetID(name));
-	}
+    public int enrollment(String name) {
+        if ((studentsCount_ < MAX_STUDENTS_COUNT)
+                && (!studentsList_.containsValue(name))) {
 
-	public void Expulsion(int id) {
-		if (students_list_.containsKey(id)) {
-	    students_list_.remove(id);
-			Students tmp = new Students(students_list_.values());
-			students_list_ = tmp.students_list_;
-			students_count_ = tmp.students_count_;
-		}
-	}
+            studentsList_.put(studentsCount_++, name);
+        }
+        return studentsCount_;
+    }
 
-  public int GetID(String name) {
-		for(Map.Entry<Integer, String> pair: students_list_.entrySet()) {
-		  if (pair.getValue().equals(name)) return pair.getKey();
-		}
-    return -1;
-	}
+    public void expulsion(String name) {
+        expulsion(getID(name));
+    }
 
-	public String GetName(int id) {
-	  return students_list_.get(id);
-	}
+    public void expulsion(int id) {
+        if (studentsList_.containsKey(id)) {
+            studentsList_.remove(id);
+            Students tmp = new Students(studentsList_.values());
+            studentsList_ = tmp.studentsList_;
+            studentsCount_ = tmp.studentsCount_;
+        }
+    }
 
+    public int getID(String name) {
+        for(Map.Entry<Integer, String> pair: studentsList_.entrySet()) {
+            if (pair.getValue().equals(name)) return pair.getKey();
+        }
+        return -1;
+    }
 
-	public void Print() {
-		if (students_count_ == 0) {
-		  System.out.print("Student list is empty\n");
-		} else {
-      students_list_.forEach((key, value) -> System.out.printf("%s\n", value));
-		}
-	}
-
-
-	private Map<Integer, String> students_list_ ;
-	private int students_count_;
-	private static final int max_students_count_ = 10;
-
-	private void BaseInitialization() {
-	  students_list_ = new HashMap<Integer, String>();
-		students_count_ = 0;
-	}
+    public String getName(int id) {
+        return studentsList_.get(id);
+    }
 
 
+    public void print() {
+        if (studentsCount_ == 0) {
+            System.out.print("Student list is empty\n");
+        } else {
+            studentsList_.forEach((key, value) -> System.out.printf("%s\n", value));
+        }
+    }
 
+
+
+    private void baseInitialization() {
+        studentsList_ = new HashMap<Integer, String>();
+        studentsCount_ = 0;
+    }
 
 }
