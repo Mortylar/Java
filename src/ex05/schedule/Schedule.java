@@ -37,7 +37,7 @@ public class Schedule {
     }
 
     private void createAttendance() {
-        attendance_ = new Attendance(students_);  //day, time, status
+        attendance_ = new Attendance(students_);
         attendance_.register("alelyka", 5, 13, 1);
         attendance_.register("vladiput", 5, 13, 1);
         attendance_.register("joba", 5, 13, -1);
@@ -85,6 +85,8 @@ public class Schedule {
 
 
     public void print() {
+        System.out.print("\n");
+
         students_.print();
         printSeparator();
 

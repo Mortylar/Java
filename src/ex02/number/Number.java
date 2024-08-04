@@ -5,6 +5,8 @@ import static java.lang.Math.sqrt;
 
 public class Number {
 
+    private static final int DEFAULT_VALUE = 0;
+
     private int number_;
 	  private int iterationCount_;
 

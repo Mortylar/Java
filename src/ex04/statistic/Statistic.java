@@ -77,7 +77,7 @@ public class Statistic {
 		    int topLength = (lettersOrder_.size() < TOP_NUMBER) ? lettersOrder_.size() 
                                                             : TOP_NUMBER;
 		    float scale = (10.f / (frequencyOrder_.get(0)));
-		    int graphHeight = 10 + 1 + 1;
+		    int graphHeight = TOP_NUMBER + 2;
 
         for (int i = 0; i < topLength; ++i) {
 			      if (frequencyOrder_.get(i) != 0) {

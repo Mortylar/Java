@@ -44,7 +44,7 @@ public class Timetable {
     public int getClassTime(int classID) {
         return dateTime_.get(classID).getHour();
     }
-//TODO
+
 		public int getClassMinute(int classID) {
 		    return dateTime_.get(classID).getMinute();
 		}
@@ -52,7 +52,7 @@ public class Timetable {
 		public String getClassDayOfWeek(int classID) {
 		    return dateTime_.get(classID).getDayOfWeekName();
 		}
-//TODO
+
     public int getClassesCount() {
         return dateTime_.size();
     }
@@ -65,13 +65,18 @@ public class Timetable {
 
     private boolean isValidData(int day, int hour, int minute) {
         boolean isValid = true;
-        if ((day < 1) || (day > 30)) {
+				final int DAYS_IN_SEPTEMBER = 30;
+				final int MINUTE_LIMIT = 60;
+				final int START_CLASS_HOUR = 13;
+				final int FINISH_CLASS_HOUR = 18;
+
+        if ((day <= 0) || (day > DAYS_IN_SEPTEMBER)) {
             isValid = false;
         }
-        if ((hour < 13) || (hour > 18)) {
+        if ((hour < START_CLASS_HOUR) || (hour > FINISH_CLASS_HOUR)) {
             isValid = false;
         }
-        if ((minute < 0) || (minute > 59)) {
+        if ((minute < 0) || (minute >= MINUTE_LIMIT)) {
             isValid = false;
         }
         return isValid;
@@ -103,6 +108,7 @@ public class Timetable {
 	  
         static final int MINUTE_IN_HOUR = 60;
         static final int MINUTE_IN_DAY = 60*24;
+				static final int CURRENT_YEAR = 2020;
 		
         private GregorianCalendar calendar_;
         private int absMinuteData_;
@@ -110,7 +116,7 @@ public class Timetable {
 
 
         public DateTime(int day, int hour, int minute) {
-            calendar_ = new GregorianCalendar(2020, Calendar.SEPTEMBER, 1);
+            calendar_ = new GregorianCalendar(CURRENT_YEAR, Calendar.SEPTEMBER, 1);
             calendar_.add(Calendar.DAY_OF_MONTH, day - 1);
             calendar_.set(Calendar.HOUR_OF_DAY, hour);
             calendar_.set(Calendar.MINUTE, minute);
@@ -143,10 +149,6 @@ public class Timetable {
         public int getDayOfWeek() {
             return calendar_.get(Calendar.DAY_OF_WEEK);
         }
-
-				//public String getDayOfWeekString() {
-				//
-				//}
 
         public int getHour() {
             return calendar_.get(Calendar.HOUR_OF_DAY);

@@ -5,11 +5,12 @@ import static java.lang.Math.sqrt;
 
 public class Number {
 
+    private static final int DEFAULT_VALUE = 0;
     private int number_;
 	  private int iterationCount_;
 
 	  public Number() {
-	    setNumber(0);
+	    setNumber(DEFAULT_VALUE);
 	  }
 
 	  public Number(int number) {

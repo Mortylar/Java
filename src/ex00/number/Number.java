@@ -4,10 +4,11 @@ import java.util.Scanner;
 
 public class Number {
 
+    private static final int DEFAULT_VALUE = 0;
     private int number_;
 
     public Number() {
-        setNumber(0);
+        setNumber(DEFAULT_VALUE);
     }
 
     public Number(int number) {
