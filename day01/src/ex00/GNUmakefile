@@ -1,7 +1,7 @@
 
 
 J_SOURCE=$(wildcard *.java)
-PACKAGE_SOURCE=$(wildcard user/*.java)
+PACKAGE_SOURCE=$(wildcard user/*.java transaction/*.java)
 TARGET=Program
 
 build:
@@ -12,4 +12,4 @@ run: build
 
 clean:
 	-rm *.class
-	-rm user/*.class
+	-rm user/*.class transaction/*.class
