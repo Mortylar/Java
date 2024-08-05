@@ -12,6 +12,14 @@ public class Transaction implements ITransaction {
 		private TransactionType transferCategory_;
 		private int transferAmount_;
 
+		private Transaction(UUID id, User recepient, User sender, TransactionType type, int transferAmount) {
+		  id_ = id;
+			recepient_ = recepient;
+			sender_ = sender;
+			transferCategory_ = type;
+			transferAmount_ = transferAmount;
+		}
+
     @Override
     public UUID getID() { return id_; }
 
@@ -26,6 +34,34 @@ public class Transaction implements ITransaction {
 
     @Override
     public int getTransferAmount() { return transferAmount_; }
+
+
+		public static Transaction createTransactionOrReturnNull(UUID id, User recepient, User sender,
+                                                            TransactionType type, int transferAmount) {
+
+				if (!isValidUserBalance(recepient, sender)) {
+				    return null; //TODO
+				}
+				
+				if (!isValidTransferAmount(type, transferAmount)) {
+				    return null; //TODO
+				}
+
+				return new Transaction(id, recepient, sender, type, transferAmount);
+    }
+
+		private static boolean isValidUserBalance(User user1, User user2) {
+		    return ((user1.getBalance() >= 0) && (user2.getBalance() >= 0));
+		}
+
+		private static boolean isValidTransferAmount(TransactionType type, int transferAmount) {
+		    return ((type == TransactionType.DEBIT) ? (transferAmount > 0)
+								                                : (transferAmount < 0));
+				                                       
+		}
+
+
+
 
 
 }
