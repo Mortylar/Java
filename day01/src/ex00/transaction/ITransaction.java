@@ -1,17 +1,18 @@
 package transaction;
 
-import user.User;
 import java.util.UUID;
+import user.User;
 
 interface ITransaction {
 
     UUID getID();
 
-		User getRecepient();
-		User getSender();
+    User getRecepient();
+    User getSender();
 
-		TransactionType getTransactionType();
+    TransactionType getTransactionType();
 
-		int getTransferAmount();
+    int getTransferAmount();
 
+    void print();
 }

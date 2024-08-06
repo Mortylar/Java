@@ -10,6 +10,12 @@ build:
 run: build
 	java $(TARGET)
 
+style:
+	clang-format -style=file:../.clang-format -n $(J_SOURCE) $(PACKAGE_SOURCE)
+
+fix_style:
+	clang-format -style=file:../.clang-format -i $(J_SOURCE) $(PACKAGE_SOURCE)
+
 clean:
 	-rm *.class
 	-rm user/*.class transaction/*.class
