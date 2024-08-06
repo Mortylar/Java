@@ -60,11 +60,11 @@ public class Transaction implements ITransaction {
                                   TransactionType type, int transferAmount) {
 
         if (!isValidUserBalance(recepient, sender)) {
-            return null; // TODO
+            return null;
         }
 
         if (!isValidTransferAmount(type, transferAmount)) {
-            return null; // TODO
+            return null;
         }
 
         return new Transaction(id, recepient, sender, type, transferAmount);
