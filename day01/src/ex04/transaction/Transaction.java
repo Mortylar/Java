@@ -59,7 +59,7 @@ public class Transaction implements ITransaction {
     createTransactionOrReturnNull(UUID id, User recepient, User sender,
                                   TransactionType type, int transferAmount) {
 
-        if (!isValidUserBalance(recepient, sender)) {
+        if (!isValidUserBalance(recepient, sender, transferAmount)) {
             return null;
         }
 
@@ -70,8 +70,8 @@ public class Transaction implements ITransaction {
         return new Transaction(id, recepient, sender, type, transferAmount);
     }
 
-    private static boolean isValidUserBalance(User user1, User user2) {
-        return ((user1.getBalance() >= 0) && (user2.getBalance() >= 0));
+    private static boolean isValidUserBalance(User user1, User user2, int transactionAmount) {
+        return ((user1.getBalance() + transactionAmount >= 0) && (user2.getBalance() - transactionAmount >= 0));
     }
 
     private static boolean isValidTransferAmount(TransactionType type,

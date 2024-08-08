@@ -17,11 +17,9 @@ import exception.IllegalTransactionException;
 public class TransactionService {
 
     private UserArrayList userList_;
-		private TransactionLinkedList trList_;  //TODO is needed?
 
 		{
         userList_ = new UserArrayList();
-				trList_ = new TransactionLinkedList();
 		}
 
     public TransactionService() {
@@ -53,7 +51,7 @@ public class TransactionService {
 
 				user2.addTransaction(tr1);
 				user2.addTransaction(tr2);
-        user2.updateBalance(transactionAmount);
+        user2.updateBalance(-transactionAmount);
 		}
 
 		public Transaction[] getTransactions(int userID) throws UserNotFoundException {
@@ -61,10 +59,22 @@ public class TransactionService {
 		}
 
     public void removeTransaction(UUID transactionID, int userID) throws UserNotFoundException, TransactionNotFoundException {
-		   ((userList_.get(userID)).getTransactionList()).remove(transactionID);
+		   ((userList_.get(userID)).getTransactionList()).remove(transactionID);//TODO remove all transactions with this id
 		}
 
     public void printUserList() {
 		    userList_.print();
+		}
+
+		public void printTransactions() throws UserNotFoundException {
+		    for (int i = 0; i < userList_.size(); ++i) {
+				    System.out.printf("%s transactions:\n", userList_.get(i + 1).getName());
+						//Transaction[] array = getTransactions(i);
+						//for (int j = 0; j < array.size(); ++j) {
+						//    array[j].print();
+						//}
+            userList_.get(i + 1).getTransactionList().print();
+						System.out.print("\n");
+				}
 		}
 }

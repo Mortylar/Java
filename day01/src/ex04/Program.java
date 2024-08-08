@@ -8,9 +8,12 @@ import transaction.TransactionType;
 import user.User;
 import user.UserIdsGenerator;
 
+import exception.UserNotFoundException;
+import exception.IllegalTransactionException;
+
 class Program {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws UserNotFoundException, IllegalTransactionException {
         Test test = new Test();
         test.runTest();
     }

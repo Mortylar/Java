@@ -3,6 +3,7 @@ import static transaction.Transaction.createTransactionOrReturnNull;
 import static user.UserIdsGenerator.getInstance;
 
 import exception.TransactionNotFoundException;
+import exception.IllegalTransactionException;
 import exception.UserNotFoundException;
 import java.util.Iterator;
 import java.util.UUID;
@@ -31,9 +32,17 @@ public class Test {
 
     public Test() {}
 
-    public void runTest() {
+    public void runTest() throws UserNotFoundException, IllegalTransactionException {
         createUserList();
 				service_.printUserList();
+				printSeparator();
+				
+				createTransactions();
+				service_.printUserList();
+				printSeparator();
+        service_.printTransactions();
+				printSeparator();
+
     }
 
 		public void createUserList() {
@@ -48,6 +57,18 @@ public class Test {
 
 				user = new User("Sanya", 10);
 				service_.addUser(user);
+		}
+
+		public void createTransactions() throws UserNotFoundException, IllegalTransactionException {
+		    service_.transactionPerform(1, 2, 10);
+		    service_.transactionPerform(1, 3, 10);
+		    service_.transactionPerform(1, 4, 10);
+		    service_.transactionPerform(4, 2, 100);
+		    service_.transactionPerform(3, 2, 100);
+		}
+
+    public void printSeparator() {
+		    System.out.println(".");
 		}
 
 }
