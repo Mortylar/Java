@@ -1,54 +1,53 @@
 package transaction;
 
+import exception.TransactionNotFoundException;
 import java.util.UUID;
-
 import user.User;
 
 public class TransactionLinkedList implements TransactionList {
 
     private Transaction transaction_;
-		private TransactionLinkedList next_;
+    private TransactionLinkedList next_;
 
     public TransactionLinkedList() {
-		    transaction_ = null;
-				next_ = null;
-		}
-
-		public TransactionLinkedList(Transaction transaction) {
         transaction_ = null;
-				next_ = new TransactionLinkedList();
-		    next_.transaction_ = transaction;
-				next_.next_ = null;
-		}
+        next_ = null;
+    }
 
-		@Override
-		public void add(Transaction transaction) {
-				if (this.next_ == null) {
+    public TransactionLinkedList(Transaction transaction) {
+        transaction_ = null;
+        next_ = new TransactionLinkedList();
+        next_.transaction_ = transaction;
+        next_.next_ = null;
+    }
+
+    @Override
+    public void add(Transaction transaction) {
+        if (this.next_ == null) {
             next_ = new TransactionLinkedList();
             next_.transaction_ = transaction;
-						next_.next_ = null;
-				} else {
-            TransactionLinkedList tmp = this;
-		        while(tmp.next_ != null) {
-				        tmp = next_;
-				    }
-						tmp.next_ = new TransactionLinkedList();
-						tmp.next_.transaction_ = transaction;
-		    }
-		}
+            next_.next_ = null;
+        } else {
+            TransactionLinkedList tmp = this.next_;
+            this.next_ = new TransactionLinkedList();
+            this.next_.transaction_ = transaction;
+            this.next_.next_ = tmp;
+        }
+    }
 
-		@Override
-		public void remove(UUID id) {
+    @Override
+    public void remove(UUID id) throws TransactionNotFoundException {
         if (next_ != null) {
-		        TransactionLinkedList tmp = this.next_;
-				    while (tmp.next_ != null) {
-				        if (tmp.transaction_.getID() == id) {
-						        remove(tmp);
-								    break;
-						    }
-				    }
-		    }
-		}
+            TransactionLinkedList tmp = this.next_;
+            while (tmp.next_ != null) {
+                if (tmp.transaction_.getID() == id) {
+                    remove(tmp);
+                    return;
+                }
+            }
+            throw new TransactionNotFoundException();
+        }
+    }
 
     private void remove(TransactionLinkedList current) {
         TransactionLinkedList last = this;
@@ -58,38 +57,59 @@ public class TransactionLinkedList implements TransactionList {
         last.next_ = current.next_;
     }
 
-		@Override
-		public Transaction[] toArray() {
+    @Override
+    public Transaction[] toArray() {
         int size = size();
         Transaction[] array = new Transaction[size];
-				TransactionLinkedList tmp = this;
-				for (int i = 0; i < size; ++i) {
-				    array[i] = tmp.transaction_;
-						tmp = tmp.next_;
-				}
-				return array;
-		}
+        if (size > 0) {
+            TransactionLinkedList tmp = this.next_;
+            for (int i = 0; i < size; ++i) {
+                array[i] = tmp.transaction_;
+                tmp = tmp.next_;
+            }
+        }
+        return array;
+    }
 
     @Override
-		public int size() {
-		    int size = 0;
-				TransactionLinkedList tmp = this;
-				while (tmp.transaction_ != null) {
-				    ++size;
-						tmp = tmp.next_;
-				}
-				return size;
-		}
+    public int size() {
+        int size = 0;
+        TransactionLinkedList tmp = this;
+        while (tmp.next_ != null) {
+            ++size;
+            tmp = tmp.next_;
+        }
+        return size;
+    }
 
-		@Override
-		public Transaction get(UUID id) {
-				TransactionLinkedList tmp = this.next_;
-				while(tmp.next_ != null) {
-				    if (tmp.transaction_.getID() == id) {
-						    return transaction_;
-						}
-				}
-				return this.transaction_;
-		}
+    @Override
+    public Transaction get(UUID id) {
+        TransactionLinkedList tmp = this.next_;
+        while (tmp.next_ != null) {
+            if (tmp.transaction_.getID() == id) {
+                return transaction_;
+            }
+        }
+        return this.transaction_;
+    }
 
+    public Transaction getFirst() {
+        if (next_ != null) {
+            return next_.transaction_;
+        }
+        return transaction_;
+    }
+
+    @Override
+    public void print() {
+        TransactionLinkedList tmp = this.next_;
+        if (tmp == null) {
+            System.out.print("Transaction list is empty\n");
+        } else {
+            while (tmp != null) {
+                tmp.transaction_.print();
+                tmp = tmp.next_;
+            }
+        }
+    }
 }

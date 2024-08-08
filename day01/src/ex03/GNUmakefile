@@ -1,7 +1,7 @@
 
 
 J_SOURCE=$(wildcard *.java)
-PACKAGE_SOURCE=$(wildcard user/*.java transaction/*.java)
+PACKAGE_SOURCE=$(wildcard user/*.java transaction/*.java exception/*.java)
 TARGET=Program
 
 build:

@@ -1,5 +1,7 @@
 package user;
 
+import exception.UserNotFoundException;
+
 public class UserArrayList implements UserList {
 
     private static final int DEFAULT_CAPASITY = 10;
