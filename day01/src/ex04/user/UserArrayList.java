@@ -70,9 +70,9 @@ public class UserArrayList implements UserList {
 
     public int getCapasity() { return capasity_; }
 
-		public void print() {
-		    for(int i = 0; i < size_; ++i) {
-				    ((User) data_[i]).print();
-				}
-		}
+    public void print() {
+        for (int i = 0; i < size_; ++i) {
+            ((User)data_[i]).print();
+        }
+    }
 }

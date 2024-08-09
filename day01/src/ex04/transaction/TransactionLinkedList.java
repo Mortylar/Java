@@ -44,9 +44,10 @@ public class TransactionLinkedList implements TransactionList {
                     remove(tmp);
                     return;
                 }
+                tmp = tmp.next_;
             }
-            throw new TransactionNotFoundException();
         }
+        throw new TransactionNotFoundException();
     }
 
     private void remove(TransactionLinkedList current) {
@@ -87,9 +88,11 @@ public class TransactionLinkedList implements TransactionList {
         TransactionLinkedList tmp = this.next_;
         while (tmp.next_ != null) {
             if (tmp.transaction_.getID() == id) {
-                return transaction_;
+                return tmp.transaction_;
             }
+            tmp = tmp.next_;
         }
+        // return null;
         return this.transaction_;
     }
 

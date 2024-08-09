@@ -70,8 +70,10 @@ public class Transaction implements ITransaction {
         return new Transaction(id, recepient, sender, type, transferAmount);
     }
 
-    private static boolean isValidUserBalance(User user1, User user2, int transactionAmount) {
-        return ((user1.getBalance() + transactionAmount >= 0) && (user2.getBalance() - transactionAmount >= 0));
+    private static boolean isValidUserBalance(User user1, User user2,
+                                              int transactionAmount) {
+        return ((user1.getBalance() + transactionAmount >= 0) &&
+                (user2.getBalance() - transactionAmount >= 0));
     }
 
     private static boolean isValidTransferAmount(TransactionType type,
