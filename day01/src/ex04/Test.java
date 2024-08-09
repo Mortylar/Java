@@ -50,6 +50,8 @@ public class Test {
         removeFirstTransaction();
 
         service_.printTransactions();
+
+				printValidateTransactions();
     }
 
     public void createUserList() {
@@ -68,7 +70,7 @@ public class Test {
 
     public void createTransactions()
         throws UserNotFoundException, IllegalTransactionException {
-        service_.transactionPerform(1, 2, 10);
+        service_.transactionPerform(1, 2, 100);
         service_.transactionPerform(1, 3, 10);
         service_.transactionPerform(1, 4, 10);
         service_.transactionPerform(4, 2, 100);
@@ -77,7 +79,7 @@ public class Test {
 
     public void printUniqTransactions() throws UserNotFoundException {
         System.out.printf("Unique transactions:\n");
-        Transaction[] array = service_.validate();
+        Transaction[] array = service_.getUniqTransactions();
         for (int i = 0; i < array.length; ++i) {
             array[i].print();
         }
@@ -92,5 +94,12 @@ public class Test {
         service_.removeTransaction(transaction.getID(), firstUserID);
     }
 
+    public void printValidateTransactions() {
+		    Transaction[] array = service_.validate();
+				System.out.printf("Validate array:\n");
+				for (int i = 0; i < array.length; ++i) {
+				    array[i].print();
+				}
+		}
     public void printSeparator() { System.out.println("."); }
 }

@@ -21,6 +21,14 @@ public class TransactionLinkedList implements TransactionList {
         next_.next_ = null;
     }
 
+		public void add(TransactionLinkedList other) {
+        TransactionLinkedList tmp = this;
+		    while (tmp.next_ != null) {
+				    tmp = tmp.next_;
+				}
+				tmp.next_ = other.next_;
+		}
+
     @Override
     public void add(Transaction transaction) {
         if (this.next_ == null) {

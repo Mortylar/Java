@@ -45,12 +45,7 @@ public class TransactionService {
         }
 
         user1.addTransaction(tr1);
-        user1.addTransaction(tr2);
-        user1.updateBalance(transactionAmount);
-
-        user2.addTransaction(tr1);
         user2.addTransaction(tr2);
-        user2.updateBalance(-transactionAmount);
     }
 
     public Transaction[] getTransactions(int userID)
@@ -60,12 +55,8 @@ public class TransactionService {
 
     public void removeTransaction(UUID transactionID, int userID)
         throws UserNotFoundException, TransactionNotFoundException {
-        while (
-            ((userList_.get(userID)).getTransactionList()).get(transactionID) !=
-            null) {
             ((userList_.get(userID)).getTransactionList())
                 .remove(transactionID);
-        }
     }
 
     public void printUserList() { userList_.print(); }
@@ -79,7 +70,7 @@ public class TransactionService {
         }
     }
 
-    public Transaction[] validate() throws UserNotFoundException {
+    public Transaction[] getUniqTransactions() throws UserNotFoundException {
         Map<UUID, Transaction> uniqTransactions =
             new HashMap<UUID, Transaction>();
         for (int i = 0; i < userList_.size(); ++i) {
@@ -97,4 +88,25 @@ public class TransactionService {
         System.arraycopy(defArray, 0, resArray, 0, defArray.length);
         return resArray;
     }
+
+		public Transaction[] validate() {
+		    TransactionLinkedList trList = new TransactionLinkedList();
+				for (int i = 0; i < userList_.size(); ++i) {
+					trList.add(userList_.getAt(i).getTransactionList());
+				}
+        Transaction[] array = trList.toArray();
+				TransactionLinkedList validateList = new TransactionLinkedList();
+				for (int i = 0; i < array.length; ++i) {
+            int counter = 0;
+				    for (int j  = 0; j < array.length; ++j) {
+						    if (array[i].getID() == array[j].getID()) {
+								    ++counter;
+								}
+						}
+						if (counter == 1) {
+						  validateList.add(array[i]);
+						}
+				}
+				return validateList.toArray();
+		}
 }
