@@ -1,10 +1,12 @@
 
 
 import java.util.Scanner;
+import java.util.UUID;
 
 import user.User;
 
 import transaction.Transaction;
+import transaction.TransactionType;
 
 import exception.UserNotFoundException;
 import exception.TransactionNotFoundException;
@@ -29,7 +31,7 @@ public class Menu {
 
 		public Menu(String[] userStatus) {
         if (userStatus.length > 0) {
-            devStatus_ = (devProfile_.equals(userStatus) ? true : false);
+            devStatus_ = (devProfile_.equals(userStatus[0]) ? true : false);
 				} else {
 				    devStatus_ = false;
 				}
@@ -49,13 +51,14 @@ public class Menu {
 					     transferPerform();
 					 } else if (AnswerCode.ALL_TRANSACTIONS_CODE == answer) {
 					     allTransactions();
+           } else if (AnswerCode.REMOVE_TRANSACTION_CODE == answer) {
+					     removeTransaction();
+					 } else if (AnswerCode.TRANSACTION_VALIDATE_CODE == answer) {
+					     transactionValidate();
+					 } else if (AnswerCode.FINISH_CODE != answer) {
+					     System.out.print("Unknown answer\n");
 					 }
-
-
-
-
 					 printSeparator();
-
 			 }
 		}
   
@@ -170,8 +173,65 @@ public class Menu {
 				}
 		}
 
+		private void removeTransaction() {
+		    if (!devStatus_) {
+				    System.out.print("Operation not permitted.\n");
+						return;
+				}
+				System.out.print("Enter a user ID and a transfer ID\n");
+
+				String input = scanner_.nextLine();
+        Scanner scanner = new Scanner(input).useDelimiter(" ");
+       
+			  if (scanner.hasNextInt()) {
+				    int userID = scanner.nextInt();
+						if (scanner.hasNext()) {
+                String uuid = scanner.next();
+						    UUID transactionID = UUID.fromString(uuid);
+								try {
+                    Transaction tr = ((service_.getUser(userID)).getTransactionList()).get(transactionID);
+								    service_.removeTransaction(transactionID, userID);
+										if (tr.getTransactionType() == TransactionType.DEBIT) {
+										    System.out.printf("Transfer from %s(id = %d) %d removed\n", tr.getSender().getName(),
+                                           tr.getSender().getID(), tr.getTransferAmount());
+										} else {
+										    System.out.printf("Transfer from %s(id = %d) %d removed\n", tr.getSender().getName(),
+                                           tr.getSender().getID(), tr.getTransferAmount());
+										}
+										return;
+								} catch (UserNotFoundException e) {
+								    System.out.printf("User with id = %d not found\n", userID);
+										return;
+								} catch (TransactionNotFoundException e) {
+								    System.out.printf("Transaction with id = %s not found\n", transactionID.toString());
+										return;
+								}
+						}
+				}
+				System.out.print("Incorect data\n");
+		}
+
+
+    private void transactionValidate() {
+		    System.out.printf("Check result:\n");
+				Transaction[] array = service_.validate();
+				if (array.length == 0) {
+				    System.out.print("Correct\n");
+				} else {
+				    for (int i = 0; i < array.length; ++i) {
+                User recepient = array[i].getRecepient();
+								User sender = array[i].getSender();
+						    System.out.printf("%s(id = %d) has an unaknowledged transfer id = %s from %s(id = %d)\n",
+                                   recepient.getName(), recepient.getID(), array[i].getID(),
+                                   sender.getName(), sender.getID());
+						}
+				}
+    
+		}
+
+
     private void printSeparator() {
-		    System.out.print("--------------------------------\n");
+		    System.out.print("--------------------------------------\n");
 		}
 
 		public enum AnswerCode {

@@ -96,14 +96,15 @@ public class TransactionService {
 		public Transaction[] validate() {
 		    TransactionLinkedList trList = new TransactionLinkedList();
 				for (int i = 0; i < userList_.size(); ++i) {
-					trList.add(userList_.getAt(i).getTransactionList());
+					trList = trList.add(userList_.getAt(i).getTransactionList());
 				}
+
         Transaction[] array = trList.toArray();
 				TransactionLinkedList validateList = new TransactionLinkedList();
 				for (int i = 0; i < array.length; ++i) {
             int counter = 0;
 				    for (int j  = 0; j < array.length; ++j) {
-						    if (array[i].getID() == array[j].getID()) {
+						    if (array[i].getID().equals(array[j].getID())) {
 								    ++counter;
 								}
 						}
