@@ -27,11 +27,15 @@ public class TransactionService {
         return (userList_.get(userID)).getBalance();
     }
 
-    public void transactionPerform(int id1, int id2, int transactionAmount)
+		public User getUser(int userID) throws UserNotFoundException {
+		    return userList_.get(userID);
+		}
+
+    public void transactionPerform(int recepientID, int senderID, int transactionAmount)
         throws UserNotFoundException, IllegalTransactionException {
         UUID transactionID = UUID.randomUUID();
-        User user1 = userList_.get(id1);
-        User user2 = userList_.get(id2);
+        User user1 = userList_.get(recepientID);
+        User user2 = userList_.get(senderID);
 
         Transaction tr1 = createTransactionOrReturnNull(
             transactionID, user1, user2, TransactionType.DEBIT,
