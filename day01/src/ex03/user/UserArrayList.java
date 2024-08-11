@@ -60,7 +60,11 @@ public class UserArrayList implements UserList {
 
     @Override
     public User getAt(int index) {
-        return ((User)data_[index]);
+        if ((index >= 0) && (index < size_)) {
+            return ((User)data_[index]);
+        } else {
+            return null;
+        }
     }
 
     @Override

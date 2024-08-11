@@ -25,6 +25,8 @@ public class User extends HomoSapiens {
         balance_ += transactionAmount;
     }
 
+    public boolean checkBalance() { return (balance_ > 0); }
+
     public void addTransaction(Transaction transaction) {
         transactions_.add(transaction);
     }

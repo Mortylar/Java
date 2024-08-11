@@ -39,7 +39,7 @@ public class TransactionLinkedList implements TransactionList {
     public void remove(UUID id) throws TransactionNotFoundException {
         if (next_ != null) {
             TransactionLinkedList tmp = this.next_;
-            while (tmp.next_ != null) {
+            while (tmp != null) {
                 if (tmp.transaction_.getID() == id) {
                     remove(tmp);
                     return;
@@ -85,7 +85,7 @@ public class TransactionLinkedList implements TransactionList {
     @Override
     public Transaction get(UUID id) {
         TransactionLinkedList tmp = this.next_;
-        while (tmp.next_ != null) {
+        while (tmp != null) {
             if (tmp.transaction_.getID() == id) {
                 return transaction_;
             }
