@@ -19,6 +19,8 @@ public class User extends HomoSapiens {
         balance_ += transactionAmount;
     }
 
+    public boolean checkBalance() { return (balance_ > 0); }
+
     @Override
     public void print() {
         System.out.printf("%d %s has %d\n", id_, super.getName(), balance_);
