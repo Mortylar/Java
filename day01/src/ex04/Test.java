@@ -3,6 +3,7 @@ import static transaction.Transaction.createTransactionOrReturnNull;
 import static user.UserIdsGenerator.getInstance;
 
 import exception.IllegalTransactionException;
+import exception.IllegalUserException;
 import exception.TransactionNotFoundException;
 import exception.UserNotFoundException;
 import java.util.Iterator;
@@ -31,7 +32,7 @@ public class Test {
 
     public Test() {}
 
-    public void runTest() throws UserNotFoundException,
+    public void runTest() throws UserNotFoundException, IllegalUserException,
                                  TransactionNotFoundException,
                                  IllegalTransactionException {
         createUserList();
@@ -51,10 +52,10 @@ public class Test {
 
         service_.printTransactions();
 
-				printValidateTransactions();
+        printValidateTransactions();
     }
 
-    public void createUserList() {
+    public void createUserList() throws IllegalUserException {
         User user = new User("Vova", 100);
         service_.addUser(user);
 
@@ -95,11 +96,11 @@ public class Test {
     }
 
     public void printValidateTransactions() {
-		    Transaction[] array = service_.validate();
-				System.out.printf("Validate array:\n");
-				for (int i = 0; i < array.length; ++i) {
-				    array[i].print();
-				}
-		}
+        Transaction[] array = service_.validate();
+        System.out.printf("Validate array:\n");
+        for (int i = 0; i < array.length; ++i) {
+            array[i].print();
+        }
+    }
     public void printSeparator() { System.out.println("."); }
 }

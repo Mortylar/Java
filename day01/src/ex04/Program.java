@@ -1,21 +1,15 @@
 
-import static transaction.Transaction.createTransactionOrReturnNull;
-
 import exception.IllegalTransactionException;
+import exception.IllegalUserException;
 import exception.TransactionNotFoundException;
 import exception.UserNotFoundException;
 import java.util.UUID;
-import transaction.Transaction;
-import transaction.TransactionLinkedList;
-import transaction.TransactionType;
-import user.User;
-import user.UserIdsGenerator;
 
 class Program {
 
-    public static void main(String[] args) throws UserNotFoundException,
-                                                  TransactionNotFoundException,
-                                                  IllegalTransactionException {
+    public static void main(String[] args)
+        throws UserNotFoundException, IllegalUserException,
+               TransactionNotFoundException, IllegalTransactionException {
         Test test = new Test();
         test.runTest();
     }

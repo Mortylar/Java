@@ -21,13 +21,13 @@ public class TransactionLinkedList implements TransactionList {
         next_.next_ = null;
     }
 
-		public void add(TransactionLinkedList other) {
+    public void add(TransactionLinkedList other) {
         TransactionLinkedList tmp = this;
-		    while (tmp.next_ != null) {
-				    tmp = tmp.next_;
-				}
-				tmp.next_ = other.next_;
-		}
+        while (tmp.next_ != null) {
+            tmp = tmp.next_;
+        }
+        tmp.next_ = other.next_;
+    }
 
     @Override
     public void add(Transaction transaction) {
@@ -47,7 +47,7 @@ public class TransactionLinkedList implements TransactionList {
     public void remove(UUID id) throws TransactionNotFoundException {
         if (next_ != null) {
             TransactionLinkedList tmp = this.next_;
-            while (tmp.next_ != null) {
+            while (tmp != null) {
                 if (tmp.transaction_.getID() == id) {
                     remove(tmp);
                     return;
@@ -94,13 +94,12 @@ public class TransactionLinkedList implements TransactionList {
     @Override
     public Transaction get(UUID id) {
         TransactionLinkedList tmp = this.next_;
-        while (tmp.next_ != null) {
+        while (tmp != null) {
             if (tmp.transaction_.getID() == id) {
                 return tmp.transaction_;
             }
             tmp = tmp.next_;
         }
-        // return null;
         return this.transaction_;
     }
 

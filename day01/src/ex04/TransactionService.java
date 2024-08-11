@@ -2,6 +2,7 @@
 import static transaction.Transaction.createTransactionOrReturnNull;
 
 import exception.IllegalTransactionException;
+import exception.IllegalUserException;
 import exception.TransactionNotFoundException;
 import exception.UserNotFoundException;
 import java.util.HashMap;
@@ -21,7 +22,13 @@ public class TransactionService {
 
     public TransactionService() {}
 
-    public void addUser(User user) { userList_.add(user); }
+    public void addUser(User user) throws IllegalUserException {
+        if (user.checkBalance()) {
+            userList_.add(user);
+        } else {
+            throw new IllegalUserException();
+        }
+    }
 
     public int getUserBalance(int userID) throws UserNotFoundException {
         return (userList_.get(userID)).getBalance();
@@ -55,8 +62,7 @@ public class TransactionService {
 
     public void removeTransaction(UUID transactionID, int userID)
         throws UserNotFoundException, TransactionNotFoundException {
-            ((userList_.get(userID)).getTransactionList())
-                .remove(transactionID);
+        ((userList_.get(userID)).getTransactionList()).remove(transactionID);
     }
 
     public void printUserList() { userList_.print(); }
@@ -89,24 +95,24 @@ public class TransactionService {
         return resArray;
     }
 
-		public Transaction[] validate() {
-		    TransactionLinkedList trList = new TransactionLinkedList();
-				for (int i = 0; i < userList_.size(); ++i) {
-					trList.add(userList_.getAt(i).getTransactionList());
-				}
+    public Transaction[] validate() {
+        TransactionLinkedList trList = new TransactionLinkedList();
+        for (int i = 0; i < userList_.size(); ++i) {
+            trList.add(userList_.getAt(i).getTransactionList());
+        }
         Transaction[] array = trList.toArray();
-				TransactionLinkedList validateList = new TransactionLinkedList();
-				for (int i = 0; i < array.length; ++i) {
+        TransactionLinkedList validateList = new TransactionLinkedList();
+        for (int i = 0; i < array.length; ++i) {
             int counter = 0;
-				    for (int j  = 0; j < array.length; ++j) {
-						    if (array[i].getID() == array[j].getID()) {
-								    ++counter;
-								}
-						}
-						if (counter == 1) {
-						  validateList.add(array[i]);
-						}
-				}
-				return validateList.toArray();
-		}
+            for (int j = 0; j < array.length; ++j) {
+                if (array[i].getID() == array[j].getID()) {
+                    ++counter;
+                }
+            }
+            if (counter == 1) {
+                validateList.add(array[i]);
+            }
+        }
+        return validateList.toArray();
+    }
 }
