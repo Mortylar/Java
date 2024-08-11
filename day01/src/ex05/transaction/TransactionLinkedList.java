@@ -21,20 +21,20 @@ public class TransactionLinkedList implements TransactionList {
         next_.next_ = null;
     }
 
-		public TransactionLinkedList add(TransactionLinkedList other) {
+    public TransactionLinkedList add(TransactionLinkedList other) {
         TransactionLinkedList newList = new TransactionLinkedList();
         TransactionLinkedList tmp = this.next_;
-				while (tmp != null) {
-				    newList.add(tmp.transaction_);
-						tmp = tmp.next_;
-				}
-				tmp = other.next_;
-				while (tmp != null) {
-				    newList.add(tmp.transaction_);
-						tmp = tmp.next_;
-				}
-				return newList;
-		}
+        while (tmp != null) {
+            newList.add(tmp.transaction_);
+            tmp = tmp.next_;
+        }
+        tmp = other.next_;
+        while (tmp != null) {
+            newList.add(tmp.transaction_);
+            tmp = tmp.next_;
+        }
+        return newList;
+    }
 
     @Override
     public void add(Transaction transaction) {

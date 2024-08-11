@@ -26,8 +26,8 @@ public class User extends HomoSapiens {
     }
 
     public void addTransaction(Transaction transaction) {
-				transactions_.add(transaction);
-				updateBalance(transaction.getTransferAmount());
+        transactions_.add(transaction);
+        updateBalance(transaction.getTransferAmount());
     }
 
     public TransactionLinkedList getTransactionList() { return transactions_; }

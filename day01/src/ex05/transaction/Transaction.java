@@ -48,12 +48,12 @@ public class Transaction implements ITransaction {
     @Override
     public void print() {
         if (transferCategory_ == TransactionType.DEBIT) {
-          System.out.printf("From ");
-				} else {
-				    System.out.printf("To ");
+            System.out.printf("From ");
+        } else {
+            System.out.printf("To ");
         }
-        System.out.printf("%s(id = %d) %d with id = %s\n", sender_.getName(), sender_.getID(),
-                                                              transferAmount_, id_.toString());
+        System.out.printf("%s(id = %d) %d with id = %s\n", sender_.getName(),
+                          sender_.getID(), transferAmount_, id_.toString());
     }
 
     public static Transaction
@@ -68,9 +68,9 @@ public class Transaction implements ITransaction {
             return null;
         }
 
-				if (recepient.getID() == sender.getID()) {
-				    return null;
-				}
+        if (recepient.getID() == sender.getID()) {
+            return null;
+        }
 
         return new Transaction(id, recepient, sender, type, transferAmount);
     }
