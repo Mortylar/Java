@@ -2,6 +2,7 @@
 import static transaction.Transaction.createTransactionOrReturnNull;
 
 import exception.IllegalTransactionException;
+import exception.IllegalUserException;
 import exception.TransactionNotFoundException;
 import exception.UserNotFoundException;
 import java.util.HashMap;
@@ -21,7 +22,11 @@ public class TransactionService {
 
     public TransactionService() {}
 
-    public void addUser(User user) { userList_.add(user); }
+    public void addUser(User user) throws IllegalUserException {
+        if (!user.checkBalance())
+            throw new IllegalUserException();
+        userList_.add(user);
+    }
 
     public int getUserBalance(int userID) throws UserNotFoundException {
         return (userList_.get(userID)).getBalance();

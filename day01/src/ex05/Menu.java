@@ -1,6 +1,7 @@
 
 
 import exception.IllegalTransactionException;
+import exception.IllegalUserException;
 import exception.TransactionNotFoundException;
 import exception.UserNotFoundException;
 import java.util.Scanner;
@@ -93,9 +94,14 @@ public class Menu {
             if (s.hasNextInt()) {
                 int userBalance = s.nextInt();
                 User user = new User(userName, userBalance);
-                service_.addUser(user);
-                System.out.printf("User with id = %d is added %s\n",
-                                  user.getID(), userName);
+                try {
+                    service_.addUser(user);
+                    System.out.printf("User with id = %d is added %s\n",
+                                      user.getID(), userName);
+                } catch (IllegalUserException e) {
+                    System.out.printf("User balance must be positive\n");
+                    addUserErrorMessage();
+                }
             } else {
                 addUserErrorMessage();
             }
