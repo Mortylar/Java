@@ -1,14 +1,14 @@
 
 
 J_SOURCE=$(wildcard *.java)
-PACKAGE_SOURCE=$(wildcard user/*.java transaction/*.java exception/*.java)
+PACKAGE_SOURCE=$(wildcard file/*.java)
 TARGET=Program
 
 build:
 	javac $(J_SOURCE) $(PACKAGE_SOURCE)
 
 run: build
-	java $(TARGET)
+	java $(TARGET) *.class
 
 style:
 	clang-format -style=file:../.clang-format -n $(J_SOURCE) $(PACKAGE_SOURCE)

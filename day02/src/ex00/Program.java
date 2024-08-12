@@ -1,27 +1,21 @@
-import java.io.File;
+// import java.io.File;
+import file.FileService;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.Scanner;
-import java.io.FileInputStream;
+// import java.util.Scanner;
+// import java.io.FileInputStream;
 
 class Program {
 
-    public static void main(String[] args) throws FileNotFoundException, IOException {
-		    String file_name = "Program.class";
+    public static void main(String[] args)
+        throws FileNotFoundException, IOException {
+        if (args.length != 1) {
+            System.err.print("Illegal arguments count!\n");
+            System.exit(-1);
+        }
 
-				SignatureReader signatureReader = new SignatureReader();
-				signatureReader.startRead();
-
-				while (signatureReader.readNext()) {
-				    String extension = signatureReader.getExtension();
-						String signature = signatureReader.getSignature();
-						System.out.printf("%s <====> %s\n", extension, signature);
-				}
-
-        FileHeaderSaver headerSaver = new FileHeaderSaver(file_name);
-				headerSaver.readFileHeader();
-				System.out.printf("\n**%s**\n", headerSaver.getHeader());
- 
-
-		}
+        FileService service = new FileService(args[0]);
+        service.findFileType();
+        System.out.printf("\n**%s**\n", service.getFileTypeOrReturnNull());
+    }
 }
