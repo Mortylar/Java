@@ -1,21 +1,33 @@
-// import java.io.File;
 import file.FileService;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-// import java.util.Scanner;
-// import java.io.FileInputStream;
+import java.util.Scanner;
 
 class Program {
 
-    public static void main(String[] args)
-        throws FileNotFoundException, IOException {
-        if (args.length != 1) {
-            System.err.print("Illegal arguments count!\n");
-            System.exit(-1);
-        }
+    private static final String EXIT_STRING = "42";
+    private static Scanner scanner_;
 
-        FileService service = new FileService(args[0]);
-        service.findFileType();
-        System.out.printf("\n**%s**\n", service.getFileTypeOrReturnNull());
+    public static void main(String[] args) {
+        scanner_ = new Scanner(System.in);
+        String answer = new String(scanner_.nextLine());
+        while (!answer.equals(EXIT_STRING)) {
+            try {
+                FileService service = new FileService(answer);
+                service.findFileType();
+                if (null == service.getFileTypeOrReturnNull()) {
+                    System.out.printf("UNDEFINED\n");
+                } else {
+                    service.writeFileType();
+                    System.out.printf("PROCESSED\n");
+                }
+            } catch (FileNotFoundException e) {
+                System.err.printf("File %s not found or is not a file\n",
+                                  answer);
+            } catch (IOException e) {
+                System.err.printf("File is broken\n");
+            }
+            answer = scanner_.nextLine();
+        }
     }
 }

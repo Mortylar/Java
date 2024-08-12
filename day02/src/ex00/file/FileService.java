@@ -7,6 +7,7 @@ public class FileService {
 
     private SignatureReader signatureReader_;
     private FileHeaderSaver header_;
+    private FileWriter fileWriter_;
     private String fileName_;
     private String fileType_;
 
@@ -15,6 +16,7 @@ public class FileService {
         fileName_ = fileName;
         signatureReader_ = new SignatureReader();
         header_ = new FileHeaderSaver(fileName_);
+        fileWriter_ = new FileWriter();
     }
 
     public void findFileType() throws IOException, FileNotFoundException {
@@ -35,4 +37,8 @@ public class FileService {
     }
 
     public String getFileTypeOrReturnNull() { return fileType_; }
+
+    public void writeFileType() throws FileNotFoundException, IOException {
+        fileWriter_.write(fileType_);
+    }
 }
