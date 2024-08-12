@@ -1,7 +1,7 @@
 
 
 J_SOURCE=$(wildcard *.java)
-PACKAGE_SOURCE=$(wildcard file/*.java)
+PACKAGE_SOURCE=$(wildcard file/*.java vector/*.java)
 TARGET=Program
 
 build:
