@@ -25,6 +25,7 @@ public class FileHeaderSaver {
         header_ = "";
         byte[] buffer = new byte[DATA_SIZE];
         fileStream_.read(buffer);
+	fileStream_.close();
 
         for (int i = 0; i < buffer.length; ++i) {
             header_ += String.format("%02x", buffer[i]);

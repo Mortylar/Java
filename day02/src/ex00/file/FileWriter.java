@@ -18,6 +18,6 @@ public class FileWriter {
         data += "\n";
         byte[] buffer = data.getBytes();
         fileStream.write(buffer, 0, buffer.length);
-        isSavePreviousData_ = true;
+	fileStream.close();
     }
 }
