@@ -3,6 +3,8 @@ import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.nio.file.AccessDeniedException;
 import java.nio.file.DirectoryStream;
+import java.nio.file.FileAlreadyExistsException;
+import java.nio.file.FileSystemException;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
@@ -15,6 +17,7 @@ public class TerminalUtility {
     private static final String MOVE = "mv";
     private static final String LIST_FILES = "ls";
     private static final String CHANGE_DIRECTORY = "cd";
+    private static final String PRESENT_WORKING_DIRECTORY = "pwd";
     private static final String EXIT = "exit";
 
     private static final int BYTES_IN_KILOBYTES = 1000;
@@ -28,7 +31,7 @@ public class TerminalUtility {
     }
 
     public void run() {
-        printCurrentDirectory();
+        presentWorkingDirectory();
 
         String input = scanner_.nextLine();
 
@@ -36,14 +39,15 @@ public class TerminalUtility {
             Scanner stringScanner = new Scanner(input).useDelimiter(" ");
             if (stringScanner.hasNext()) {
                 String command = stringScanner.next();
-
                 if (command.equals(LIST_FILES)) {
                     listFiles(stringScanner);
                 } else if (command.equals(CHANGE_DIRECTORY)) {
                     changeDirectory(stringScanner);
-                    printCurrentDirectory();
+                    presentWorkingDirectory();
                 } else if (command.equals(MOVE)) {
                     move(stringScanner);
+                } else if (command.equals(PRESENT_WORKING_DIRECTORY)) {
+                    presentWorkingDirectory();
                 } else if (!command.equals(EXIT)) {
                     printCommandNotFoundError(command);
                 }
@@ -101,7 +105,6 @@ public class TerminalUtility {
 
     private void listManyFiles(Path path) {
         Path absPath = getAbsolutePath(path);
-
         if (Files.notExists(absPath)) {
             System.err.printf("ls: %s: no such file or directory\n\n",
                               path.toString());
@@ -114,7 +117,6 @@ public class TerminalUtility {
 
     private void listFiles(Path path) {
         Path absPath = getAbsolutePath(path);
-
         if (Files.notExists(absPath)) {
             System.err.printf("ls: %s: no such file or directory\n\n",
                               path.toString());
@@ -169,21 +171,43 @@ public class TerminalUtility {
                               source.getFileName().toString());
             return;
         }
-				if (Files.isDirectory(target)) {
-            String newTarget = target.toString() + "/" +source.getFileName().toString();
-				    try {
+        if (Files.isDirectory(target)) {
+            String newTarget =
+                target.toString() + "/" + source.getFileName().toString();
+            try {
                 Files.move(source, Paths.get(newTarget));
-						} catch (IOException e) {
-						    e.printStackTrace();
-								System.out.printf("\nAAAAAAAAA\n");
-						}
-				} else {
+            } catch (FileSystemException e) {
+                if (!source.equals(target)) {
+                    System.out.printf("mv: %s.\n", e.getMessage());
+                }
+            } catch (IOException e) {
+                System.out.printf("\nmv: %s\n", e.getMessage());
+            }
+        } else {
             try {
                 Files.move(source, target);
+            } catch (FileAlreadyExistsException e) {
+                moveIfExists(source, target);
             } catch (IOException e) {
-                e.printStackTrace();
+                System.out.printf("mv: %s\n", e.getMessage());
             }
-				}
+        }
+    }
+
+    private void moveIfExists(Path source, Path target) {
+        System.out.printf("File %s exists.\n Replase if for %s? (yes/no)",
+                          target, source);
+        Scanner scanner = new Scanner(System.in);
+        String answer = scanner.nextLine();
+        String yes = "yes";
+        if (answer.equals(yes)) {
+            try {
+                Files.delete(target);
+                Files.move(source, target);
+            } catch (IOException e) {
+                System.err.printf("mv: %s.\n", e.getMessage());
+            }
+        }
     }
 
     private long getFileSize(Path path)
@@ -210,7 +234,7 @@ public class TerminalUtility {
         System.err.printf("%s: too many arguments\n", command);
     }
 
-    private void printCurrentDirectory() {
+    private void presentWorkingDirectory() {
         if (currentDir_.toString().equals("/")) {
             System.out.printf("%s\n", currentDir_.toString());
         } else {
