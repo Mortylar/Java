@@ -17,4 +17,4 @@ fix_style:
 	clang-format -style=file:../.clang-format -i $(J_SOURCE) $(PACKAGE_SOURCE)
 
 clean:
-	-rm *.class */*.class
+	-rm *.class */*.class dictionary.txt

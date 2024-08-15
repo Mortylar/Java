@@ -38,4 +38,12 @@ public class WordsReader {
     private boolean isLetter(int ch) {
         return (((ch >= 'a') && (ch <= 'z')) || ((ch >= 'A') && (ch <= 'Z')));
     }
+
+    public void close() {
+        try {
+            reader_.close();
+        } catch (IOException e) {
+            System.err.printf("WordsReader.close():\n%s\n", e.getMessage());
+        }
+    }
 }

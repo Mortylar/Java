@@ -52,6 +52,7 @@ public class FileAnalizator {
             }
             word = reader.readNextWordOrReturnNull();
         }
+        reader.close();
     }
 
     private void computeWordsFrequency()
@@ -78,6 +79,7 @@ public class FileAnalizator {
             }
             word = reader.readNextWordOrReturnNull();
         }
+        reader.close();
     }
 
     public void saveDictionary() throws FileNotFoundException, IOException {
