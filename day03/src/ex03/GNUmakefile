@@ -1,5 +1,5 @@
 J_SOURCE=$(wildcard *.java)
-PACKAGE_SOURCE=$()
+PACKAGE_SOURCE=$(wildcard file/*.java)
 TARGET=Program
 
 build:
@@ -15,4 +15,4 @@ fix_style:
 	clang-format -style=file:../.clang-format -i $(J_SOURCE) $(PACKAGE_SOURCE)
 
 clean:
-	-rm *.class */*.class
+	-rm *.class */*.class *.jpg *.png *.pdf
