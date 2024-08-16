@@ -1,39 +1,35 @@
-import java.lang.Thread;
 import java.lang.Runnable;
+import java.lang.Thread;
 
 public class CounterThread implements Runnable {
 
     private CommonResource resource_;
-		private int threadsCount_;
-    private int id_;
+    private int startIndex_;
+    private int endIndex_;
 
-    public CounterThread(CommonResource res, int threadsCount, int id) {
-      resource_ = res;
-			id_ = id;
-			threadsCount_ = threadsCount;
-			id_ = 0;
-	  }
-
-		public void setId(int id) {
-		    id_ = id;
-		}
+    public CounterThread(CommonResource res, int startIndex, int endIndex) {
+        resource_ = res;
+        startIndex_ = startIndex;
+        ;
+        endIndex_ = endIndex;
+        ;
+    }
 
     @Override
     public void run() {
         int sum = 0;
-				int threadsLength = 1 + (resource_.size() / threadsCount_);
-				int startThreadPosition = threadsCount_ * id_;
-        for (int i = startThreadPosition;
-             (i < resource_.size()) && (i < startThreadPosition + threadsLength -1); ++i) {
-				    sum += resource_.getData()[i];
-				}
-        printResult(sum, startThreadPosition, startThreadPosition + threadsLength - 1);
-		}
+        int size = resource_.size();
+        for (int i = startIndex_; (i < size) && (i <= endIndex_); ++i) {
+            sum += resource_.getData()[i];
+        }
+        resource_.addSum(sum);
+        printResult(sum, (startIndex_ < size ? startIndex_ : (size - 1)),
+                    (endIndex_ < size ? endIndex_ : (size - 1)));
+    }
 
-		private void printResult(int number, int startPos, int endPos) {
-		    System.out.printf("%s: from %d to %d sum is %d\n", Thread.currentThread().getName(),
-                           startPos, endPos, number);
-		}
-
+    private void printResult(int number, int startPos, int endPos) {
+        System.out.printf("%s: from %d to %d sum is %d\n",
+                          Thread.currentThread().getName(), startPos, endPos,
+                          number);
+    }
 }
-
