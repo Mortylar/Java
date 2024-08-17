@@ -15,11 +15,27 @@ class Program {
             System.exit(-1);
         }
 
-        int inputNumber = Integer.parseInt(
-            args[0].substring(ARGUMENT_PREFIX.length(), args[0].length()));
+        if (args[0].length() <= ARGUMENT_PREFIX.length()) {
+            System.err.printf("Incorrect argument. Expected: --count=<int>.\n");
+            System.exit(-1);
+        }
 
+        String argPrefix = args[0].substring(0, ARGUMENT_PREFIX.length());
+        if (!argPrefix.equals(ARGUMENT_PREFIX)) {
+            System.err.printf("Incorrect argument. Expected: --count=<int>.\n");
+            System.exit(-1);
+        }
+        int inputNumber = 0;
+        try {
+            inputNumber =
+                Integer.parseInt(args[0].substring(ARGUMENT_PREFIX.length()));
+        } catch (NumberFormatException e) {
+            System.err.printf("Argument is not number -> %s.\n",
+                              e.getMessage());
+        }
+        final int notFinalValueForNotInputNumber = inputNumber;
         Runnable egg = () -> {
-            for (int i = 0; i < inputNumber; ++i) {
+            for (int i = 0; i < notFinalValueForNotInputNumber; ++i) {
                 System.out.printf("%s\n", Thread.currentThread().getName());
                 try {
                     Thread.currentThread().sleep(1);
