@@ -1,8 +1,3 @@
-import java.lang.InterruptedException;
-import java.lang.Runnable;
-import java.lang.Thread;
-import java.util.concurrent.locks.ReentrantLock;
-
 class Program {
 
     private static final String ARRAY_PREFIX = "--arraySize=";
@@ -21,6 +16,7 @@ class Program {
         if ((args[ARRAY_ARG_POSITION].length() <= ARRAY_PREFIX.length()) ||
             (args[THREAD_ARG_POSITION].length() <= THREAD_PREFIX.length())) {
             System.err.printf("Invalid argument.\n");
+            System.err.printf("Usage --arraySize=int --threadsCount=int\n");
             System.exit(-1);
         }
 
@@ -29,6 +25,7 @@ class Program {
             (!THREAD_PREFIX.equals(args[THREAD_ARG_POSITION].substring(
                 0, THREAD_PREFIX.length())))) {
             System.err.printf("Invalid argument.\n");
+            System.err.printf("Usage --arraySize=int --threadsCount=int\n");
             System.exit(-1);
         }
 
