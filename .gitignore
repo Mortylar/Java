@@ -50,6 +50,7 @@ Module.symvers
 Mkfile.old
 dkms.conf
 
+*.DS_Store
 
 
 #java obj
