@@ -1,0 +1,25 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>  
+    </properties>
+
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>main.java.edu.school21.printer</groupId>
+    <artifactId>Program</artifactId>
+    <version>1.0-Printer</version>
+    <packaging>jar</packaging>
+
+    <build>
+      <resources>
+        <resource>
+          <directory>src/main/resources</directory>
+          <filtering>true</filtering>
+        </resource>
+      </resources>
+    </build>
+
+
+</project>
