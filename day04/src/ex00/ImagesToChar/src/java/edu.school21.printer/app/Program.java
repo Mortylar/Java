@@ -19,8 +19,7 @@ public class Program {
 
     private static final int INVALID_ARGS = -1;
 
-    private static final String DEFAULT_FILE =
-        "/Users/mortylar/Downloads/it.bmp"; // TODO
+    private static final String DEFAULT_FILE = "it.bmp";
 
     public static void main(String[] args) {
         Program program = new Program();
@@ -96,10 +95,7 @@ public class Program {
         }
         if (!(WHITE_PREFIX.equals(
                 args[WHITE_ARG_IND].substring(0, WHITE_PREFIX.length())))) {
-            // System.err.printf("\n%%%s%%\n",
-            // args[WHITE_ARG_IND].substring(WHITE_PREFIX.length()));
-            // System.out.printf()
-            error(String.format("%s AAA- invalid argument.",
+            error(String.format("%s - invalid argument.",
                                 args[WHITE_ARG_IND]));
             return INVALID_ARGS;
         }
@@ -148,7 +144,6 @@ public class Program {
     private void error(String message) {
         System.out.printf("%s\n", message);
         printHelp();
-        // System.exit(-1);
     }
 
     private void printHelp() {
