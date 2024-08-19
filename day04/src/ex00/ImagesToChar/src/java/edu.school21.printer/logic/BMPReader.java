@@ -1,4 +1,4 @@
-
+package edu.school21.printer.logic;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -26,7 +26,7 @@ public class BMPReader {
         store_ = new BMPStore();
     }
 
-    public void read() {
+    public BMPStore read() {
         byte[] header = readHeader();
 
         store_.addSize(convertBytesToInt(header, WEIGHT_OFFSET, WEIGHT_SIZE),
@@ -34,7 +34,7 @@ public class BMPReader {
         byte[] image = readImage(
             convertBytesToInt(header, IMAGE_OFFSET, IMAGE_OFFSET_SIZE));
         store_.setImage(image);
-        // print(store_.getImage(), 2, image.length);
+        return store_;
     }
 
     private byte[] readHeader() {
@@ -54,13 +54,13 @@ public class BMPReader {
     }
 
     private byte[] readImage(int imageOffset) {
-        int imageSize = store_.getSize() / BYTE_SIZE;
+        int imageSize = store_.size() / BYTE_SIZE;
         byte[] image = new byte[imageSize];
         try (FileInputStream reader = new FileInputStream(file_)) {
             reader.skip(imageOffset);
             final byte VALID_BYTES = 2;
             final byte INVALID_BYTES = 2;
-            for (int i = 0; i < imageSize; i += 2) {
+            for (int i = 0; i < imageSize; i += VALID_BYTES) {
                 reader.read(image, i, VALID_BYTES);
                 reader.skip(INVALID_BYTES);
             }
@@ -70,31 +70,7 @@ public class BMPReader {
         }
         return image;
     }
-    /*
-        private void print(byte[] image, int lineLength, int size) {
-            System.out.printf("\n%d\n%d\n", lineLength, size);
-            for (int i = 0; i < size - 1; i += 2) {
-                printByte(image[i]);
-                printByte(image[i+1]);
-                System.out.printf("\n");
-            }
-        }
 
-        private void printByte(byte target) {
-            int flag = 0x80;
-            // System.out.printf("\n");
-            for (int i = 0; i < 8; ++i) {
-                if ((target & flag) != 0) {
-                    System.out.printf(".");
-                } else {
-                    System.out.printf("0");
-                }
-                // flag <<= 2;
-                // System.out.printf("%d  ", flag);
-                flag >>= 1;
-            }
-        }
-    */
     private int convertBytesToInt(byte[] array, int startPosition, int length) {
         int result = 0;
         for (int i = startPosition + length - 1; i >= startPosition; --i) {

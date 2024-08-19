@@ -1,26 +1,26 @@
-package logic;
+package edu.school21.printer.logic;
 
 public class BMPStore {
 
     private static final byte BYTE_SIZE = 8;
 
     private int height_;
-    private int weight_;
+    private int width_;
     private int size_;
     private byte[] image_;
 
     public BMPStore() {
         height_ = 0;
-        weight_ = 0;
+        width_ = 0;
         size_ = 0;
     }
 
-    public BMPStore(int weight, int height) { addSize(weight, height); }
+    public BMPStore(int width, int height) { addSize(width, height); }
 
-    public void addSize(int weight, int height) {
+    public void addSize(int width, int height) {
         height_ = height;
-        weight_ = weight;
-        size_ = height_ * weight_;
+        width_ = width;
+        size_ = height_ * width_;
     }
 
     public void setImage(byte[] image) {
@@ -34,9 +34,9 @@ public class BMPStore {
 
     public int getHeight() { return height_; }
 
-    public int getWeight() { return weight_; }
+    public int getWidth() { return width_; }
 
-    public int getSize() { return size_; }
+    public int size() { return size_; }
 
     public byte[] getImage() { return image_; }
 }
