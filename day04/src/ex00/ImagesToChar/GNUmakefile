@@ -13,11 +13,14 @@ all:
 build:
 	javac  -d $(CLASS_FOLDER) $(APP_SOURCE) $(LOGIC_SOURCE)
 
-run:
-	java -cp $(CLASS_FOLDER) $(EXE)
+run: build
+	java -cp $(CLASS_FOLDER) $(EXE) $(white) $(black) $(filename)
 
 style:
 	clang-format -style=file:../../.clang-format -n $(APP_SOURCE) $(LOGIC_SOURCE)
 
 fix_style:
 	clang-format -style=file:../../.clang-format -i $(APP_SOURCE) $(LOGIX_SOURCE)
+
+clean:
+	-rm -rf target
