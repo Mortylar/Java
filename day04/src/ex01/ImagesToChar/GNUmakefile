@@ -29,7 +29,7 @@ style:
 	clang-format -style=file:../../.clang-format -n $(APP_SOURCE) $(LOGIC_SOURCE)
 
 fix_style:
-	clang-format -style=file:../../.clang-format -i $(APP_SOURCE) $(LOGIX_SOURCE)
+	clang-format -style=file:../../.clang-format -i $(APP_SOURCE) $(LOGIC_SOURCE)
 
 clean:
 	-rm -rf target

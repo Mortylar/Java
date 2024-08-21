@@ -1,7 +1,7 @@
 package edu.school21.printer.logic;
 
-import java.io.InputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 public class BMPReader {
 
@@ -70,7 +70,6 @@ public class BMPReader {
         }
         return image;
     }
-
 
     private int convertBytesToInt(byte[] array, int startPosition, int length) {
         int result = 0;
