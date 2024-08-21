@@ -1,6 +1,6 @@
 package edu.school21.printer.logic;
 
-import java.io.FileInputStream;
+import java.io.InputStream;
 import java.io.IOException;
 
 public class BMPReader {
@@ -39,7 +39,7 @@ public class BMPReader {
 
     private byte[] readHeader() {
         byte[] header = new byte[HEADER_SIZE];
-        try (FileInputStream reader = new FileInputStream(file_)) {
+        try (InputStream reader = BMPReader.class.getResourceAsStream(file_)) {
             if (reader.read(header) != HEADER_SIZE) {
                 System.err.printf("File %s is invalid.", file_);
                 reader.close();
@@ -56,7 +56,7 @@ public class BMPReader {
     private byte[] readImage(int imageOffset) {
         int imageSize = store_.size() / BYTE_SIZE;
         byte[] image = new byte[imageSize];
-        try (FileInputStream reader = new FileInputStream(file_)) {
+        try (InputStream reader = BMPReader.class.getResourceAsStream(file_)) {
             reader.skip(imageOffset);
             final byte VALID_BYTES = 2;
             final byte INVALID_BYTES = 2;
@@ -70,6 +70,7 @@ public class BMPReader {
         }
         return image;
     }
+
 
     private int convertBytesToInt(byte[] array, int startPosition, int length) {
         int result = 0;
