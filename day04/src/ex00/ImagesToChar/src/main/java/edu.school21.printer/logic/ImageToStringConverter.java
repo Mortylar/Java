@@ -22,13 +22,9 @@ public class ImageToStringConverter {
     }
 
     public String convertByteToString(BMPStore image) {
-        int height = image.getHeight();
-        int width = image.getWidth();
-        int size = image.size();
-        int dataSize = height * width + height;
         byte[] array = image.getImage();
 
-        int bytesInLine = array.length / width;
+        int bytesInLine = array.length / image.getWidth();
 
         for (int i = 0; i < array.length; i += bytesInLine) {
             for (int j = 0; j < bytesInLine; ++j) {
