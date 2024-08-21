@@ -1,19 +1,22 @@
 
 
 GNUmakefile:
+        make build
+        java -jar target/Program.jar
+        or
         make run
         or
-        make run white=--white-pixels=<ch> black=--black-pixels=<ch> filename=--file=<string>;
+        make run white=--white-pixels=<ch> black=--black-pixels=<ch>;
 
         example:
-            make run white=--white-pixels=. black=--black-pixels=O filename=--file=it.bmp
+            make run white=--white-pixels=. black=--black-pixels=O
 
 
 
 Maven:
-        mvn compile
-        mvn exec:java -Dexec.mainClass="edu.school21.printer.app.Program" -Dexec.args="--white-pixels=<ch> --black-pixels=<ch> --file=<string>"
+        mvn clean package
+            java -jar target/Program-2.0.jar 
 
 
         example:
-            mvn exec:java -Dexec.mainClass="edu.school21.printer.app.Program" -Dexec.args="--white-pixels=. --black-pixels=0 --file=it.bmp"
+            java -jar target/Program-2.0.jar --white-pixels=. --black-pixels=O

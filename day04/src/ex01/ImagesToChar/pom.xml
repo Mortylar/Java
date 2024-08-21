@@ -9,7 +9,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>main.java.edu.school21.printer</groupId>
     <artifactId>Program</artifactId>
-    <version>2.0-Printer</version>
+    <version>2.0</version>
     <packaging>jar</packaging>
 
 
@@ -23,8 +23,6 @@
               <archive>
                 <manifest>
                   <mainClass>edu.school21.printer.app.Program</mainClass>
-                  <addClasspath>true</addClasspath>
-                  <classpathPrefix>main/META-INF</classpathPrefix>
                 </manifest>
               </archive>
             </configuration>

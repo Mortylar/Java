@@ -78,8 +78,7 @@ public class Program {
         }
         if (!(WHITE_PREFIX.equals(
                 args[WHITE_ARG_IND].substring(0, WHITE_PREFIX.length())))) {
-            error(String.format("%s - invalid argument.",
-                                args[WHITE_ARG_IND]));
+            error(String.format("%s - invalid argument.", args[WHITE_ARG_IND]));
             return INVALID_ARGS;
         }
         if (!(BLACK_PREFIX.equals(
