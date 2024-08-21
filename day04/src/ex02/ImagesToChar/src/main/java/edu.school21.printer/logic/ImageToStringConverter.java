@@ -2,8 +2,8 @@ package edu.school21.printer.logic;
 
 public class ImageToStringConverter {
 
-    private static final char DEFAULT_WHITE = ' ';
-    private static final char DEFAULT_AFRO = 'X';
+    private static final char DEFAULT_WHITE = 'w';
+    private static final char DEFAULT_AFRO = 'b';
     private static final int MAX_BYTE = 0xff;
 
     private char whiteColor_;

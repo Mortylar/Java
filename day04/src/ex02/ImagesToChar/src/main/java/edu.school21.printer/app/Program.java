@@ -1,117 +1,111 @@
 package edu.school21.printer.app;
 
+import static com.diogonunes.jcolor.Ansi.colorize;
+import static com.diogonunes.jcolor.Attribute.*;
+import com.diogonunes.jcolor.Attribute;
+import com.beust.jcommander.JCommander;
+import com.beust.jcommander.Parameter;
+
 import edu.school21.printer.logic.BMPReader;
 import edu.school21.printer.logic.BMPStore;
 import edu.school21.printer.logic.ImageToStringConverter;
 
+
+
+
 public class Program {
 
-    private static final String WHITE_PREFIX = "--white-pixels=";
-    private static final String BLACK_PREFIX = "--black-pixels=";
+    @Parameter(names = {"-w", "--white"}, description = "White pixels color")
+    String white;
 
-    private static final int WHITE_ARG_IND = 0;
-    private static final int BLACK_ARG_IND = 1;
+    @Parameter(names = {"-b", "--black"}, description = "Black pixels color")
+    String black;
 
     private static final int ARGS_COUNT = 2;
-
-    private static final int INVALID_ARGS = -1;
-
     private static final String FILE_NAME = "/image.bmp";
+
+    private static final char WHITE = 'w';
+    private static final char BLACK = 'b';
+
+    private static final String WHITE_COLOR = "WHITE";
+    private static final String BLACK_COLOR = "BLACK";
+    private static final String GREEN_COLOR = "GREEN";
+    private static final String BLUE_COLOR = "BLUE";
+    private static final String RED_COLOR = "RED";
+    private static final String YELLOW_COLOR = "YELLOW"; 
+    private static final String CYAN_COLOR = "CYAN";
+    private static final String MAGENTA_COLOR = "MAGENTA";
+
+
+    private static Attribute whiteAttrib_;
+    private static Attribute blackAttrib_;
 
     public static void main(String[] args) {
         Program program = new Program();
 
+        if (ARGS_COUNT != args.length) {
+            System.err.printf("Incorrect argument count - expected 2.\n");
+            System.err.printf("Usage:\n ... --white=<String> --black=<String>\n");
+            System.exit(-1);
+        }
+        try {
+            JCommander.newBuilder().addObject(program).build().parse(args);
+        } catch (Exception e) {
+            System.err.printf("%s.\n", e.getMessage());
+            System.exit(-1);
+        }
+
+        whiteAttrib_ = program.getAttribute(program.white);
+        blackAttrib_ = program.getAttribute(program.black);
+
         BMPReader reader = new BMPReader(FILE_NAME);
-        ImageToStringConverter converter;
-
-        int argsCount = program.checkArgs(args);
-        if (INVALID_ARGS == argsCount) {
-            converter = new ImageToStringConverter();
-        } else if (ARGS_COUNT == argsCount) {
-            converter = new ImageToStringConverter(
-                program.extractWhite(args[WHITE_ARG_IND]),
-                program.extractBlack(args[BLACK_ARG_IND]));
-        } else {
-            System.err.printf("Some unknown error.\n");
-            return;
-        }
-
+        ImageToStringConverter converter = new ImageToStringConverter(WHITE, BLACK);
         BMPStore store = reader.read();
-        System.out.print(converter.convertByteToString(store));
+        program.babyPrint(converter.convertByteToString(store));
     }
 
-    private char extractWhite(String whiteString) {
-        return whiteString.charAt(WHITE_PREFIX.length());
+    private void babyPrint(String string) {
+        for (int i = 0; i < string.length(); ++i) {
+            if (string.charAt(i) == WHITE) {
+                System.out.print(colorize(" ", whiteAttrib_));
+            } else if (string.charAt(i) == BLACK) {
+                System.out.print(colorize(" ", blackAttrib_));
+            } else {
+                System.out.print(string.charAt(i));
+            }
+        }
     }
 
-    private char extractBlack(String afroString) {
-        return afroString.charAt(BLACK_PREFIX.length());
+    private Attribute getAttribute(String color) {
+        if (WHITE_COLOR == color) {
+            return WHITE_BACK();
+        }
+        if (BLACK_COLOR == color) {
+            return BLACK_BACK();
+        }
+        if (GREEN_COLOR == color) {
+            return GREEN_BACK();
+        }
+        if (BLUE_COLOR == color) {
+            return BLUE_BACK();
+        }
+        if (RED_COLOR == color) {
+            return RED_BACK();
+        }
+        if (YELLOW_COLOR == color) {
+            return YELLOW_BACK();
+        }
+        if (CYAN_COLOR == color) {
+            return CYAN_BACK();
+        }
+        if (MAGENTA_COLOR == color) {
+            return MAGENTA_BACK();
+        }
+        System.err.printf("color %s do not supported.\n", color);
+        System.err.printf("Use one of then:\n");
+        System.err.printf("WHITE\nBLACK\nGREEN\nBLUE\nRED\nYELLOW\nCYAN\nMAGENTA\n");
+        System.exit(-1);
+        return null;
     }
 
-    private int checkArgs(String[] args) {
-        int validArgsCount = checkArgsCount(args.length);
-        if (validArgsCount != INVALID_ARGS) {
-            validArgsCount = checkArgsLength(args, validArgsCount);
-        }
-        if (validArgsCount != INVALID_ARGS) {
-            validArgsCount = checkArgsValidity(args, validArgsCount);
-        }
-        return validArgsCount;
-    }
-
-    private int checkArgsCount(int argsCount) {
-        if (argsCount < ARGS_COUNT) {
-            error("Too few argument found - expected 2");
-            return INVALID_ARGS;
-        } else if (argsCount > ARGS_COUNT) {
-            error("Too many arguments - expected 2");
-            return INVALID_ARGS;
-        }
-        return ARGS_COUNT;
-    }
-
-    private int checkArgsLength(String[] args, int argsCount) {
-        if ((args[WHITE_ARG_IND].length() <= WHITE_PREFIX.length()) ||
-            (args[BLACK_ARG_IND].length() <= BLACK_PREFIX.length())) {
-            error("Incorrect argument length");
-            return INVALID_ARGS;
-        }
-        if (!(WHITE_PREFIX.equals(
-                args[WHITE_ARG_IND].substring(0, WHITE_PREFIX.length())))) {
-            error(String.format("%s - invalid argument.", args[WHITE_ARG_IND]));
-            return INVALID_ARGS;
-        }
-        if (!(BLACK_PREFIX.equals(
-                args[BLACK_ARG_IND].substring(0, BLACK_PREFIX.length())))) {
-            error(String.format("%s - invalid argument.", args[BLACK_ARG_IND]));
-            return INVALID_ARGS;
-        }
-        return argsCount;
-    }
-
-    private int checkArgsValidity(String[] args, int argsCount) {
-        String sample = "э";
-        String thisArg = args[WHITE_ARG_IND].substring(WHITE_PREFIX.length());
-        if (thisArg.length() != sample.length()) {
-            error(String.format("%s - invalid argument.", thisArg));
-            return INVALID_ARGS;
-        }
-        thisArg = args[BLACK_ARG_IND].substring(BLACK_PREFIX.length());
-        if (thisArg.length() != sample.length()) {
-            error(String.format("%s - invalid argument.", thisArg));
-            return INVALID_ARGS;
-        }
-        return argsCount;
-    }
-
-    private void error(String message) {
-        System.out.printf("%s\n", message);
-        printHelp();
-    }
-
-    private void printHelp() {
-        System.out.printf("Usage:\n");
-        System.out.printf("    %s<c>\n", WHITE_PREFIX);
-        System.out.printf("    %s<c>\n", BLACK_PREFIX);
-    }
 }
