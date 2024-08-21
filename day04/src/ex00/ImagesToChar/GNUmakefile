@@ -7,8 +7,7 @@ LOGIC_CLASS_SOURCE=$(CLASS_FOLDER)$(wildcard edu/school21/printer/logic/*.java)
 
 EXE=edu/school21/printer/app/Program
 
-all:
-	echo $(LOGIC_SOURCE)
+all: clean style build
 
 build:
 	javac  -d $(CLASS_FOLDER) $(APP_SOURCE) $(LOGIC_SOURCE)
@@ -20,7 +19,7 @@ style:
 	clang-format -style=file:../../.clang-format -n $(APP_SOURCE) $(LOGIC_SOURCE)
 
 fix_style:
-	clang-format -style=file:../../.clang-format -i $(APP_SOURCE) $(LOGIX_SOURCE)
+	clang-format -style=file:../../.clang-format -i $(APP_SOURCE) $(LOGIC_SOURCE)
 
 clean:
 	-rm -rf target
