@@ -6,10 +6,11 @@ GNUmakefile:
         or
         make run
         or
-        make run white=--white-pixels=<ch> black=--black-pixels=<ch>;
+        make run white=--white=<String> black=--black=<String>;
 
         example:
-            make run white=--white-pixels=. black=--black-pixels=O
+            make run white=--white=WHITE black=--black=BLACK
+            java -jar target/Program.jar --white=WHITE --black=BLACK
 
 
 
