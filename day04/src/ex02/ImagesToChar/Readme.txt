@@ -15,9 +15,9 @@ GNUmakefile:
 
 
 Maven:
-        mvn clean package
-            java -jar target/Program-2.0.jar 
+        mvn clean package 
+            java -jar target/Program-2.0.jar --white=<String> --blak=<BLACK>
 
 
         example:
-            java -jar target/Program-2.0.jar --white-pixels=. --black-pixels=O
+            java -jar target/Program-2.0.jar --white=WHITE --black=BLACK
