@@ -2,7 +2,7 @@
 
 GNUmakefile:
         make build
-        java -jar target/Program.jar
+        java -jar target/images-to-chars-printer.jar
         or
         make run
         or
@@ -10,14 +10,14 @@ GNUmakefile:
 
         example:
             make run white=--white=WHITE black=--black=BLACK
-            java -jar target/Program.jar --white=WHITE --black=BLACK
+            java -jar target/images-to-chars-printer.jar --white=WHITE --black=BLACK
 
 
 
 Maven:
         mvn clean package 
-            java -jar target/Program-2.0.jar --white=<String> --blak=<BLACK>
+            java -jar target/images-to-chars-printer-1.0.jar --white=<String> --blak=<BLACK>
 
 
         example:
-            java -jar target/Program-2.0.jar --white=WHITE --black=BLACK
+            java -jar target/images-to-chars-printer-1.0.jar --white=WHITE --black=BLACK

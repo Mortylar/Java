@@ -15,7 +15,7 @@ RESOURCE=src/main/resources/
 
 
 EXE=edu/school21/printer/app/Program
-JAR=Program.jar
+JAR=images-to-chars-printer.jar
 
 
 all: clean style build
