@@ -8,11 +8,11 @@ public class Obstacle extends Entity implements IEntity, Immovable {
         super(DEFAULT_ICON);
     }
 
-    public Target(char icon) {
+    public Obstacle(char icon) {
         super(icon);
     }
 
-    public Target(Position position, char icon) {
+    public Obstacle(Position position, char icon) {
         super(position, icon);
     }
 

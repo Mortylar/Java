@@ -1,7 +1,7 @@
 public abstract class Entity implements IEntity {
 
     private Position position_;
-    private char icon_; //TODO static
+    private char icon_;
 
     public Entity() {
         position_ = new Position();
@@ -16,11 +16,11 @@ public abstract class Entity implements IEntity {
         icon_ = icon;
     }
 
-    public void setIcon(icon) {
+    public void setIcon(char icon) {
         icon_ = icon;
     }
 
-    public char getIcon(icon) {
+    public char getIcon() {
         return icon_;
     }
 
@@ -29,7 +29,7 @@ public abstract class Entity implements IEntity {
     }
 
     public Position getPosition() {
-        return position_
+        return position_;
     }
     
 }

@@ -16,6 +16,9 @@ public class Enemy extends Entity implements IEntity, Moveable {
         super(position, icon);
     }
 
+//    public void setPosition(Position position) {
+//    }
+
     @Override
     public void move() {
     }

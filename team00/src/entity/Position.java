@@ -21,7 +21,7 @@ public class Position {
         y_ += dy;
     }
 
-    public int x(() {
+    public int x() {
         return x_;
     }
 
