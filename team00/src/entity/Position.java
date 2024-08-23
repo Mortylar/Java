@@ -3,8 +3,7 @@ public class Position {
     public int x_ = 0;
     public int y_ = 0;
 
-    public Position() {
-    }
+    public Position() {}
 
     public Position(int x, int y) {
         x_ = x;
@@ -21,12 +20,7 @@ public class Position {
         y_ += dy;
     }
 
-    public int x() {
-        return x_;
-    }
+    public int x() { return x_; }
 
-    public int y() {
-        return y_;
-    }
-
+    public int y() { return y_; }
 }

@@ -1,3 +1,1 @@
-public interface Immovable {
-
-}
+public interface Immovable {}
