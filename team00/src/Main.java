@@ -1,4 +1,4 @@
-
+import java.util.Scanner;
 
 public class Main {
 
@@ -13,18 +13,29 @@ public class Main {
         int enemiesCount = 20;
         int obstaclesCount = 20;
 
-        EntityService service = new EntityService();
+        Field field = new Field(size, empty_);
+
+        EntityService service = new EntityService(field);
         service.setPlayersData(1, player_);
         service.setEnemiesData(enemiesCount, enemy_);
         service.setObstaclesData(obstaclesCount, obstacle_);
         service.setTargetsData(1, target_);
         service.build();
 
-        Field field = new Field(size, empty_);
+        // Field field = new Field(size, empty_);
         field.generateEntitiesPosition(service.getEntityArr(player_));
         field.generateEntitiesPosition(service.getEntityArr(obstacle_));
         field.generateEntitiesPosition(service.getEntityArr(enemy_));
         field.generateEntitiesPosition(service.getEntityArr(target_));
         field.print();
+
+        while (true) {
+            Scanner scanner = new Scanner(System.in);
+            String ans = scanner.nextLine();
+            while (!service.movePlayer(ans, 0)) {
+                ans = scanner.nextLine();
+            }
+            field.print();
+        }
     }
 }

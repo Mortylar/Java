@@ -43,12 +43,36 @@ public class Field {
 
     public boolean isEmpty(char place) { return place == empty_; }
 
-    public void print() {
-        for (int i = 0; i < size_; ++i) {
-            for (int j = 0; j < size_; ++j) {
-                System.out.print((char)field_[i][j]);
-            }
-            System.out.print("\n");
+    public void clearPosition(Position pos) {
+        field_[pos.x()][pos.y()] = empty_;
+    }
+
+    public void setEntity(Entity entity) {
+        Position pos = entity.getPosition();
+        field_[pos.x()][pos.y()] = entity.getIcon();
+    }
+
+    public boolean checkPosition(Position pos) {
+        if ((pos.x() < 0) || (pos.x() >= size_)) {
+            return false;
         }
+        if ((pos.y() < 0) || (pos.y() >= size_)) {
+            return false;
+        }
+        return isEmpty((char) field_[pos.x()][pos.y()]);
+    }
+
+    public int size() { return size_; }
+
+    public void print() {
+        System.out.print("========================\n");
+        for (int i = 0; i < size_; ++i) {
+            System.out.print("||");
+            for (int j = 0; j < size_; ++j) {
+                System.out.print((char)field_[j][i]);
+            }
+            System.out.print("||\n");
+        } 
+        System.out.print("========================\n");
     }
 }

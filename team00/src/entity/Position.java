@@ -5,6 +5,11 @@ public class Position {
 
     public Position() {}
 
+    public Position(Position position) {
+        x_ = position.x_;
+        y_ = position.y_;
+    }
+
     public Position(int x, int y) {
         x_ = x;
         y_ = y;

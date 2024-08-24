@@ -19,6 +19,10 @@ public class EntityService {
     private Obstacle[] obstacleArr_;
     private Target[] targetArr_;
 
+    private Field field_;
+
+    public EntityService(Field field) { field_ = field; }
+
     public void setPlayersData(int count, char icon) {
         playersCount_ = count;
         playerIcon_ = icon;
@@ -72,6 +76,32 @@ public class EntityService {
         for (int i = 0; i < targetsCount_; ++i) {
             targetArr_[i] = new Target(targetIcon_);
         }
+    }
+
+    public boolean movePlayer(String direction, int id) {
+        Player player = playerArr_[id];
+        Position oldPosition = player.getPosition();
+        Position newPosition = new Position(oldPosition);
+        if (direction.equals("w")) {
+            newPosition.move(-1, 0);
+        } else if (direction.equals("s")) {
+            newPosition.move(1, 0);
+        } else if (direction.equals("d")) {
+            newPosition.move(0, 1);
+        } else if (direction.equals("a")) {
+            newPosition.move(0, -1);
+        } else {
+            System.out.printf("Direction %s incorrect.\n", direction);
+            return false;
+        }
+        int fieldSize = field_.size();
+        if (field_.checkPosition(newPosition)) {
+            field_.clearPosition(oldPosition);
+            player.setPosition(newPosition);
+            field_.setEntity(player);
+            return true;
+        }
+        return false;
     }
 
     public Entity[] getEntityArr(char icon) {
