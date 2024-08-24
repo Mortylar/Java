@@ -9,8 +9,8 @@ public class Main {
     private static char empty_ = ' ';
 
     public static void main(String[] args) {
-        int size = 20;
-        int enemiesCount = 20;
+        int size = 10;
+        int enemiesCount = 3;
         int obstaclesCount = 20;
 
         Field field = new Field(size, empty_);
@@ -28,7 +28,7 @@ public class Main {
         field.generateEntitiesPosition(service.getEntityArr(enemy_));
         field.generateEntitiesPosition(service.getEntityArr(target_));
         field.print();
-
+/*
         while (true) {
             Scanner scanner = new Scanner(System.in);
             String ans = scanner.nextLine();
@@ -36,6 +36,18 @@ public class Main {
                 ans = scanner.nextLine();
             }
             field.print();
+        }
+        */
+        int[][] sample = field.getCopy();
+        WaveManager manager = new WaveManager(sample);
+        manager.configure(player_, enemy_, obstacle_);
+        sample = manager.run();
+        System.out.printf("========================\n=====================\n");
+        for (int i = 0; i < sample.length; ++i) {
+            for (int j = 0; j < sample[0].length; ++j) {
+                System.out.printf("%3d ", sample[i][j]);
+            }
+            System.out.print("\n");
         }
     }
 }

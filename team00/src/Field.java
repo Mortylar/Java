@@ -64,12 +64,22 @@ public class Field {
 
     public int size() { return size_; }
 
+    public int[][] getCopy() {
+        int[][] copy = new int[size_][size_];
+        for (int i = 0; i < size_; ++i) {
+            for (int j = 0; j < size_; ++j) {
+                copy[i][j] = field_[i][j];
+            }
+        }
+        return copy;
+    }
+
     public void print() {
         System.out.print("========================\n");
         for (int i = 0; i < size_; ++i) {
             System.out.print("||");
             for (int j = 0; j < size_; ++j) {
-                System.out.print((char)field_[j][i]);
+                System.out.print((char)field_[i][j]);
             }
             System.out.print("||\n");
         } 

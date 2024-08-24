@@ -20,9 +20,16 @@ public class Position {
         y_ = y;
     }
 
-    public void move(int dx, int dy) {
+    public Position move(int dx, int dy) {
         x_ += dx;
         y_ += dy;
+        return this;
+    }
+
+    public Position move(Position direction) {
+        x_ += direction.x_;
+        y_ += direction.y_;
+        return this;
     }
 
     public int x() { return x_; }
