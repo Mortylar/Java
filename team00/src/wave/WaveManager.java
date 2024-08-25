@@ -5,7 +5,7 @@ public class WaveManager {
     private static final int START_MARKER = 1;
     private static final int END_MARKER = -1;
     private static final int EMPTY_MARKER = 0;
-  
+
     private int start_;
     private int end_;
     private int[] obstacle_;
@@ -15,9 +15,7 @@ public class WaveManager {
 
     private int[][] field_;
 
-    public WaveManager(int[][] field) {
-        field_ = field;
-    }
+    public WaveManager(int[][] field) { field_ = field; }
 
     public void configure(int start, int end, int[] obstacle) {
         start_ = start;
@@ -42,7 +40,7 @@ public class WaveManager {
                     pos_ = new Position(i, j);
                 } else if (end_ == field_[i][j]) {
                     field_[i][j] = END_MARKER;
-                } else if (field_[i][j] != border_){
+                } else if (field_[i][j] != border_) {
                     field_[i][j] = EMPTY_MARKER;
                 }
             }
@@ -60,7 +58,4 @@ public class WaveManager {
             }
         }
     }
-
-
-
 }

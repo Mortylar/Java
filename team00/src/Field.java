@@ -41,7 +41,12 @@ public class Field {
         }
     }
 
-    public boolean isEmpty(char place) { return place == empty_; }
+    public boolean isEmpty(char place) {
+        // System.out.printf("\nEMPTY FALSE place  a%ca empty  a%ca\n", place,
+        // empty_);
+
+        return place == empty_;
+    }
 
     public void clearPosition(Position pos) {
         field_[pos.x()][pos.y()] = empty_;
@@ -59,7 +64,17 @@ public class Field {
         if ((pos.y() < 0) || (pos.y() >= size_)) {
             return false;
         }
-        return isEmpty((char) field_[pos.x()][pos.y()]);
+        return isEmpty((char)field_[pos.x()][pos.y()]);
+    }
+
+    public boolean checkPosition(Position pos, char targetIcon) {
+        if ((pos.x() < 0) || (pos.x() >= size_)) {
+            return false;
+        }
+        if ((pos.y() < 0) || (pos.y() >= size_)) {
+            return false;
+        }
+        return (targetIcon == field_[pos.x()][pos.y()]);
     }
 
     public int size() { return size_; }
@@ -82,7 +97,7 @@ public class Field {
                 System.out.print((char)field_[i][j]);
             }
             System.out.print("||\n");
-        } 
+        }
         System.out.print("========================\n");
     }
 }

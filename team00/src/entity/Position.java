@@ -1,5 +1,10 @@
 public class Position {
 
+    public static final Position UP = new Position(0, 1);
+    public static final Position DOWN = new Position(0, -1);
+    public static final Position RIGHT = new Position(1, 0);
+    public static final Position LEFT = new Position(-1, 0);
+
     public int x_ = 0;
     public int y_ = 0;
 
