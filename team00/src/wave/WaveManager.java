@@ -8,7 +8,7 @@ public class WaveManager {
   
     private int start_;
     private int end_;
-    private int obstacle_;
+    private int[] obstacle_;
     private int border_;
 
     private Position pos_;
@@ -19,7 +19,7 @@ public class WaveManager {
         field_ = field;
     }
 
-    public void configure(int start, int end, int obstacle) {
+    public void configure(int start, int end, int[] obstacle) {
         start_ = start;
         end_ = end;
         obstacle_ = obstacle;
@@ -34,17 +34,28 @@ public class WaveManager {
     }
 
     private void marking() {
+        markObstacles();
         for (int i = 0; i < field_.length; ++i) {
             for (int j = 0; j < field_[0].length; ++j) {
-                if (obstacle_ == field_[i][j]) {
-                    field_[i][j] = border_;
-                } else if (start_ == field_[i][j]) {
+                if (start_ == field_[i][j]) {
                     field_[i][j] = START_MARKER;
                     pos_ = new Position(i, j);
                 } else if (end_ == field_[i][j]) {
                     field_[i][j] = END_MARKER;
-                } else {
+                } else if (field_[i][j] != border_){
                     field_[i][j] = EMPTY_MARKER;
+                }
+            }
+        }
+    }
+
+    private void markObstacles() {
+        for (int ind = 0; ind < obstacle_.length; ++ind) {
+            for (int i = 0; i < field_.length; ++i) {
+                for (int j = 0; j < field_[0].length; ++j) {
+                    if (obstacle_[ind] == field_[i][j]) {
+                        field_[i][j] = border_;
+                    }
                 }
             }
         }

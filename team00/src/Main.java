@@ -13,20 +13,26 @@ public class Main {
         int enemiesCount = 3;
         int obstaclesCount = 20;
 
-        Field field = new Field(size, empty_);
+        Configuration conf = new Configuration();
+        conf.setEnemyCount(enemiesCount);
+        conf.setWallCount(obstaclesCount);
+        conf.setPlayerCount(1);
+        conf.setGoalCount(1);
 
-        EntityService service = new EntityService(field);
-        service.setPlayersData(1, player_);
-        service.setEnemiesData(enemiesCount, enemy_);
-        service.setObstaclesData(obstaclesCount, obstacle_);
-        service.setTargetsData(1, target_);
+        Field field = new Field(size, conf.getEmptyIcon());
+
+        EntityService service = new EntityService(field, conf);
+        //service.setPlayersData(1, player_);
+        //service.setEnemiesData(enemiesCount, enemy_);
+        //service.setObstaclesData(obstaclesCount, obstacle_);
+        //service.setTargetsData(1, target_);
         service.build();
 
         // Field field = new Field(size, empty_);
-        field.generateEntitiesPosition(service.getEntityArr(player_));
-        field.generateEntitiesPosition(service.getEntityArr(obstacle_));
-        field.generateEntitiesPosition(service.getEntityArr(enemy_));
-        field.generateEntitiesPosition(service.getEntityArr(target_));
+        field.generateEntitiesPosition(service.getEntityArr(conf.getPlayerIcon()));
+        field.generateEntitiesPosition(service.getEntityArr(conf.getWallIcon()));
+        field.generateEntitiesPosition(service.getEntityArr(conf.getEnemyIcon()));
+        field.generateEntitiesPosition(service.getEntityArr(conf.getGoalIcon()));
         field.print();
 /*
         while (true) {
@@ -40,7 +46,10 @@ public class Main {
         */
         int[][] sample = field.getCopy();
         WaveManager manager = new WaveManager(sample);
-        manager.configure(player_, enemy_, obstacle_);
+        int[] obstaclesObj = new int[2];
+        obstaclesObj[0] = conf.getWallIcon();
+        obstaclesObj[1] = conf.getGoalIcon();
+        manager.configure(conf.getPlayerIcon(), conf.getEnemyIcon(), obstaclesObj);
         sample = manager.run();
         System.out.printf("========================\n=====================\n");
         for (int i = 0; i < sample.length; ++i) {

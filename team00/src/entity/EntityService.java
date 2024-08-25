@@ -2,17 +2,7 @@
 
 public class EntityService {
 
-    private int playersCount_;
-    private char playerIcon_;
-
-    private int enemiesCount_;
-    private char enemyIcon_;
-
-    private int obstaclesCount_;
-    private char obstacleIcon_;
-
-    private int targetsCount_;
-    private char targetIcon_;
+    private Configuration conf_;
 
     private Player[] playerArr_;
     private Enemy[] enemyArr_;
@@ -21,26 +11,9 @@ public class EntityService {
 
     private Field field_;
 
-    public EntityService(Field field) { field_ = field; }
-
-    public void setPlayersData(int count, char icon) {
-        playersCount_ = count;
-        playerIcon_ = icon;
-    }
-
-    public void setEnemiesData(int count, char icon) {
-        enemiesCount_ = count;
-        enemyIcon_ = icon;
-    }
-
-    public void setObstaclesData(int count, char icon) {
-        obstaclesCount_ = count;
-        obstacleIcon_ = icon;
-    }
-
-    public void setTargetsData(int count, char icon) {
-        targetsCount_ = count;
-        targetIcon_ = icon;
+    public EntityService(Field field, Configuration configuration) {
+        field_ = field;
+        conf_ = configuration;
     }
 
     public void build() {
@@ -51,30 +24,34 @@ public class EntityService {
     }
 
     private void createPlayerArray() {
-        playerArr_ = new Player[playersCount_];
-        for (int i = 0; i < playersCount_; ++i) {
-            playerArr_[i] = new Player(playerIcon_);
+        int playersCount = conf_.getPlayerCount();
+        playerArr_ = new Player[playersCount];
+        for (int i = 0; i < playersCount; ++i) {
+            playerArr_[i] = new Player(conf_.getPlayerIcon());
         }
     }
 
     private void createEnemyArray() {
-        enemyArr_ = new Enemy[enemiesCount_];
-        for (int i = 0; i < enemiesCount_; ++i) {
-            enemyArr_[i] = new Enemy(enemyIcon_);
+        int enemiesCount = conf_.getEnemyCount();
+        enemyArr_ = new Enemy[enemiesCount];
+        for (int i = 0; i < enemiesCount; ++i) {
+            enemyArr_[i] = new Enemy(conf_.getEnemyIcon());
         }
     }
 
     private void createObstacleArray() {
-        obstacleArr_ = new Obstacle[obstaclesCount_];
-        for (int i = 0; i < obstaclesCount_; ++i) {
-            obstacleArr_[i] = new Obstacle(obstacleIcon_);
+        int obstaclesCount = conf_.getWallCount();
+        obstacleArr_ = new Obstacle[obstaclesCount];
+        for (int i = 0; i < obstaclesCount; ++i) {
+            obstacleArr_[i] = new Obstacle(conf_.getWallIcon());
         }
     }
 
     private void createTargetArray() {
-        targetArr_ = new Target[targetsCount_];
-        for (int i = 0; i < targetsCount_; ++i) {
-            targetArr_[i] = new Target(targetIcon_);
+        int targetsCount = conf_.getGoalCount();
+        targetArr_ = new Target[targetsCount];
+        for (int i = 0; i < targetsCount; ++i) {
+            targetArr_[i] = new Target(conf_.getGoalIcon());
         }
     }
 
@@ -105,13 +82,13 @@ public class EntityService {
     }
 
     public Entity[] getEntityArr(char icon) {
-        if (icon == playerIcon_) {
+        if (conf_.getPlayerIcon() == icon) {
             return playerArr_;
-        } else if (icon == enemyIcon_) {
+        } else if (conf_.getEnemyIcon() == icon) {
             return enemyArr_;
-        } else if (icon == obstacleIcon_) {
+        } else if (conf_.getWallIcon() == icon) {
             return obstacleArr_;
-        } else if (icon == targetIcon_) {
+        } else if (conf_.getGoalIcon() == icon) {
             return targetArr_;
         } else {
             System.err.printf("Entity with icon %s not found.\n", icon);
