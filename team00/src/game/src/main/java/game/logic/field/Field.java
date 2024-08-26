@@ -1,3 +1,5 @@
+package game.logic.field;
+
 import java.util.Random;
 
 public class Field {

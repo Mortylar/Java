@@ -1,4 +1,4 @@
-// import java.io.Serializable;
+package game.logic.configuration;
 
 public class Configuration { // implements Serializable{
 

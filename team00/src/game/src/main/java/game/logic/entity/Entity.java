@@ -1,3 +1,7 @@
+package game.logic.entity;
+
+import game.logic.position.Position;
+
 public abstract class Entity implements IEntity {
 
     private Position position_;

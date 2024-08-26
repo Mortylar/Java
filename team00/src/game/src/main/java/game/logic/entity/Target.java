@@ -1,4 +1,6 @@
+package game.logic.entity;
 
+import game.logic.position.Position;
 
 public class Target extends Entity implements IEntity, Immovable {
 

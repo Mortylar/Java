@@ -1,9 +1,14 @@
+package game.logic.entity;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
+
+import game.logic.configuration.Configuration;
+import game.logic.position.Position;
+import game.logic.field.Field;
 
 public class EntityService {
 

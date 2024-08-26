@@ -1,4 +1,6 @@
+package game.logic.entity;
 
+import game.logic.position.Position;
 
 public class Enemy extends Entity implements IEntity, Moveable {
 

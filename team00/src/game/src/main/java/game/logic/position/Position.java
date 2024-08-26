@@ -1,3 +1,5 @@
+package game.logic.position;
+
 public class Position {
 
     public static final Position UP = new Position(0, 1);
