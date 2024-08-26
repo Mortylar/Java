@@ -2,6 +2,9 @@ package game.logic.field;
 
 import java.util.Random;
 
+import game.logic.entity.Entity;
+import game.logic.position.Position;
+
 public class Field {
 
     private int[][] field_;

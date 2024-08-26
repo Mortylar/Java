@@ -1,5 +1,4 @@
-package chaselogic.position; 
-
+package chaselogic.position;
 
 public class Position {
 

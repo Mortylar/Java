@@ -7,7 +7,7 @@ build:
 	javac -d out $(SOURCES)
  
 run: build
-	java -cp out/ Main
+	java -cp out/ game.app.Main
 
 style:
 	clang-format -style=file:$(CLANG_CONFIG) -n $(SOURCES)

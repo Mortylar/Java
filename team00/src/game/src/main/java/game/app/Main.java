@@ -2,6 +2,13 @@ package game.app;
 
 import java.util.Scanner;
 
+import game.logic.configuration.Configuration;
+import game.logic.field.Field;
+import game.logic.entity.EntityService;
+
+import game.logic.entity.exception.EnemyGetPlayerException;
+import game.logic.entity.exception.PlayerGetGoalException;
+
 public class Main {
 
     // private static char player_ = '@';

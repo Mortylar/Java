@@ -6,9 +6,14 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
+import chaselogic.WaveManager;
+
 import game.logic.configuration.Configuration;
-import game.logic.position.Position;
 import game.logic.field.Field;
+import game.logic.position.Position;
+import game.logic.entity.exception.PlayerGetGoalException;
+import game.logic.entity.exception.EnemyGetPlayerException;
+
 
 public class EntityService {
 
@@ -115,7 +120,8 @@ public class EntityService {
                                 new Position(pos).move(Position.LEFT)};
         HashMap<Position, Integer> ways = new HashMap<Position, Integer>();
         for (int i = 0; i < positions.length; ++i) {
-            if (field_.checkPosition(positions[i])) {
+            if ((field_.checkPosition(positions[i]))
+                 && (map[positions[i].x()][positions[i].y()] != 0) ) { //TODO
                 ways.put(positions[i], map[positions[i].x()][positions[i].y()]);
             } else if (field_.checkPosition(positions[i],
                                             enemy.getTargetIcon())) {
