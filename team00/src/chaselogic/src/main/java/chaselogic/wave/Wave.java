@@ -1,4 +1,6 @@
+package chaselogic.wave;
 
+import chaselogic.position.Position;
 
 public class Wave {
 

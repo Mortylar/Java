@@ -15,6 +15,8 @@ style:
 fix_style:
 	clang-format -style=file:$(CLANG_CONFIG) -i $(SOURCES)
 
+a:
+	echo $(CLANG_CONFIG)
 
 clean:
-	rm $(CLASSES)
+	rm -rf $(CLASSES) out/
