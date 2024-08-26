@@ -25,6 +25,16 @@
         <artifactId>ChaseLogic</artifactId>
         <version>1.0</version>
       </dependency>
+      <dependency>
+        <groupId>com.beust</groupId>
+        <artifactId>jcommander</artifactId>
+        <version>1.82</version>
+      </dependency> 
+      <dependency>
+        <groupId>com.diogonunes</groupId>
+        <artifactId>JColor</artifactId>
+        <version>5.5.1</version>
+      </dependency>
     </dependencies>
 
 
