@@ -5,7 +5,10 @@ import java.util.Scanner;
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
 
+import chaselogic.WaveManager;
+
 import game.logic.configuration.Configuration;
+import game.logic.position.Position;
 import game.logic.field.Field;
 import game.logic.entity.EntityService;
 
@@ -26,53 +29,89 @@ public class Main {
     @Parameter(names = {"-p", "--profile="}, description = "User profile")
     private static String profile_;
 
+
+    private static Field field_;
+    private static EntityService service_;
+    private static Configuration conf_;
+
     public static void main(String[] args) {
         Main main = new Main();
         JCommander.newBuilder().addObject(main).build().parse(args);
 
-        Configuration conf = new Configuration();
-        conf.setEnemyCount(enemiesCount_);
-        conf.setWallCount(wallsCount_);
-        conf.setPlayerCount(1);
-        conf.setGoalCount(1);
+        conf_ = new Configuration();
+        conf_.setEnemyCount(enemiesCount_);
+        conf_.setWallCount(wallsCount_);
+        conf_.setPlayerCount(1);
+        conf_.setGoalCount(1);
 
-        Field field = new Field(size_, conf.getEmptyIcon());
+        field_ = new Field(size_, conf_.getEmptyIcon());
 
-        EntityService service = new EntityService(field, conf);
-        service.build();
+        service_ = new EntityService(field_, conf_);
+        service_.build();
+        generateField();
+        field_.print();
 
-        field.generateEntitiesPosition(
-            service.getEntityArr(conf.getPlayerIcon()));
-        field.generateEntitiesPosition(
-            service.getEntityArr(conf.getWallIcon()));
-        field.generateEntitiesPosition(
-            service.getEntityArr(conf.getEnemyIcon()));
-        field.generateEntitiesPosition(
-            service.getEntityArr(conf.getGoalIcon()));
-        field.print();
 
         while (true) {
             Scanner scanner = new Scanner(System.in);
             String ans = scanner.nextLine();
             try {
-                while (!service.movePlayer(ans, 0)) {
+                while (!service_.movePlayer(ans, 0)) {
                     ans = scanner.nextLine();
                 }
             } catch (PlayerGetGoalException e) {
                 System.out.print("\nWIN\n");
                 System.exit(0);
             }
-            field.print();
+            field_.print();
             System.out.printf("\n==========\nEnemies:\n");
             try {
-                service.moveEnemies();
+                service_.moveEnemies();
             } catch (EnemyGetPlayerException e) {
                 System.out.print("\nYOU DIED\n");
                 System.exit(0);
             }
-            field.print();
-            System.out.printf("\n==========\n, Player:\n");
+            field_.print();
+            System.out.printf("\n==========\nPlayer:\n");
         }
 
+    }
+
+    private static boolean generateField() {
+        boolean isHavingAPath = false;
+        WaveManager manager;
+        //manager.configure(conf_.getPlayerIcon(), conf_.getGoalIcon(),
+          //                new int[] {conf_.getWallIcon(), conf_.getEnemyIcon()});
+        while (false == isHavingAPath) { 
+            field_.generateEntitiesPosition(
+                service_.getEntityArr(conf_.getPlayerIcon()));
+            field_.generateEntitiesPosition(
+                service_.getEntityArr(conf_.getWallIcon()));
+            field_.generateEntitiesPosition(
+                service_.getEntityArr(conf_.getEnemyIcon()));
+            field_.generateEntitiesPosition(
+                service_.getEntityArr(conf_.getGoalIcon()));
+
+            manager = new WaveManager(field_.getCopy());
+            manager.configure(conf_.getPlayerIcon(), conf_.getGoalIcon(),
+                              new int[] {conf_.getWallIcon(), conf_.getEnemyIcon()});
+
+            int[][] map = manager.run();
+            Position goalPosition = service_.getEntityArr(conf_.getGoalIcon())[0].getPosition();
+            for (int i = -1; i <= 1; i += 2) {
+                for (int j = -1; j <= 1; j += 2) { //TODO right algorithm
+                    int x = i + goalPosition.x();
+                    int y = j + goalPosition.y();
+                    if ((x >= 0) && (y >= 0) && (x < map.length) && (y < map.length)) {
+                        if ((map[x][y] != 0) && (map[x][y] < map.length * map.length)) {
+                            return true;
+                        }
+                    }
+                }
+            }
+            field_.clear();
+            System.out.printf("\nBad field generate --> regeneration...\n");
+       }
+       return false;
     }
 }

@@ -151,13 +151,10 @@ public class EntityService {
             field_.clearPosition(enemy.getPosition());
             enemy.setPosition(newPosition);
             field_.setEntity(enemy);
-            // System.out.print("\nTRUE\n");
             return true;
         } else if (field_.checkPosition(newPosition, enemy.getTargetIcon())) {
             throw new EnemyGetPlayerException();
         }
-        // System.out.printf("\nfalse %d %d\n", newPosition.x(),
-        // newPosition.y());
         return false;
     }
 

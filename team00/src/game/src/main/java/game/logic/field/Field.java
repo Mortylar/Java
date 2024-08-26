@@ -94,6 +94,14 @@ public class Field {
         return copy;
     }
 
+    public void clear() {
+        for (int i = 0; i < size_; ++i) {
+            for (int j = 0; j < size_; ++j) {
+                field_[i][j] = empty_;
+            }
+        }
+    }
+
     public void print() {
         System.out.print("========================\n");
         for (int i = 0; i < size_; ++i) {
