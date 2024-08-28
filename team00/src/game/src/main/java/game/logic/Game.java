@@ -31,6 +31,7 @@ public class Game {
 
         service_ = new EntityService(field_, conf_);
         service_.build();
+        checkArguments();
         generateField();
     }
 
@@ -80,21 +81,35 @@ public class Game {
                               new int[] {conf_.getWallIcon(), conf_.getEnemyIcon()});
 
             int[][] map = manager.run();
-            Position goalPosition = service_.getEntityArr(conf_.getGoalIcon())[0].getPosition();
-            for (int i = -1; i <= 1; i += 2) {
-                for (int j = -1; j <= 1; j += 2) { //TODO right algorithm
-                    int x = i + goalPosition.x();
-                    int y = j + goalPosition.y();
+            Position pos = service_.getEntityArr(conf_.getGoalIcon())[0].getPosition();
+            Position[] positions = new Position[] { new Position(pos).move(Position.UP),
+                                                    new Position(pos).move(Position.DOWN),
+                                                    new Position(pos).move(Position.LEFT),
+                                                    new Position(pos).move(Position.RIGHT)};
+            for (int i = 0; i < positions.length; ++i) {
+                int x = positions[i].x();
+                int y = positions[i].y(); 
                     if ((x >= 0) && (y >= 0) && (x < map.length) && (y < map.length)) {
                         if ((map[x][y] != 0) && (map[x][y] < map.length * map.length)) {
                             return true;
                         }
                     }
                 }
-            }
             field_.clear();
             System.out.printf("\nBad field generate --> regeneration...\n");
+            //TODO add counter and limit for regeneration attempt
        }
        return false;
+    }
+
+    private void checkArguments() {
+        int needEmpty = 2;
+        int emptySpace = conf_.getFieldSize() * conf_.getFieldSize()
+                         - conf_.getEnemyCount() - conf_.getWallCount();
+        if (emptySpace < needEmpty) {
+            //TODO throw Exception
+            System.out.print("\nIncorrect arguments\n");
+            System.exit(-1);
+        }
     }
 }
