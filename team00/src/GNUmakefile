@@ -18,5 +18,8 @@ fix_style:
 a:
 	echo $(CLANG_CONFIG)
 
+open:
+	vim $(shell find . -name $(file_name))
+
 clean:
 	rm -rf $(CLASSES) out/

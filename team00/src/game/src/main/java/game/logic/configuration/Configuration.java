@@ -1,6 +1,6 @@
 package game.logic.configuration;
 
-public class Configuration { // implements Serializable{
+public class Configuration {
 
     private static char enemyIcon_;
     private static char playerIcon_;
@@ -17,6 +17,8 @@ public class Configuration { // implements Serializable{
     private static int playerCount_;
     private static int wallCount_;
     private static int goalCount_;
+
+    private static int fieldSize_;
 
     public Configuration() { // TODO
         enemyIcon_ = 'X';
@@ -44,6 +46,9 @@ public class Configuration { // implements Serializable{
 
     public int getGoalCount() { return goalCount_; }
 
+    public int getFieldSize() { return fieldSize_; }
+
+
     public void setEnemyIcon(char icon) { enemyIcon_ = icon; }
 
     public void setPlayerIcon(char icon) { playerIcon_ = icon; }
@@ -61,4 +66,8 @@ public class Configuration { // implements Serializable{
     public void setWallCount(int count) { wallCount_ = count; }
 
     public void setGoalCount(int count) { goalCount_ = count; }
+  
+    public void setFieldSize(int size) { fieldSize_ = size; }
+
+
 }
