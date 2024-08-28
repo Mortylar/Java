@@ -13,7 +13,7 @@ import game.logic.configuration.Configuration;
 //import game.logic.field.Field;
 import game.logic.Game;
 
-//import game.logic.entity.exception.EnemyGetPlayerException;
+import game.logic.exception.IllegalParameterException;
 //import game.logic.entity.exception.PlayerGetGoalException;
 
 public class Main {
@@ -33,7 +33,7 @@ public class Main {
 
     private static Configuration conf_;
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IllegalParameterException {
         Main main = new Main();
         JCommander.newBuilder().addObject(main).build().parse(args);
 

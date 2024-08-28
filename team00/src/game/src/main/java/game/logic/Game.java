@@ -12,8 +12,9 @@ import game.logic.position.Position;
 import game.logic.field.Field;
 import game.logic.entity.EntityService;
 
-import game.logic.entity.exception.EnemyGetPlayerException;
-import game.logic.entity.exception.PlayerGetGoalException;
+import game.logic.exception.EnemyGetPlayerException;
+import game.logic.exception.PlayerGetGoalException;
+import game.logic.exception.IllegalParameterException;
 
 public class Game {
 
@@ -26,7 +27,7 @@ public class Game {
     }
 
 
-    public void build() {
+    public void build() throws IllegalParameterException {
         field_ = new Field(conf_.getFieldSize(), conf_.getEmptyIcon());
 
         service_ = new EntityService(field_, conf_);
@@ -102,14 +103,12 @@ public class Game {
        return false;
     }
 
-    private void checkArguments() {
+    private void checkArguments() throws IllegalParameterException {
         int needEmpty = 2;
         int emptySpace = conf_.getFieldSize() * conf_.getFieldSize()
                          - conf_.getEnemyCount() - conf_.getWallCount();
         if (emptySpace < needEmpty) {
-            //TODO throw Exception
-            System.out.print("\nIncorrect arguments\n");
-            System.exit(-1);
+            throw new IllegalParameterException();
         }
     }
 }

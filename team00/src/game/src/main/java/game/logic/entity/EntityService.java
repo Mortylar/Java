@@ -11,8 +11,8 @@ import chaselogic.WaveManager;
 import game.logic.configuration.Configuration;
 import game.logic.field.Field;
 import game.logic.position.Position;
-import game.logic.entity.exception.PlayerGetGoalException;
-import game.logic.entity.exception.EnemyGetPlayerException;
+import game.logic.exception.PlayerGetGoalException;
+import game.logic.exception.EnemyGetPlayerException;
 
 
 public class EntityService {
