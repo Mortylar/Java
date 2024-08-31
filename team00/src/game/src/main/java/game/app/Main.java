@@ -6,6 +6,7 @@ import com.beust.jcommander.ParameterException;
 import com.beust.jcommander.Parameters;
 import game.logic.Game;
 import game.logic.configuration.Configuration;
+import game.logic.configuration.ConfigurationReader;
 import game.logic.exception.IllegalParameterException;
 
 @Parameters(separators = "=")
@@ -43,8 +44,11 @@ public class Main {
         conf_.setGoalCount(1);
         conf_.setFieldSize(size_);
 
-        Game game = new Game(conf_);
-        game.build();
-        game.run();
+        ConfigurationReader reader = new ConfigurationReader(profile_);
+        reader.read();
+
+        // Game game = new Game(conf_);
+        // game.build();
+        // game.run();
     }
 }
