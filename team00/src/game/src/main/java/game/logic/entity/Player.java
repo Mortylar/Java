@@ -8,6 +8,8 @@ public class Player extends Entity implements IEntity, Moveable {
 
     private static char target_;
 
+    private String name_ = "Pavel Durov";
+
     public Player() { super(DEFAULT_ICON); }
 
     public Player(char icon) { super(icon); }
@@ -18,6 +20,10 @@ public class Player extends Entity implements IEntity, Moveable {
 
     public char getTargetIcon() { return target_; }
 
+    public String getName() { return name_; }
+
     @Override
-    public void move() {}
+    public void move(Position newPosition) {
+        setPosition(newPosition);
+    }
 }

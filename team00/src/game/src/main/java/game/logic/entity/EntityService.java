@@ -1,21 +1,23 @@
 package game.logic.entity;
 
+import chaselogic.WaveManager;
+import game.logic.configuration.Configuration;
+import game.logic.exception.EnemyGetPlayerException;
+import game.logic.exception.PlayerGetGoalException;
+import game.logic.exception.PlayerIsStackedException;
+import game.logic.field.Field;
+import game.logic.position.Position;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
-
-import chaselogic.WaveManager;
-
-import game.logic.configuration.Configuration;
-import game.logic.field.Field;
-import game.logic.position.Position;
-import game.logic.exception.PlayerGetGoalException;
-import game.logic.exception.EnemyGetPlayerException;
-
+import java.util.Scanner;
 
 public class EntityService {
+
+    private static final String END_GAME_CODE = "9";
+    private static final String CONFIRM_ENEMY_MOVE_DEV_CODE = "8";
 
     private Configuration conf_;
 
@@ -72,7 +74,30 @@ public class EntityService {
         }
     }
 
-    public boolean movePlayer(String direction, int id)
+    public void movePlayer(int playerId)
+        throws PlayerGetGoalException, PlayerIsStackedException {
+        if (isStacked(playerId)) {
+            System.out.printf("\n%s is stacked.\n",
+                              playerArr_[playerId].getName());
+            throw new PlayerIsStackedException();
+        }
+        String ans = readAnswer();
+        if (ans.equals(END_GAME_CODE)) {
+            voluntaryExit();
+        }
+        while (!movePlayer(ans, playerId)) {
+            ans = readAnswer();
+            if (ans.equals(END_GAME_CODE)) {
+                voluntaryExit();
+            }
+        }
+        if (!conf_.getProfile().equals(conf_.DEV_PROFILE)) {
+            field_.clearScreen();
+        }
+        field_.print();
+    }
+
+    private boolean movePlayer(String direction, int id)
         throws PlayerGetGoalException {
         Player player = playerArr_[id];
         Position oldPosition = player.getPosition();
@@ -92,13 +117,33 @@ public class EntityService {
         int fieldSize = field_.size();
         if (field_.checkPosition(newPosition)) {
             field_.clearPosition(oldPosition);
-            player.setPosition(newPosition);
+            player.move(newPosition);
             field_.setEntity(player);
             return true;
         } else if (field_.checkPosition(newPosition, player.getTargetIcon())) {
+            System.out.printf("\nPlayer %s just saved the universe\n",
+                              player.getName());
             throw new PlayerGetGoalException();
         }
         return false;
+    }
+
+    public boolean isStacked(int playerId) {
+        boolean isStacked = true;
+        Player player = playerArr_[playerId];
+        Position pos = player.getPosition();
+        Position[] positions = {new Position(pos).move(Position.UP),
+                                new Position(pos).move(Position.DOWN),
+                                new Position(pos).move(Position.RIGHT),
+                                new Position(pos).move(Position.LEFT)};
+        for (int i = 0; i < positions.length; ++i) {
+            if (field_.checkPosition(positions[i], player.getTargetIcon()) ||
+                field_.checkPosition(positions[i])) {
+                isStacked = false;
+                return isStacked;
+            }
+        }
+        return isStacked;
     }
 
     public void moveEnemies() throws EnemyGetPlayerException {
@@ -120,26 +165,41 @@ public class EntityService {
                                 new Position(pos).move(Position.LEFT)};
         HashMap<Position, Integer> ways = new HashMap<Position, Integer>();
         for (int i = 0; i < positions.length; ++i) {
-            if ((field_.checkPosition(positions[i]))
-                 && (map[positions[i].x()][positions[i].y()] != 0) ) { //TODO
+            if ((field_.checkPosition(positions[i])) &&
+                (map[positions[i].x()][positions[i].y()] != 0)) {
                 ways.put(positions[i], map[positions[i].x()][positions[i].y()]);
             } else if (field_.checkPosition(positions[i],
                                             enemy.getTargetIcon())) {
+                System.out.printf("\n%s eat player\n", enemy.getName());
                 throw new EnemyGetPlayerException();
             }
         }
 
         ArrayList<Map.Entry<Position, Integer>> list = sortMapByValue(ways);
-        // for (int i = 0; i < list.size(); ++i) {
-        //     System.out.printf("\n%d\n", list.get(i).getValue());
-        // }
         int index = list.size() - 1;
         while (index >= 0) {
             Position position = list.get(index).getKey();
             if (moveEnemy(enemy, position)) {
-                System.out.printf("Enemy move from %d %d to %d %d.\n", pos.x(),
-                                  pos.y(), position.x(), position.y());
+                System.out.printf("Enemy %s move from %d %d to %d %d.\n",
+                                  enemy.getName(), pos.x(), pos.y(),
+                                  position.x(), position.y());
                 index = -1;
+                if (conf_.getProfile().equals(conf_.DEV_PROFILE)) {
+                    String ans = readAnswer();
+                    if (ans.equals(END_GAME_CODE)) {
+                        voluntaryExit();
+                    }
+                    while (!ans.equals(CONFIRM_ENEMY_MOVE_DEV_CODE)) {
+                        ans = readAnswer();
+                        if (ans.equals(END_GAME_CODE)) {
+                            voluntaryExit();
+                        }
+                    }
+                    field_.print();
+                } else {
+                    field_.clearScreen();
+                    field_.print();
+                }
             }
             --index;
         }
@@ -149,7 +209,7 @@ public class EntityService {
         throws EnemyGetPlayerException {
         if (field_.checkPosition(newPosition)) {
             field_.clearPosition(enemy.getPosition());
-            enemy.setPosition(newPosition);
+            enemy.move(newPosition);
             field_.setEntity(enemy);
             return true;
         } else if (field_.checkPosition(newPosition, enemy.getTargetIcon())) {
@@ -185,5 +245,21 @@ public class EntityService {
             System.exit(-1);
             return null;
         }
+    }
+
+    private String readAnswer() {
+        Scanner scanner = new Scanner(System.in);
+        if (scanner.hasNextLine()) {
+            String ans = scanner.nextLine();
+            return ans;
+        }
+        System.out.printf("\nNo input found. Goodbye, looser.\n");
+        System.exit(0);
+        return null;
+    }
+
+    private void voluntaryExit() {
+        System.out.printf("\nCongratulation!!! - You gave up!\n");
+        System.exit(0);
     }
 }
