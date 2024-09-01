@@ -43,12 +43,10 @@ public class Main {
         conf_.setPlayerCount(1);
         conf_.setGoalCount(1);
         conf_.setFieldSize(size_);
+        conf_.configure();
 
-        ConfigurationReader reader = new ConfigurationReader(profile_);
-        reader.read();
-
-        // Game game = new Game(conf_);
-        // game.build();
-        // game.run();
+        Game game = new Game(conf_);
+        game.build();
+        game.run();
     }
 }

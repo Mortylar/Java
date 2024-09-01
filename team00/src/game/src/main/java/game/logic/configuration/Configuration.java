@@ -1,5 +1,7 @@
 package game.logic.configuration;
 
+import game.logic.exception.IllegalConfigurationException;
+
 public class Configuration {
 
     public static String WHITE_COLOR = "WHITE";
@@ -33,7 +35,9 @@ public class Configuration {
 
     private static int fieldSize_;
 
-    public Configuration() { // TODO
+    public Configuration() {}
+
+    private void setDefaultConfiguration() {
         enemyIcon_ = 'X';
         playerIcon_ = '@';
         wallIcon_ = '#';
@@ -45,6 +49,28 @@ public class Configuration {
         wallColor_ = "MAGENTA";
         goalColor_ = "BLUE";
         emptyColor_ = "YELLOW";
+    }
+
+    public void configure() {
+        ConfigurationReader reader = new ConfigurationReader(profile_);
+        try {
+            reader.read();
+        } catch (IllegalConfigurationException e) {
+            System.err.printf("\nWarning: configuration file is incorrect.\n");
+            setDefaultConfiguration();
+            return;
+        }
+        enemyIcon_ = reader.value(reader.ENEMY_INDEX);
+        playerIcon_ = reader.value(reader.PLAYER_INDEX);
+        wallIcon_ = reader.value(reader.WALL_INDEX);
+        goalIcon_ = reader.value(reader.GOAL_INDEX);
+        emptyIcon_ = reader.value(reader.EMPTY_INDEX);
+
+        enemyColor_ = reader.getColor(reader.ENEMY_INDEX);
+        playerColor_ = reader.getColor(reader.PLAYER_INDEX);
+        wallColor_ = reader.getColor(reader.WALL_INDEX);
+        goalColor_ = reader.getColor(reader.GOAL_INDEX);
+        emptyColor_ = reader.getColor(reader.EMPTY_INDEX);
     }
 
     public char getEnemyIcon() { return enemyIcon_; }
