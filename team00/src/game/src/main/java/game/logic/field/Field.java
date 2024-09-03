@@ -126,8 +126,6 @@ public class Field {
                 } else if (conf_.getGoalIcon() == field_[i][j]) {
                     System.out.print(colorize(
                         new String("" + (char)field_[i][j]), goalColor));
-                } else {
-                    System.out.print("AAA"); // TODO remove
                 }
             }
             System.out.print("\n");

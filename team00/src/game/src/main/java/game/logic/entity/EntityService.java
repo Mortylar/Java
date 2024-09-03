@@ -103,13 +103,13 @@ public class EntityService {
         Position oldPosition = player.getPosition();
         Position newPosition = new Position(oldPosition);
         if (direction.equals("w")) {
-            newPosition.move(-1, 0);
+            newPosition.move(Position.UP);
         } else if (direction.equals("s")) {
-            newPosition.move(1, 0);
+            newPosition.move(Position.DOWN);
         } else if (direction.equals("d")) {
-            newPosition.move(0, 1);
+            newPosition.move(Position.RIGHT);
         } else if (direction.equals("a")) {
-            newPosition.move(0, -1);
+            newPosition.move(Position.LEFT);
         } else {
             System.out.printf("Direction %s incorrect.\n", direction);
             return false;

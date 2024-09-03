@@ -12,6 +12,8 @@ import game.logic.position.Position;
 
 public class Game {
 
+    private static final int REGENERATE_LIMIT = 10;
+
     private static Field field_;
     private static EntityService service_;
     private static Configuration conf_;
@@ -54,6 +56,7 @@ public class Game {
     private static boolean generateField() {
         boolean isHavingAPath = false;
         WaveManager manager;
+        int regenerateCount = 0;
         while (false == isHavingAPath) {
             field_.generateEntitiesPosition(
                 service_.getEntityArr(conf_.getPlayerIcon()));
@@ -89,8 +92,13 @@ public class Game {
                 }
             }
             field_.clear();
+            ++regenerateCount;
+            if (regenerateCount > REGENERATE_LIMIT) {
+                System.err.printf(
+                    "\nRegeneration limit is end. Try with new arguments.\n");
+                System.exit(-1);
+            }
             System.out.printf("\nBad field generate --> regeneration...\n");
-            // TODO add counter and limit for regeneration attempt
         }
         return false;
     }
