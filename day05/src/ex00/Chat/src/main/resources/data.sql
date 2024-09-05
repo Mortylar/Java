@@ -102,8 +102,22 @@ EXCEPT(
     SELECT ChatroomId, UserId
     FROM UserChatroom); 
 
+--Message
 
+INSERT INTO Message(AutorId, RoomId, Text, MessageTime)
+VALUES(2, 4, "Bonjour, Do you order a pizza with cheese holes?", CURRENT_TIMESTAMP);
 
+INSERT INTO Message(AutorId, RoomId, Text, MessageTime)
+VALUES(4, 4, "Non, I ordered a pizza with cheese without holes.", CURRENT_TIMESTAMP);
+
+INSERT INTO Message(AutorId, RoomId, Text, MessageTime)
+VALUES(2, 4, "I''m sorry, but cheese is gone, only holes remain.", CURRENT_TIMESTAMP);
+
+INSERT INTO Message(AutorId, RoomId, Text, MessageTime)
+VALUES(4, 4, "<censored>***</censored>", CURRENT_TIMESTAMP);
+
+INSERT INTO Message(AutorId, RoomId, Text, MessageTime)
+VALUES(6, 5, "Hello! Is anybody here?", CURRENT_TIMESTAMP);
 
 
 
