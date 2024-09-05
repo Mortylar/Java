@@ -9,6 +9,13 @@ public class Chatroom implements ITable {
     private User owner_;
     private List<Message> messages_;
 
+    public Chatroom(int id, String name, User owner, List<Message> messages) {
+        chatroomId_ = id;
+        name_ = name;
+        owner_ = owner;
+        messages_ = messages;
+    }
+
     @Override
     public boolean equals(Object other) {
         if ((other == null) || !(other instanceof Chatroom)) {
@@ -17,7 +24,7 @@ public class Chatroom implements ITable {
         if (other == this) {
             return true;
         }
-        return chatroomId_ == (Chatroom)other.chatroomId_;
+        return chatroomId_ == ((Chatroom)other).chatroomId_;
     }
 
     @Override
@@ -29,10 +36,10 @@ public class Chatroom implements ITable {
     public String toString() {
         String result =
             String.format("Chatroom %s: id = %d, owner = { %s }, messages = { ",
-                          name_, chatroomId_, owner.toString());
+                          name_, chatroomId_, owner_.toString());
         for (int i = 0; i < messages_.size(); ++i) {
             result += String.format("%s; ", messages_.get(i).toString());
         }
-        return result += "}"
+        return result += "}";
     }
 }

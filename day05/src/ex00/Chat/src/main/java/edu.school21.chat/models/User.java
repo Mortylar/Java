@@ -10,7 +10,16 @@ public class User implements ITable {
     private List<Chatroom> createdRooms_;
     private List<Chatroom> availableRooms_;
 
-    @override
+    public User(int id, String login, String password,
+                List<Chatroom> createdRooms, List<Chatroom> availableRooms) {
+        userId_ = id;
+        login_ = login;
+        password_ = password;
+        createdRooms_ = createdRooms;
+        availableRooms_ = availableRooms;
+    }
+
+    @Override
     public boolean equals(Object other) {
         if ((other == null) || !(other instanceof User)) {
             return false;
@@ -18,7 +27,7 @@ public class User implements ITable {
         if (this == other) {
             return true;
         }
-        return userId_ == (User)other.userId_;
+        return userId_ == ((User)other).userId_;
     }
 
     @Override

@@ -10,6 +10,15 @@ class Message implements ITable {
     private String text_;
     private Calendar dateTime_;
 
+    public Message(int id, User author, Chatroom room, String text,
+                   Calendar dateTime) {
+        messageId_ = id;
+        author_ = author;
+        room_ = room;
+        text_ = text;
+        dateTime_ = dateTime;
+    }
+
     @Override
     public boolean equals(Object other) {
         if ((other == null) || !(other instanceof Message)) {
@@ -18,12 +27,12 @@ class Message implements ITable {
         if (this == other) {
             return true;
         }
-        return messageId_ == (Message)other.messageId_;
+        return messageId_ == ((Message)other).messageId_;
     }
 
     @Override
     public int hashCode() {
-        return ~MessageId_;
+        return ~messageId_;
     }
 
     @Override

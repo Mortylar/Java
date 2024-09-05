@@ -1,6 +1,7 @@
 
 SOURCES=$(shell find . -name "*.java")
 CLASSES=$(shell find . -name "*.class")
+CLASSPATH=-cp lib/HikariCP-4.0.3.jar:lib/slf4j-api-2.0.16.jar:lib/postgresql-42.7.3.jar:target/classes
 CLANG_CONFIG=../.clang-format
 
 build:
@@ -10,8 +11,8 @@ run: build
 	java -cp out/ game.app.Main
 
 test:
-	mvn clean package
-	java -jar target/Game.jar --enemiesCount=10 --wallsCount=10 --size=10 --profile=production
+	mvn clean compile
+	java $(CLASSPATH) edu.school21.chat.app.Main
 
 
 style:
