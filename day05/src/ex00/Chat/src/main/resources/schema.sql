@@ -1,9 +1,7 @@
 DROP TABLE IF EXISTS Users CASCADE;
-DROP TABLE IF EXISTS UserRoom CASCADE;
 DROP TABLE IF EXISTS Chatroom CASCADE;
 DROP TABLE IF EXISTS UserChatroom CASCADE;
 DROP TABLE IF EXISTS Message CASCADE;
-DROP TABLE IF EXISTS ChatroomMessages CASCADE;
 
 
 CREATE TABLE IF NOT EXISTS Users (
@@ -12,19 +10,11 @@ CREATE TABLE IF NOT EXISTS Users (
                 Password VARCHAR NOT null);
 
 
-
-CREATE TABLE IF NOT EXISTS UserRoom (
-                UserId INTEGER,
-                Room VARCHAR,
-                CONSTRAINT fk_UserRoom_UserId FOREIGN KEY (UserId) REFERENCES Users(Id));
-
-
 CREATE TABLE IF NOT EXISTS Chatroom (
                 Id SERIAL PRIMARY KEY NOT null,
                 Name VARCHAR,
                 OwnerId INTEGER,
                 CONSTRAINT fk_Chatroom_OwnerId FOREIGN KEY (OwnerId) REFERENCES Users(Id));
-
 
 
 CREATE TABLE IF NOT EXISTS UserChatroom (
@@ -42,11 +32,4 @@ CREATE TABLE IF NOT EXISTS Message (
                 MessageTime TIMESTAMP,
                 CONSTRAINT fk_Message_AutorId FOREIGN KEY (AutorId) REFERENCES Users(Id),
                 CONSTRAINT fk_Message_RoomId FOREIGN KEY (RoomId) REFERENCES Chatroom(Id));
-
-
-CREATE TABLE IF NOT EXISTS ChatroomMessages (
-                ChatroomId INTEGER,
-                Message INTEGER,
-                CONSTRAINT fk_ChatroomMessages_ChatroomId FOREIGN KEY (ChatroomId) REFERENCES Chatroom(Id),
-                CONSTRAINT fk_ChatroomMessages_Message FOREIGN KEY (Message) REFERENCES Message(Id));
 
