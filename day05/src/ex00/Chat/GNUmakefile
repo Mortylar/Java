@@ -1,18 +1,14 @@
 
 SOURCES=$(shell find . -name "*.java")
 CLASSES=$(shell find . -name "*.class")
-CLASSPATH=-cp lib/HikariCP-4.0.3.jar:lib/slf4j-api-2.0.16.jar:lib/postgresql-42.7.3.jar:target/classes
+TARGET=target/Chat.jar
 CLANG_CONFIG=../.clang-format
 
 build:
-	javac -d out $(SOURCES)
+	mvn clean package
  
 run: build
-	java -cp out/ game.app.Main
-
-test:
-	mvn clean compile
-	java $(CLASSPATH) edu.school21.chat.app.Main
+	java -jar $(TARGET)
 
 
 style:
@@ -20,9 +16,6 @@ style:
 
 fix_style:
 	clang-format -style=file:$(CLANG_CONFIG) -i $(SOURCES)
-
-a:
-	echo $(CLANG_CONFIG)
 
 open:
 	vim $(shell find . -name $(file_name))
