@@ -9,9 +9,7 @@ public class Chatroom implements ITable {
     private User owner_;
     private List<Message> messages_;
 
-    public Chatroom(long id){
-        chatroomId_ = id;
-    };
+    public Chatroom(long id) { chatroomId_ = id; };
 
     public Chatroom(long id, String name, User owner, List<Message> messages) {
         chatroomId_ = id;

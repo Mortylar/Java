@@ -10,9 +10,7 @@ public class User implements ITable {
     private List<Chatroom> createdRooms_;
     private List<Chatroom> availableRooms_;
 
-    public User(long id){
-        userId_ = id;
-    };
+    public User(long id) { userId_ = id; };
 
     public User(long id, String login, String password,
                 List<Chatroom> createdRooms, List<Chatroom> availableRooms) {

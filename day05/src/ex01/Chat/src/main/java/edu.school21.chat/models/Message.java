@@ -10,9 +10,7 @@ public class Message implements ITable {
     private String text_;
     private Calendar dateTime_;
 
-    public Message(long id){
-        messageId_ = id;
-    };
+    public Message(long id) { messageId_ = id; };
 
     public Message(long id, User author, Chatroom room, String text,
                    Calendar dateTime) {
