@@ -24,7 +24,7 @@ public class Main {
 
             createDataBase(statement);
             DataBaseService service = new DataBaseService(ds);
-            service.saveMessage();
+            service.findMessage();
         } catch (SQLException | IOException e) {
             System.err.println(e.getMessage());
             System.exit(-1);
