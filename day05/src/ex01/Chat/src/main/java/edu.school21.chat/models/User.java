@@ -39,7 +39,7 @@ public class User implements ITable {
 
     @Override
     public String toString() {
-        return String.format("User: id = %d, login = %s.", userId_, login_);
+        return String.format("User: id = %d, login = %s", userId_, login_);
     }
 
     public void setLogin(String login) { login_ = login; }

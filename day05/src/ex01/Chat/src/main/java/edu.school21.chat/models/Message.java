@@ -39,10 +39,13 @@ public class Message implements ITable {
 
     @Override
     public String toString() {
-        return String.format(
-            "Message: id = %d, autor = { %s }, chatroom = { %s }, time = %s, text_ = %s.",
-            messageId_, author_.toString(), room_.toString(),
-            dateTime_.toString(), text_);
+        String formatString = "Message: id = %d,\nAuthor = { %s },\n";
+        formatString += "Chatroom = {\n\t%s },\ntime = %s,\ntext = %s\n";
+        return String.format(formatString, messageId_,
+                             (author_ == null) ? "null" : author_.toString(),
+                             (room_ == null) ? "null" : room_.toString(),
+                             (dateTime_ == null) ? "null" : dateTime_.getTime(),
+                             text_);
     }
 
     public void setAuthor(User user) { author_ = user; }

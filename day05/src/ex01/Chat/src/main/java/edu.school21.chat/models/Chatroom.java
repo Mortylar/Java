@@ -38,9 +38,14 @@ public class Chatroom implements ITable {
     public String toString() {
         String result =
             String.format("Chatroom %s: id = %d, owner = { %s }, messages = { ",
-                          name_, chatroomId_, owner_.toString());
-        for (int i = 0; i < messages_.size(); ++i) {
-            result += String.format("%s; ", messages_.get(i).toString());
+                          (name_ == null) ? "null" : name_, chatroomId_,
+                          (owner_ == null) ? "null" : owner_.toString());
+        if (messages_ == null) {
+            result += "null";
+        } else {
+            for (int i = 0; i < messages_.size(); ++i) {
+                result += String.format("%s; ", messages_.get(i).toString());
+            }
         }
         return result += "}";
     }

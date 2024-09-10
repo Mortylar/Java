@@ -22,6 +22,8 @@ public class Main {
         Statement statement = conn.createStatement();
 
         createDataBase(statement);
+        DataBaseService service = new DataBaseService(ds);
+        service.run();
     }
 
     public static void createDataBase(Statement statement)

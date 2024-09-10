@@ -37,6 +37,7 @@ public class MessagesRepositoryJdbcImpl implements MessagesRepository {
                 String.format("SELECT * FROM Message WHERE id = %d;", id));
             message = buildMessage(line);
         } catch (Exception e) {
+            System.out.printf("\n%s\n", e.getMessage());
             message = null;
         }
         return Optional.ofNullable(message);
@@ -74,6 +75,10 @@ public class MessagesRepositoryJdbcImpl implements MessagesRepository {
         ResultSet userData = statement.executeQuery(
             String.format("SELECT * FROM Users WHERE id = %d;", id));
 
+        if (!userData.next()) {
+            return null;
+        }
+
         return new User(id, userData.getString(LOGIN_INDEX),
                         userData.getString(PASSWORD_INDEX),
                         new ArrayList<Chatroom>(), new ArrayList<Chatroom>());
@@ -91,6 +96,9 @@ public class MessagesRepositoryJdbcImpl implements MessagesRepository {
         Statement statement = connection.createStatement();
         ResultSet chatroomData = statement.executeQuery(
             String.format("SELECT * FROM Chatroom WHERE id = %d;", id));
+        if (!chatroomData.next()) {
+            return null;
+        }
 
         return new Chatroom(id, chatroomData.getString(NAME_INDEX), null, null);
     }
