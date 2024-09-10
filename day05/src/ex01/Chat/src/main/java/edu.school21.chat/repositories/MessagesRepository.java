@@ -6,4 +6,6 @@ import java.util.Optional;
 public interface MessagesRepository {
 
     public Optional<Message> findById(long id);
+
+    public void save(Message message);
 }

@@ -56,7 +56,7 @@ public class Chatroom implements ITable {
 
     public void setMessages(List<Message> messages) { messages_ = messages; }
 
-    public long setId() { return chatroomId_; }
+    public long getId() { return chatroomId_; }
 
     public String setName() { return name_; }
 

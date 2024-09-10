@@ -26,10 +26,10 @@ CREATE TABLE IF NOT EXISTS UserChatroom (
 
 CREATE TABLE IF NOT EXISTS Message (
                 Id SERIAL PRIMARY KEY NOT null,
-                AutorId INTEGER,
+                AuthorId INTEGER,
                 RoomId INTEGER,
                 Text VARCHAR,
                 MessageTime TIMESTAMP,
-                CONSTRAINT fk_Message_AutorId FOREIGN KEY (AutorId) REFERENCES Users(Id),
+                CONSTRAINT fk_Message_AutorId FOREIGN KEY (AuthorId) REFERENCES Users(Id),
                 CONSTRAINT fk_Message_RoomId FOREIGN KEY (RoomId) REFERENCES Chatroom(Id));
 

@@ -1,5 +1,6 @@
 package edu.school21.chat.repositories;
 
+import edu.school21.chat.exception.NotSavedSubEntityException;
 import edu.school21.chat.models.Chatroom;
 import edu.school21.chat.models.Message;
 import edu.school21.chat.models.User;
@@ -112,5 +113,43 @@ public class MessagesRepositoryJdbcImpl implements MessagesRepository {
         Timestamp timestamp = line.getTimestamp(DATETIME_INDEX);
         dateTime.setTimeInMillis(timestamp.getTime());
         return dateTime;
+    }
+
+    public void save(Message message) throws NotSavedSubEntityException {
+        checkMessage(message);
+        try {
+            System.out.printf("sdfasvza");
+            Connection connection = dataBase_.getConnection();
+            Statement statement = connection.createStatement();
+            String query =
+                "INSERT INTO Message(AuthorId, RoomId, Text, MessageTime)\n";
+            query += String.format(
+                "VALUES(%d, %d, '%s', '%s')", message.getAuthor().getId(),
+                message.getChatroom().getId(), message.getText(),
+                new Timestamp(message.getDateTime().getTimeInMillis()));
+            try {
+                statement.executeUpdate(query);
+            } catch (SQLException e) {
+                System.err.printf("\n%s\n", e.getMessage());
+                throw new NotSavedSubEntityException();
+            }
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+            System.exit(-1);
+        }
+    }
+
+    private void checkMessage(Message message)
+        throws NotSavedSubEntityException {
+        User author = message.getAuthor();
+        Chatroom room = message.getChatroom();
+        if ((author == null) || (room == null)) {
+            throw new NotSavedSubEntityException();
+        }
+
+        final int MIN_ID = 1;
+        if ((author.getId() < MIN_ID) || (room.getId() < MIN_ID)) {
+            throw new NotSavedSubEntityException();
+        }
     }
 }

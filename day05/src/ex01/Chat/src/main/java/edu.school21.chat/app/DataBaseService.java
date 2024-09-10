@@ -1,8 +1,13 @@
 package edu.school21.chat.app;
 
+import edu.school21.chat.exception.NotSavedSubEntityException;
+import edu.school21.chat.models.Chatroom;
 import edu.school21.chat.models.Message;
+import edu.school21.chat.models.User;
 import edu.school21.chat.repositories.MessagesRepositoryJdbcImpl;
 import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.Calendar;
 import java.util.Optional;
 import java.util.Scanner;
 import javax.sql.DataSource;
@@ -16,7 +21,7 @@ public class DataBaseService {
 
     public DataBaseService(DataSource source) { dataSource_ = source; }
 
-    public void run() {
+    public void findMessage() {
         printInvitation();
         long messageId = INCORRECT_INPUT;
         while (messageId == INCORRECT_INPUT) {
@@ -56,5 +61,14 @@ public class DataBaseService {
         MessagesRepositoryJdbcImpl objectOfClassWithIndistinctName =
             new MessagesRepositoryJdbcImpl(dataSource_);
         return objectOfClassWithIndistinctName.findById(id);
+    }
+
+    public void saveMessage() throws NotSavedSubEntityException, SQLException {
+        User user = new User(2L);
+        Chatroom room = new Chatroom(5L);
+        String text = "";
+        MessagesRepositoryJdbcImpl x =
+            new MessagesRepositoryJdbcImpl(dataSource_);
+        x.save(new Message(0, user, room, text, Calendar.getInstance()));
     }
 }
