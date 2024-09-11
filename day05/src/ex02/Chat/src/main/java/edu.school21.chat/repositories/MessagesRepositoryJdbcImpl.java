@@ -115,6 +115,7 @@ public class MessagesRepositoryJdbcImpl implements MessagesRepository {
         return dateTime;
     }
 
+    @Override
     public void save(Message message) throws NotSavedSubEntityException {
         checkMessage(message);
         try {
