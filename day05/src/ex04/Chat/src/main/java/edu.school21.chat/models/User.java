@@ -54,6 +54,18 @@ public class User implements ITable {
         availableRooms_ = availableRooms;
     }
 
+    public void addCreatedRoom(Chatroom room) {
+        if (!createdRooms_.contains(room)) {
+            createdRooms_.add(room);
+        }
+    }
+
+    public void addAvailableRoom(Chatroom room) {
+        if (!availableRooms_.contains(room)) {
+            availableRooms_.add(room);
+        }
+    }
+
     public long getId() { return userId_; }
 
     public String getLogin() { return login_; }

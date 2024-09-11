@@ -5,9 +5,11 @@ import edu.school21.chat.models.Chatroom;
 import edu.school21.chat.models.Message;
 import edu.school21.chat.models.User;
 import edu.school21.chat.repositories.MessagesRepositoryJdbcImpl;
+import edu.school21.chat.repositories.UsersRepositoryJdbcImpl;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
 import javax.sql.DataSource;
@@ -79,5 +81,34 @@ public class DataBaseService {
         MessagesRepositoryJdbcImpl x =
             new MessagesRepositoryJdbcImpl(dataSource_);
         x.update(new Message(6L, user, room, text, null));
+    }
+
+    public void findAll() {
+        UsersRepositoryJdbcImpl x = new UsersRepositoryJdbcImpl(dataSource_);
+        List<User> userList = x.findAll(1, 3);
+        System.out.printf("\nUser List:\n");
+        for (int i = 0; i < userList.size(); ++i) {
+            User user = userList.get(i);
+            System.out.printf("\n%s\n", user);
+            printCreatedRooms(user);
+            printAvailableRooms(user);
+            System.out.printf("\n-------------------\n");
+        }
+    }
+
+    private void printCreatedRooms(User user) {
+        List<Chatroom> rooms = user.getCreatedRooms();
+        System.out.printf("\nCreated Rooms:\n");
+        for (int i = 0; i < rooms.size(); ++i) {
+            System.out.printf("\n%s\n", rooms.get(i));
+        }
+    }
+
+    private void printAvailableRooms(User user) {
+        List<Chatroom> rooms = user.getAvailableRooms();
+        System.out.printf("\nAvailable Rooms:\n");
+        for (int i = 0; i < rooms.size(); ++i) {
+            System.out.printf("\n%s\n", rooms.get(i));
+        }
     }
 }
