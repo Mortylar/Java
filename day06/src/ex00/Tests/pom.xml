@@ -1,18 +1,127 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
   <modelVersion>4.0.0</modelVersion>
   <groupId>edu.school21.numbers</groupId>
   <artifactId>Tests</artifactId>
   <packaging>jar</packaging>
-  <version>1.0-SNAPSHOT</version>
+  <version>1.0</version>
   <name>Tests</name>
   <url>http://maven.apache.org</url>
+
+  <repositories>
+    <repository>
+      <id>org.junit.jupiter</id>
+      <url>https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api</url>
+    </repository>
+ </repositories>
+
+
+  <properties>
+    <maven.test.skip>false</maven.test.skip>
+    <java.version>1.8</java.version>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
+    <project.build.sourceEncoding>
+      UTF-8
+    </project.build.sourceEncoding>
+  </properties>
+
+
   <dependencies>
     <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>3.8.1</version>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-api</artifactId>
+      <version>5.8.1</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-engine</artifactId>
+      <version>5.8.1</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-params</artifactId>
+      <version>5.8.1</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>3.5.0</version>
+        <configuration>
+          <argLine>
+            --illegal-access=permit
+          </argLine>
+          <testFailureIgnore>true</testFailureIgnore>
+          <forkCount>2</forkCount>
+          <reuseForks>true</reuseForks>
+          <argLine>${surefireArgLine}</argLine> 
+        </configuration>
+     </plugin>
+     <plugin>
+       <groupId>org.jacoco</groupId>
+       <artifactId>jacoco-maven-plugin</artifactId>
+       <version>0.8.7</version>
+       <executions>
+         <execution>
+           <id>default-prepare-agent</id>
+           <goals> 
+             <goal>prepare-agent</goal>
+           </goals>
+           <configuration>
+             <destFile>
+               ${project.build.directory}/coverage-reports/jacoco.exec
+             </destFile>
+             <propertyName>surefireArgLine</propertyName>
+           </configuration>
+         </execution>
+         <execution>
+           <id>default-report</id>
+           <phase>test</phase>
+           <goals>
+             <goal>report</goal>
+           </goals>
+           <configuration>
+             <dataFile>
+               ${project.build.directory}/coverage-reports/jacoco.exec
+             </dataFile>
+             <outputDirectory>
+               ${project.reporting.outputDirectory}/jacoco
+             </outputDirectory>
+           </configuration>
+         </execution>
+         <execution>
+           <id>default-check</id>
+           <goals>
+             <goal>check</goal>
+           </goals>
+           <configuration>
+             <rules>
+               <rule>
+                 <element>BUNDLE</element>
+                 <limits>
+                   <limit>
+                     <counter>COMPLEXITY</counter>
+                     <value>COVEREDRATIO</value>
+                     <minimum>0.70</minimum>
+                   </limit>
+                 </limits>
+               </rule>
+             </rules>
+           </configuration>
+         </execution>
+       </executions>
+     </plugin>
+
+
+    </plugins>
+  </build>
+
 </project>

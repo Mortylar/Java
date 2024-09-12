@@ -1,6 +1,7 @@
 
 SOURCES=$(shell find . -name "*.java")
 CLASSES=$(shell find . -name "*.class")
+COVERAGE_FILES=$(shell find . -name "index.html")
 TARGET=target/Chat.jar
 CLANG_CONFIG=../.clang-format
 
@@ -9,6 +10,12 @@ build:
  
 run: build
 	java -jar $(TARGET)
+
+test:
+	mvn test
+
+coverage: test 
+	open $(COVERAGE_FILES)
 
 
 style:
@@ -24,4 +31,4 @@ add: fix_style
 	git add $(shell find . -name "*.java")
 
 clean:
-	rm -rf $(CLASSES) out/
+	mvn clean
