@@ -7,11 +7,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import edu.school21.numbers.exception.IllegalNumberException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvFileSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
-/**
- * Unit test for simple App.
- */
 public class NumberWorkerTest {
 
     private NumberWorker worker_ = new NumberWorker();
@@ -35,20 +33,9 @@ public class NumberWorkerTest {
                      () -> worker_.isPrime(number));
     }
 
-    /**
-     * Create the test case
-     *
-     * @param testName name of the test case
-     */
-    // public AppTest(String testName) { super(testName); }
-
-    /**
-     * @return the suite of tests being tested
-     */
-    // public static Test suite() { return new TestSuite(AppTest.class); }
-
-    /**
-     * Rigourous Test :-)
-     */
-    // public void testApp() { assertTrue(true); }
+    @ParameterizedTest
+    @CsvFileSource(resources = "/data.csv", numLinesToSkip = 1)
+    public void digitSumTest(int number, int digitSum) {
+        assertEquals(worker_.digitsSum(number), digitSum);
+    }
 }

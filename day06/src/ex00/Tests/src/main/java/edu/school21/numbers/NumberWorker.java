@@ -26,6 +26,9 @@ public class NumberWorker {
     }
 
     public int digitsSum(int number) {
+        if (number < 0) {
+            number *= -1;
+        }
         int result = 0;
 
         while (number > 0) {
