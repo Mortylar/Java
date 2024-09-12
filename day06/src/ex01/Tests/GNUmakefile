@@ -32,3 +32,9 @@ add: fix_style
 
 clean:
 	mvn clean
+
+a:
+	java -cp ~/Downloads/hsqldb-2.7.3.jar org.hsqldb.util.DatabaseManagerSwing
+
+b:
+	java -cp ~/Downloads/hsqldb-2.7.3.jar org.hsqldb.server.Server --database.0 file:mydb --dbname.0 xdg

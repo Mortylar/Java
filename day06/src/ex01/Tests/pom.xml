@@ -12,8 +12,23 @@
   <repositories>
     <repository>
       <id>org.junit.jupiter</id>
-      <url>https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api</url>
+      <url>
+        https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api
+      </url>
     </repository>
+    <repository>
+      <id>org.springframework</id>
+      <url>
+        https://mvnrepository.com/artifact/org.springframework/spring-jdbc
+      </url>
+    </repository>
+    <repository>
+      <id>org.hsqldb</id>
+      <url>
+        https://mvnrepository.com/artifact/org.hsqldb/hsqldb
+      </url>
+    </repository>
+
  </repositories>
 
 
@@ -47,6 +62,18 @@
       <version>5.8.1</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-jdbc</artifactId>
+      <version>6.1.12</version>
+    </dependency>
+    <dependency>
+      <groupId>org.hsqldb</groupId>
+      <artifactId>hsqldb</artifactId>
+      <version>2.7.3</version>
+      <scope>test</scope>
+    </dependency>
+
   </dependencies>
 
   <build>
