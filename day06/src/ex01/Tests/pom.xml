@@ -2,7 +2,7 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
   <modelVersion>4.0.0</modelVersion>
-  <groupId>edu.school21.numbers</groupId>
+  <groupId>edu.school21</groupId>
   <artifactId>Tests</artifactId>
   <packaging>jar</packaging>
   <version>1.0</version>
@@ -95,7 +95,7 @@
      <plugin>
        <groupId>org.jacoco</groupId>
        <artifactId>jacoco-maven-plugin</artifactId>
-       <version>0.8.7</version>
+       <version>0.8.12</version>
        <executions>
          <execution>
            <id>default-prepare-agent</id>
