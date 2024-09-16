@@ -73,7 +73,18 @@
       <version>2.7.3</version>
       <scope>test</scope>
     </dependency>
-
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+      <version>1.18.34</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-core</artifactId>
+      <version>5.13.0</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
   <build>
@@ -146,6 +157,23 @@
          </execution>
        </executions>
      </plugin>
+     <plugin>
+       <groupId>org.apache.maven.plugins</groupId>
+       <artifactId>maven-compiler-plugin</artifactId>
+       <version>3.5.1</version>
+       <configuration>
+         <source>11</source> <!-- depending on your project -->
+         <target>11</target> <!-- depending on your project -->
+         <annotationProcessorPaths>
+           <path>
+             <groupId>org.projectlombok</groupId>
+             <artifactId>lombok</artifactId>
+             <version>1.18.34</version>
+           </path>                              
+         </annotationProcessorPaths>
+       </configuration>
+     </plugin>
+
 
 
     </plugins>
