@@ -60,7 +60,7 @@ public class ProductsRepositoryJdbcImpl implements ProductsRepository {
     public void update(Product product) {
         checkProduct(product);
         String query = String.format(
-            "UPDATE Product SET name = %s, price = %f WHERE id = %d",
+            "UPDATE Product SET name = '%s', price = %f WHERE id = %d",
             product.getName(), product.getPrice(), product.getId());
 
         updateDataBase(query);
@@ -90,7 +90,6 @@ public class ProductsRepositoryJdbcImpl implements ProductsRepository {
         } catch (SQLException e) {
             throw new BadConnectionException(e.getMessage());
         }
-        // return null;
     }
 
     private void updateDataBase(String query) {
@@ -105,10 +104,9 @@ public class ProductsRepositoryJdbcImpl implements ProductsRepository {
         try {
             Connection connection = dataSource_.getConnection();
             return connection.createStatement();
-        } catch (SQLException e) {
+        } catch (Exception e) {
             throw new BadConnectionException(e.getMessage());
         }
-        // return null;
     }
 
     private Product extractProduct(ResultSet line) throws SQLException {
