@@ -27,6 +27,9 @@ fix_style:
 open:
 	vim $(shell find . -name $(file_name))
 
+open_all_sources:
+	vim $(shell find . -name "*.java")
+
 add: fix_style
 	git add $(shell find . -name "*.java")
 

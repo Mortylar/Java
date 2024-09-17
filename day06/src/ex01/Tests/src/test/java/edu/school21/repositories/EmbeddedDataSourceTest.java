@@ -8,6 +8,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
@@ -50,5 +51,10 @@ public class EmbeddedDataSourceTest {
             }
             System.out.println();
         });
+    }
+
+    @AfterEach
+    private void closeConnection() {
+        assertDoesNotThrow(() -> { connection_.close(); });
     }
 }
