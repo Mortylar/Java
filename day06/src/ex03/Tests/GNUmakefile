@@ -27,11 +27,18 @@ fix_style:
 open:
 	vim $(shell find . -name $(file_name))
 
+open_all_sources:
+	vim $(shell find . -name "*.java")
+
 add: fix_style
 	git add $(shell find . -name "*.java")
 
 clean:
 	mvn clean
+
+
+mvn_check: #do not use
+	mvn checkstyle:check
 
 a:
 	java -cp ~/Downloads/hsqldb-2.7.3.jar org.hsqldb.util.DatabaseManagerSwing
