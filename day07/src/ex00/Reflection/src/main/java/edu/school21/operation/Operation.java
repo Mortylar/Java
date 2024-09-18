@@ -26,6 +26,12 @@ public class Operation implements Operationable {
         }
     }
 
+    public int operation(int x, int y) {
+        this.firstValue = x;
+        this.secondValue = y;
+        return operation();
+    }
+
     @Override
     public String toString() {
         return String.format("%d %c %d = %d", this.firstValue,

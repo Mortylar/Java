@@ -2,7 +2,7 @@
 SOURCES=$(shell find . -name "*.java")
 CLASSES=$(shell find . -name "*.class")
 COVERAGE_FILES=$(shell find . -name "index.html")
-TARGET=target/Chat.jar
+TARGET=target/Reflection.jar
 CLANG_CONFIG=../.clang-format
 
 build:
@@ -12,7 +12,7 @@ run: build
 	java -jar $(TARGET)
 
 test:
-	mvn test
+	java -jar $(TARGET)
 
 coverage: test 
 	open $(COVERAGE_FILES)

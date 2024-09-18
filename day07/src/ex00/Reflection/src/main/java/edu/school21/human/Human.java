@@ -8,8 +8,8 @@ public class Human {
     private static final int comingOfAge = 18;
 
     private String color;
-    private int age;
     private double price;
+    private int age;
 
     {
         this.color = DEF_COLOR;
