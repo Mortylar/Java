@@ -74,7 +74,9 @@ public class ReflectionService {
     /**/
     private void printCurrentClassInfo() {
         printCurrentClassFields();
-        printCurrentClassMethods(); // TODO
+        printCurrentClassMethods();
+        printDelimiterLine();
+        Object current = createObject(); // TODO
     }
 
     private void printCurrentClassFields() {
@@ -102,6 +104,11 @@ public class ReflectionService {
                               methods[i].getReturnType().getSimpleName(),
                               methods[i].getName(), args);
         }
+    }
+
+    /**/
+    private Object createObject() {
+        System.out.printf("Let’s create an object.\n");
     }
 
     private void printDelimiterLine() {
