@@ -1,5 +1,6 @@
 package edu.school21.app;
 
+import edu.school21.data.DataReader;
 import edu.school21.human.Human;
 import edu.school21.operation.Operation;
 import java.lang.reflect.Field;
@@ -25,6 +26,16 @@ public class ReflectionService {
         printAvailableClasses();
         setCurrentClass();
         printCurrentClassInfo();
+        try {
+            Object current = createObject();
+
+            // System.out.printf("\nObject is:\n%s\n\n", current.toString());
+            updateObject(current);
+
+            // System.out.printf("\nObject is:\n%s\n\n", current.toString());
+        } catch (Exception e) {
+            System.err.printf("Error: %s\n", e.getMessage());
+        }
     }
 
     /**/
@@ -76,14 +87,10 @@ public class ReflectionService {
         printCurrentClassFields();
         printCurrentClassMethods();
         printDelimiterLine();
-        Object current = createObject(); // TODO
     }
 
     private void printCurrentClassFields() {
-        Field[] fields =
-            Arrays.stream(this.currentClass.getDeclaredFields())
-                .filter(field -> !Modifier.isStatic(field.getModifiers()))
-                .toArray(Field[] ::new);
+        Field[] fields = getFields(this.currentClass);
         System.out.printf("Fields:\n");
         for (int i = 0; i < fields.length; ++i) {
             System.out.printf("\t\t%s %s\n\n",
@@ -93,13 +100,10 @@ public class ReflectionService {
     }
 
     private void printCurrentClassMethods() {
-        Method[] methods = this.currentClass.getDeclaredMethods();
+        Method[] methods = getMethods(this.currentClass);
         System.out.printf("Methods:\n");
         for (int i = 0; i < methods.length; ++i) {
-            String args = Arrays.stream(methods[i].getParameterTypes())
-                              .map(type -> type.getSimpleName())
-                              //.mapToObj(String::valueOf)
-                              .collect(Collectors.joining(", "));
+            String args = getMethodParameterString(methods[i], ", ");
             System.out.printf("\t\t%s %s(%s)\n\n",
                               methods[i].getReturnType().getSimpleName(),
                               methods[i].getName(), args);
@@ -107,8 +111,66 @@ public class ReflectionService {
     }
 
     /**/
-    private Object createObject() {
+    private Object createObject() throws Exception {
         System.out.printf("Let’s create an object.\n");
+        Object obj = this.currentClass.getDeclaredConstructor().newInstance();
+        Field[] fields = getFields(this.currentClass);
+        for (int i = 0; i < fields.length; ++i) {
+            setField(fields[i], obj,
+                     String.format("%s:\n\t", fields[i].getName()));
+        }
+        System.out.printf("Object created: %s.\n", obj.toString());
+        printDelimiterLine();
+
+        return obj;
+    }
+
+    /**/
+    private Object updateObject(Object current) throws Exception {
+        System.out.printf("Enter name of the field for changing:\n");
+        Field field = readField(current);
+        while (null == field) {
+            System.out.printf("Invalid field name - try again\n");
+            field = readField(current);
+        }
+        setField(field, current,
+                 String.format("Enter %s value:\n\t",
+                               field.getType().getSimpleName()));
+        System.out.printf("Object updated: %s.\n", current.toString());
+        return current;
+    }
+
+    private Field readField(Object current) {
+        try {
+            return current.getClass().getDeclaredField(readString());
+        } catch (Exception e) {
+            System.out.printf("\n%s\n", e.getMessage());
+            return null;
+        }
+    }
+
+    private void setField(Field field, Object object, String message)
+        throws Exception {
+        DataReader reader = new DataReader();
+        System.out.print(message);
+        field.setAccessible(true);
+        field.set(object, reader.readData(field.getType()));
+    }
+
+    private Field[] getFields(Class current) {
+        return Arrays.stream(current.getDeclaredFields())
+            .filter(field -> !Modifier.isStatic(field.getModifiers()))
+            .toArray(Field[] ::new);
+    }
+
+    private Method[] getMethods(Class current) {
+        return current.getDeclaredMethods();
+    }
+
+    private String getMethodParameterString(Method method, String delimiter) {
+        return Arrays.stream(method.getParameterTypes())
+            .map(type -> type.getSimpleName())
+            .collect(Collectors.joining(delimiter));
     }
 
     private void printDelimiterLine() {

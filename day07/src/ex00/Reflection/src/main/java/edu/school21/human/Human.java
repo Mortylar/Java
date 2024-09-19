@@ -30,7 +30,7 @@ public class Human {
 
     @Override
     public String toString() {
-        return String.format("Human %s, %d years old, price = %f", this.color,
+        return String.format("Human: %s, %d years old, price = %f", this.color,
                              this.age, this.price);
     }
 }
