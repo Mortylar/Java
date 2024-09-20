@@ -24,7 +24,7 @@ public class DataReader {
         }
 
         if (type.equals(long.class)) {
-            // return readLong();
+            return readLong();
         }
         return null;
     }
@@ -38,7 +38,7 @@ public class DataReader {
 
     public int readInt() {
         while (!this.scanner.hasNextInt()) {
-            System.err.printf("\nIncorrect type - try again\n");
+            System.err.printf("\nIncorrect type - try again\n\t");
             this.scanner.next();
         }
         int number = this.scanner.nextInt();
@@ -47,7 +47,7 @@ public class DataReader {
 
     public double readDouble() {
         while (!this.scanner.hasNextDouble()) {
-            System.err.printf("\nIncorrect type - try again\n");
+            System.err.printf("\nIncorrect type - try again\n\t");
             this.scanner.next();
         }
         return this.scanner.nextDouble();
@@ -55,7 +55,7 @@ public class DataReader {
 
     public boolean readBoolean() {
         while (!this.scanner.hasNextBoolean()) {
-            System.err.printf("\nIncorrect type - try again\n");
+            System.err.printf("\nIncorrect type - try again\n\t");
             this.scanner.next();
         }
         return this.scanner.nextBoolean();
@@ -63,7 +63,7 @@ public class DataReader {
 
     public long readLong() {
         while (!this.scanner.hasNextLong()) {
-            System.err.printf("\nIncorrect type - try again\n");
+            System.err.printf("\nIncorrect type - try again\n\t");
             this.scanner.next();
         }
         return this.scanner.nextLong();

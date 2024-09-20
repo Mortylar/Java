@@ -28,11 +28,8 @@ public class ReflectionService {
         printCurrentClassInfo();
         try {
             Object current = createObject();
-
-            // System.out.printf("\nObject is:\n%s\n\n", current.toString());
             updateObject(current);
-
-            // System.out.printf("\nObject is:\n%s\n\n", current.toString());
+            callMethod(current);
         } catch (Exception e) {
             System.err.printf("Error: %s\n", e.getMessage());
         }
@@ -40,7 +37,7 @@ public class ReflectionService {
 
     /**/
     private void printAvailableClasses() {
-        System.out.printf("Classes:\n");
+        System.out.printf("\nClasses:\n");
         for (int i = 0; i < this.availableClasses.length; ++i) {
             System.out.printf("\t- %s\n",
                               this.availableClasses[i].getSimpleName());
@@ -51,13 +48,13 @@ public class ReflectionService {
     /**/
     private void setCurrentClass() {
         while (!chooseClass()) {
-            System.out.printf("Invalid class name, try again.\n");
+            System.out.printf("Invalid class name, try again.\n\t");
         }
         printDelimiterLine();
     }
 
     private boolean chooseClass() {
-        System.out.printf("Enter class name:\n");
+        System.out.printf("Enter class name:\n\t");
         String className = readString();
         for (int i = 0; i < this.availableClasses.length; ++i) {
             if (className.equals(this.availableClasses[i].getSimpleName())) {
@@ -127,16 +124,17 @@ public class ReflectionService {
 
     /**/
     private Object updateObject(Object current) throws Exception {
-        System.out.printf("Enter name of the field for changing:\n");
+        System.out.printf("Enter name of the field for changing:\n\t");
         Field field = readField(current);
         while (null == field) {
-            System.out.printf("Invalid field name - try again\n");
+            System.out.printf("Invalid field name - try again\n\t");
             field = readField(current);
         }
         setField(field, current,
                  String.format("Enter %s value:\n\t",
                                field.getType().getSimpleName()));
         System.out.printf("Object updated: %s.\n", current.toString());
+        printDelimiterLine();
         return current;
     }
 
@@ -144,7 +142,7 @@ public class ReflectionService {
         try {
             return current.getClass().getDeclaredField(readString());
         } catch (Exception e) {
-            System.out.printf("\n%s\n", e.getMessage());
+            System.out.printf("\nError: %s\n", e.getMessage());
             return null;
         }
     }
@@ -155,6 +153,73 @@ public class ReflectionService {
         System.out.print(message);
         field.setAccessible(true);
         field.set(object, reader.readData(field.getType()));
+    }
+
+    /**/
+    private void callMethod(Object current) throws Exception {
+        System.out.printf("Enter name of the method for call:\n\t");
+        Method method = readMethod(current);
+        while (null == method) {
+            System.out.printf("Invalid method name - try again.\n\t");
+            method = readMethod(current);
+        }
+        Object[] args = readMethodArgs(current, method);
+        method.setAccessible(true);
+        Object ans = method.invoke(current, args);
+        if (null != ans) {
+            System.out.printf("Method returned:\n\t%s\n", ans);
+        }
+        printDelimiterLine();
+    }
+
+    private Object[] readMethodArgs(Object current, Method method) {
+        Class[] args = method.getParameterTypes();
+        Object[] result = new Object[args.length];
+        for (int i = 0; i < args.length; ++i) {
+            System.out.printf("Enter %s value:\n\t", args[i].getSimpleName());
+            result[i] = new DataReader().readData(args[i]);
+        }
+        return result;
+    }
+
+    private Method readMethod(Object current) {
+        try {
+            String name = readString();
+            name = name.replaceAll(" ", "");
+            String[] nameParts = name.split("[(,)]");
+            name = nameParts[0];
+            Class[] args = extractArgs(nameParts);
+            return current.getClass().getDeclaredMethod(name, args);
+        } catch (Exception e) {
+            System.out.printf("Error: %s\n", e.getMessage());
+            return null;
+        }
+    }
+
+    private Class[] extractArgs(String[] signature) throws Exception {
+        if (signature.length <= 1) {
+            return null;
+        }
+        Class[] types = new Class[signature.length - 1];
+        for (int i = 0; i < types.length; ++i) {
+            types[i] = convertStringToClass(signature[i + 1]);
+        }
+        return types;
+    }
+
+    private Class convertStringToClass(String typeName) {
+        if (typeName.equals("int")) {
+            return int.class;
+        } else if (typeName.equals("double")) {
+            return double.class;
+        } else if (typeName.equals("boolean")) {
+            return boolean.class;
+        } else if (typeName.equals("long")) {
+            return long.class;
+        } else if (typeName.equals("String")) {
+            return String.class;
+        }
+        return null;
     }
 
     private Field[] getFields(Class current) {

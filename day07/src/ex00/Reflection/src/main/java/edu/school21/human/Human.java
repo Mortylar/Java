@@ -33,4 +33,6 @@ public class Human {
         return String.format("Human: %s, %d years old, price = %f", this.color,
                              this.age, this.price);
     }
+
+    public void printHuman() { System.out.printf("%s\n", toString()); }
 }
