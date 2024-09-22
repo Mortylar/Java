@@ -6,16 +6,9 @@ TARGET=target/Reflection.jar
 CLANG_CONFIG=../.clang-format
 
 build:
-	mvn clean package
+	mvn clean compile
  
 run: build
-	java -jar $(TARGET)
-
-test:
-	java -jar $(TARGET)
-
-coverage: test 
-	open $(COVERAGE_FILES)
 
 
 style:
@@ -40,8 +33,3 @@ clean:
 mvn_check: #do not use
 	mvn checkstyle:check
 
-a:
-	java -cp ~/Downloads/hsqldb-2.7.3.jar org.hsqldb.util.DatabaseManagerSwing
-
-b:
-	java -cp ~/Downloads/hsqldb-2.7.3.jar org.hsqldb.server.Server --database.0 file:mydb --dbname.0 xdg
