@@ -4,14 +4,19 @@ import edu.school21.annotations.OrmColumn;
 import edu.school21.annotations.OrmColumnId;
 import edu.school21.annotations.OrmEntity;
 import edu.school21.exceptions.CreateTableException;
+import edu.school21.exceptions.ObjectNotFoundException;
+import edu.school21.exceptions.ObjectNotSavedException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedType;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import javax.sql.DataSource;
 
@@ -26,13 +31,159 @@ public class OrmManager implements IOrmManager {
     }
 
     @Override
-    public void save(Object object) {}
+    public void save(Object object) {
+        String query = generateSaveQuery(object);
+        this.executeQuery(query);
+    }
 
-    public void update(Object object) {}
+    private void executeQuery(String query) {
+        try (Connection connection = dataSource.getConnection()) {
+            Statement statement = connection.createStatement();
+            System.out.printf("\nExecute:\n%s\n", query);
+            statement.executeUpdate(query);
+        } catch (SQLException e) {
+            throw new ObjectNotSavedException(e.getMessage());
+        }
+    }
+
+    private String generateSaveQuery(Object object) {
+        Class oClass = object.getClass();
+        String headerQuery = new String();
+        String insertQuery = new String("VALUES ( ");
+        if (oClass.isAnnotationPresent(OrmEntity.class)) {
+            headerQuery += String.format(
+                "INSERT INTO %s( ",
+                ((OrmEntity)oClass.getAnnotation(OrmEntity.class)).table());
+            Field fields[] = oClass.getDeclaredFields();
+            for (int i = 0; i < fields.length; ++i) {
+                OrmColumn annotation = fields[i].getAnnotation(OrmColumn.class);
+                if (null != annotation) {
+                    headerQuery += String.format("%s", annotation.name());
+                    insertQuery += getInsertValue(fields[i], object);
+                    if (i != fields.length - 1) {
+                        headerQuery += ", ";
+                        insertQuery += ", ";
+                    } else {
+                        headerQuery += ")\n";
+                        insertQuery += ");";
+                    }
+                }
+            }
+            return headerQuery + insertQuery;
+        }
+        throw new ObjectNotSavedException(String.format(
+            "Object %s does not supported.", object.getClass().getName()));
+    }
+
+    private String getInsertValue(Field field, Object current) {
+        try {
+            field.setAccessible(true);
+            Object object = field.get(current);
+            if (null == object) {
+                return "NULL";
+            }
+            if (object.getClass().equals(String.class)) {
+                return String.format("'%s'", object.toString());
+            }
+            return object.toString();
+        } catch (Exception e) {
+            throw new ObjectNotSavedException(e.getMessage());
+        }
+    }
+
+    @Override
+    public void update(Object object) {
+        String query = generateUpdateQuery(object);
+        this.executeQuery(query);
+    }
+
+    private String generateUpdateQuery(Object object) {
+        Class oClass = object.getClass();
+        String headerQuery = new String("UPDATE ");
+        String setQuery = new String("SET ");
+        String bottomQuery = new String("WHERE id = ");
+        if (oClass.isAnnotationPresent(OrmEntity.class)) {
+            headerQuery += String.format(
+                "%s\n",
+                ((OrmEntity)oClass.getAnnotation(OrmEntity.class)).table());
+            Field fields[] = oClass.getDeclaredFields();
+            for (int i = 0; i < fields.length; ++i) {
+                OrmColumn annotation = fields[i].getAnnotation(OrmColumn.class);
+                if (null != annotation) {
+                    setQuery += String.format("%s = ", annotation.name());
+                    setQuery += getInsertValue(fields[i], object);
+                    if (i != fields.length - 1) {
+                        setQuery += ", ";
+                    } else {
+                        setQuery += "\n";
+                    }
+                }
+                OrmColumnId idAnnotation =
+                    fields[i].getAnnotation(OrmColumnId.class);
+                if (idAnnotation != null) {
+                    bottomQuery += getInsertValue(fields[i], object);
+                }
+            }
+            return headerQuery + setQuery + bottomQuery;
+        }
+        throw new ObjectNotSavedException(String.format(
+            "Object %s does not supported.", object.getClass().getName()));
+    }
 
     @Override
     public <T> T findById(Long id, Class<T> aClass) {
-        return null;
+        if (!aClass.isAnnotationPresent(OrmEntity.class)) {
+            String message =
+                String.format("Class %s doesn't exists %s annotation.",
+                              aClass.getName(), OrmEntity.class.getName());
+            throw new ObjectNotFoundException(message);
+        }
+
+        ResultSet data = getResultLine(generateSelectQuery(
+            id, ((OrmEntity)aClass.getAnnotation(OrmEntity.class)).table()));
+        try {
+            data.next();
+
+            Field[] fields = aClass.getDeclaredFields();
+            ArrayList<Object> argsObj = new ArrayList();
+            for (int i = 0; i < fields.length; ++i) {
+                if (fields[i].isAnnotationPresent(OrmColumnId.class)) {
+                    argsObj.add(id);
+                } else {
+                    OrmColumn annotation =
+                        fields[i].getAnnotation(OrmColumn.class);
+                    if (null == annotation) {
+                        argsObj.add(null);
+                    } else {
+                        argsObj.add(data.getObject(annotation.name()));
+                    }
+                }
+            }
+            Constructor constr =
+                aClass.getDeclaredConstructor(Arrays.stream(fields)
+                                                  .map(f -> f.getType())
+                                                  .toArray(Class[] ::new));
+            constr.setAccessible(true);
+            Object target = constr.newInstance(argsObj.toArray(new Object[0]));
+            return (T)target;
+        } catch (Exception e) {
+            throw new ObjectNotFoundException(e.getMessage());
+        }
+    }
+
+    private String generateSelectQuery(Long id, String tableName) {
+        return String.format("SELECT * FROM %s WHERE id = %d", tableName, id);
+    }
+
+    private ResultSet getResultLine(String query) {
+        try {
+            Connection connection = this.dataSource.getConnection();
+            Statement statement = connection.createStatement();
+            System.out.printf("\nSELECT:\n%s\n", query);
+            return statement.executeQuery(query);
+        } catch (SQLException e) {
+            throw new ObjectNotFoundException(e.getMessage());
+        }
     }
 
     public static class OrmManagerBuilder {
@@ -146,9 +297,6 @@ public class OrmManager implements IOrmManager {
                     query += ",\n";
                 }
             }
-
-            System.out.printf("\nann = %s\n", query);
-
             return query;
         }
 

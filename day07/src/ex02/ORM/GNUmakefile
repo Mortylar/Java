@@ -2,7 +2,7 @@
 SOURCES=$(shell find . -name "*.java")
 CLASSES=$(shell find . -name "*.class")
 COVERAGE_FILES=$(shell find . -name "index.html")
-TARGET=target/Reflection.jar
+TARGET=target/ORM.jar
 CLANG_CONFIG=../.clang-format
 
 build:
@@ -40,8 +40,3 @@ clean:
 mvn_check: #do not use
 	mvn checkstyle:check
 
-a:
-	java -cp ~/Downloads/hsqldb-2.7.3.jar org.hsqldb.util.DatabaseManagerSwing
-
-b:
-	java -cp ~/Downloads/hsqldb-2.7.3.jar org.hsqldb.server.Server --database.0 file:mydb --dbname.0 xdg

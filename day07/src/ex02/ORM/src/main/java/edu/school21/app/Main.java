@@ -19,5 +19,17 @@ public class Main {
                                  .addAnnotationClass(Main.class)
                                  .setRemovingTables()
                                  .build();
+
+        User user = new User(1L, "Vladimir", "Putin", 1234);
+        manager.save(user);
+        user.setAge(null);
+        manager.update(user);
+        System.out.printf("\nnew user = %s\n",
+                          manager.findById(1L, User.class));
+        try {
+            manager.findById(2L, User.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
