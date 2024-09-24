@@ -32,6 +32,9 @@ public class OrmManager implements IOrmManager {
 
     @Override
     public void save(Object object) {
+        if (null == object) {
+            throw new ObjectNotSavedException("Entity is null.");
+        }
         String query = generateSaveQuery(object);
         this.executeQuery(query);
     }
@@ -48,11 +51,12 @@ public class OrmManager implements IOrmManager {
 
     private String generateSaveQuery(Object object) {
         Class oClass = object.getClass();
+        final String delimiter = ", ";
         String headerQuery = new String();
-        String insertQuery = new String("VALUES ( ");
+        String insertQuery = new String("VALUES (");
         if (oClass.isAnnotationPresent(OrmEntity.class)) {
             headerQuery += String.format(
-                "INSERT INTO %s( ",
+                "INSERT INTO %s(",
                 ((OrmEntity)oClass.getAnnotation(OrmEntity.class)).table());
             Field fields[] = oClass.getDeclaredFields();
             for (int i = 0; i < fields.length; ++i) {
@@ -60,15 +64,16 @@ public class OrmManager implements IOrmManager {
                 if (null != annotation) {
                     headerQuery += String.format("%s", annotation.name());
                     insertQuery += getInsertValue(fields[i], object);
-                    if (i != fields.length - 1) {
-                        headerQuery += ", ";
-                        insertQuery += ", ";
-                    } else {
-                        headerQuery += ")\n";
-                        insertQuery += ");";
-                    }
+                    headerQuery += delimiter;
+                    insertQuery += delimiter;
                 }
             }
+            headerQuery = headerQuery.substring(0, headerQuery.length() -
+                                                       delimiter.length()) +
+                          ")\n";
+            insertQuery = insertQuery.substring(0, insertQuery.length() -
+                                                       delimiter.length()) +
+                          ");";
             return headerQuery + insertQuery;
         }
         throw new ObjectNotSavedException(String.format(
@@ -93,12 +98,16 @@ public class OrmManager implements IOrmManager {
 
     @Override
     public void update(Object object) {
+        if (null == object) {
+            throw new ObjectNotSavedException("Entity is null.");
+        }
         String query = generateUpdateQuery(object);
         this.executeQuery(query);
     }
 
     private String generateUpdateQuery(Object object) {
         Class oClass = object.getClass();
+        String delimiter = ", ";
         String headerQuery = new String("UPDATE ");
         String setQuery = new String("SET ");
         String bottomQuery = new String("WHERE id = ");
@@ -112,11 +121,7 @@ public class OrmManager implements IOrmManager {
                 if (null != annotation) {
                     setQuery += String.format("%s = ", annotation.name());
                     setQuery += getInsertValue(fields[i], object);
-                    if (i != fields.length - 1) {
-                        setQuery += ", ";
-                    } else {
-                        setQuery += "\n";
-                    }
+                    setQuery += ", ";
                 }
                 OrmColumnId idAnnotation =
                     fields[i].getAnnotation(OrmColumnId.class);
@@ -124,6 +129,9 @@ public class OrmManager implements IOrmManager {
                     bottomQuery += getInsertValue(fields[i], object);
                 }
             }
+            setQuery =
+                setQuery.substring(0, setQuery.length() - delimiter.length()) +
+                " ";
             return headerQuery + setQuery + bottomQuery;
         }
         throw new ObjectNotSavedException(String.format(
@@ -144,7 +152,12 @@ public class OrmManager implements IOrmManager {
         try {
             data.next();
 
-            Field[] fields = aClass.getDeclaredFields();
+            Field[] fields =
+                Arrays.stream(aClass.getDeclaredFields())
+                    .filter(f
+                            -> ((null != f.getAnnotation(OrmColumn.class)) ||
+                                (null != f.getAnnotation(OrmColumnId.class))))
+                    .toArray(Field[] ::new);
             ArrayList<Object> argsObj = new ArrayList();
             for (int i = 0; i < fields.length; ++i) {
                 if (fields[i].isAnnotationPresent(OrmColumnId.class)) {
@@ -267,6 +280,7 @@ public class OrmManager implements IOrmManager {
 
         private String getCreateTableQuery(Class current) {
             String query = new String();
+            String delimiter = ",\n";
             OrmEntity entityAnnotation =
                 (OrmEntity)current.getAnnotation(OrmEntity.class);
             if (entityAnnotation == null) {
@@ -283,6 +297,7 @@ public class OrmManager implements IOrmManager {
                     fields[i].getAnnotation(OrmColumnId.class);
                 if (null != idAnnotation) {
                     query += String.format("id SERIAL PRIMARY KEY NOT null");
+                    query += delimiter;
                 }
                 OrmColumn colAnnotation =
                     fields[i].getAnnotation(OrmColumn.class);
@@ -290,14 +305,12 @@ public class OrmManager implements IOrmManager {
                     query += String.format(
                         "%s %s", colAnnotation.name(),
                         getSqlType(fields[i].getAnnotatedType().getType()));
-                }
-                if (i == (fields.length - 1)) {
-                    query += ");";
-                } else {
-                    query += ",\n";
+                    query += delimiter;
                 }
             }
-            return query;
+
+            return (query.substring(0, query.length() - delimiter.length()) +
+                    "\n);");
         }
 
         private String getSqlType(Type type) {

@@ -5,6 +5,7 @@ import com.zaxxer.hikari.HikariDataSource;
 import edu.school21.manager.OrmManager;
 import edu.school21.models.User;
 
+@Generated
 public class Main {
 
     public static void main(String[] args) {
@@ -26,6 +27,7 @@ public class Main {
         manager.update(user);
         System.out.printf("\nnew user = %s\n",
                           manager.findById(1L, User.class));
+        manager.findById(null, User.class);
         try {
             manager.findById(2L, User.class);
         } catch (Exception e) {

@@ -12,7 +12,7 @@ run: build
 	java -jar $(TARGET)
 
 test:
-	java -jar $(TARGET)
+	mvn test
 
 coverage: test 
 	open $(COVERAGE_FILES)
