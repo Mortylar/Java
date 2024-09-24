@@ -27,11 +27,15 @@ public class Main {
         manager.update(user);
         System.out.printf("\nnew user = %s\n",
                           manager.findById(1L, User.class));
-        manager.findById(null, User.class);
+        try {
+            manager.findById(null, User.class);
+        } catch (Exception e) {
+            System.out.printf("Catch exception:\n\t%s", e.getMessage());
+        }
         try {
             manager.findById(2L, User.class);
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.printf("Catch exception:\n\t%s", e.getMessage());
         }
     }
 }
