@@ -165,11 +165,7 @@ public class OrmManager implements IOrmManager {
                 } else {
                     OrmColumn annotation =
                         fields[i].getAnnotation(OrmColumn.class);
-                    if (null == annotation) {
-                        argsObj.add(null);
-                    } else {
-                        argsObj.add(data.getObject(annotation.name()));
-                    }
+                    argsObj.add(data.getObject(annotation.name()));
                 }
             }
             Constructor constr =

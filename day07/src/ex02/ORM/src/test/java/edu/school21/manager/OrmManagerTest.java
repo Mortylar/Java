@@ -13,7 +13,12 @@ import edu.school21.exceptions.CreateTableException;
 import edu.school21.exceptions.ObjectNotFoundException;
 import edu.school21.exceptions.ObjectNotSavedException;
 import edu.school21.manager.OrmManager;
+import edu.school21.models.InvalidUserAnn;
+import edu.school21.models.InvalidUserTable;
+import edu.school21.models.InvalidUserValue;
+import edu.school21.models.Product;
 import edu.school21.models.User;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -38,6 +43,7 @@ public class OrmManagerTest {
         manager = new OrmManager.OrmManagerBuilder()
                       .setDataSource(new HikariDataSource(config))
                       .addAnnotationClass(User.class)
+                      .addAnnotationClass(Product.class)
                       .addAnnotationClass(OrmManagerTest.class)
                       .setRemovingTables()
                       .build();
@@ -72,12 +78,6 @@ public class OrmManagerTest {
         assertThrows(ObjectNotSavedException.class, () -> manager.save(1));
     }
 
-    /*    @Test
-        public void saveInfectiveUserTest() {
-            assertThrows(ObjectNotSavedException.class,
-                    () -> manager.save(infectiveUser));
-        }*/
-
     @Test
     public void updateCorrectTest() {
         assertDoesNotThrow(() -> { manager.update(updatedCorrectUser); });
@@ -103,5 +103,59 @@ public class OrmManagerTest {
     public void findByIdInvalidTypeTest() {
         assertThrows(ObjectNotFoundException.class,
                      () -> manager.findById(correctUser.getId(), String.class));
+    }
+
+    @Test
+    @AfterAll
+    public static void InvalidUserValueTest() {
+        assertThrows(CreateTableException.class, () -> {
+            HikariConfig config = new HikariConfig();
+            config.setJdbcUrl("jdbc:postgresql://localhost:5432/postgres");
+            config.setUsername("postgres");
+
+            OrmManager secondManager =
+                new OrmManager.OrmManagerBuilder()
+                    .setDataSource(new HikariDataSource(config))
+                    .addAnnotationClass(InvalidUserValue.class)
+                    .setRemovingTables()
+                    .build();
+        });
+    }
+
+    @Test
+    @AfterAll
+    public static void InvalidUserTableTest() {
+        assertThrows(CreateTableException.class, () -> {
+            HikariConfig config = new HikariConfig();
+            config.setJdbcUrl("jdbc:postgresql://localhost:5432/postgres");
+            config.setUsername("postgres");
+
+            OrmManager secondManager =
+                new OrmManager.OrmManagerBuilder()
+                    .setDataSource(new HikariDataSource(config))
+                    .addAnnotationClass(InvalidUserTable.class)
+                    .setRemovingTables()
+                    .build();
+        });
+    }
+
+    @Test
+    @AfterAll
+    public static void InvalidUserAnnTest() {
+        assertThrows(ObjectNotFoundException.class, () -> {
+            HikariConfig config = new HikariConfig();
+            config.setJdbcUrl("jdbc:postgresql://localhost:5432/postgres");
+            config.setUsername("postgres");
+
+            OrmManager secondManager =
+                new OrmManager.OrmManagerBuilder()
+                    .setDataSource(new HikariDataSource(config))
+                    .addAnnotationClass(InvalidUserAnn.class)
+                    .build();
+            InvalidUserAnn user = new InvalidUserAnn();
+            user.setId(1L);
+            secondManager.save(user);
+            secondManager.findById(user.getId(), InvalidUserAnn.class);
+        });
     }
 }
