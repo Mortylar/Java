@@ -6,13 +6,13 @@ TARGET=target/Reflection.jar
 CLANG_CONFIG=../.clang-format
 
 build:
-	mvn clean package
+	mvn clean compile
  
 run: build
-	java -jar $(TARGET)
+	mvn exec:java -Dexec.mainClass="edu.school21.app.Main"
 
 test:
-	java -jar $(TARGET)
+	mvn clean test
 
 coverage: test 
 	open $(COVERAGE_FILES)

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans  xmlns="http://www.springframework.org/schema/beans"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd">
+  
+
+  <bean id="PreProcessorToUpper" class="edu.school21.preprocessor.PreProcessorToUpperImpl"/>
+  <bean id="PreProcessorToLower" class="edu.school21.preprocessor.PreProcessorToLowerImpl"/>
+
+
+  <bean id="RendererStandardToUpper" class="edu.school21.renderer.RendererStandardImpl">
+    <constructor-arg name="PreProcessor" ref="PreProcessorToUpper"/>
+  </bean>
+
+  <bean id="RendererStandardToLower" class="edu.school21.renderer.RendererStandardImpl">
+    <constructor-arg name="PreProcessor" ref="PreProcessorToLower"/>
+  </bean>
+
+  <bean id="RendererErrToUpper" class="edu.school21.renderer.RendererErrImpl">
+    <constructor-arg name="PreProcessor" ref="PreProcessorToUpper"/>
+  </bean>
+
+  <bean id="RendererErrToLower" class="edu.school21.renderer.RendererErrImpl">
+    <constructor-arg name="PreProcessor" ref="PreProcessorToLower"/>
+  </bean>
+
+
+  <bean id="PrinterWithPrefixStandardToUpper" class="edu.school21.printer.PrinterWithPrefixImpl">
+    <constructor-arg name="Renderer" ref="RendererStandardToUpper"/>
+    <property name="prefix" value="Prefix"/>
+  </bean>
+
+  <bean id="PrinterWithPrefixStandardToLower" class="edu.school21.printer.PrinterWithPrefixImpl">
+    <constructor-arg name="Renderer" ref="RendererStandardToLower"/>
+    <property name="prefix" value="Prefix"/>
+  </bean>
+
+  <bean id="PrinterWithPrefixErrToUpper" class="edu.school21.printer.PrinterWithPrefixImpl">
+    <constructor-arg name="Renderer" ref="RendererErrToUpper"/> 
+    <property name="prefix" value="Prefix"/>
+  </bean>
+
+  <bean id="PrinterWithPrefixErrToLower" class="edu.school21.printer.PrinterWithPrefixImpl">
+    <constructor-arg name="Renderer" ref="RendererErrToLower"/>
+    <property name="prefix" value="Prefix"/>
+  </bean>
+
+
+  <bean id="PrinterWithDateTimeStandardToUpper" class="edu.school21.printer.PrinterWithDateTimeImpl">
+    <constructor-arg name="Renderer" ref="RendererStandardToUpper"/>
+  </bean>
+
+  <bean id="PrinterWithDateTimeStandardToLower" class="edu.school21.printer.PrinterWithDateTimeImpl">
+    <constructor-arg name="Renderer" ref="RendererStandardToLower"/>
+  </bean>
+
+  <bean id="PrinterWithDateTimeErrToUpper" class="edu.school21.printer.PrinterWithDateTimeImpl">
+    <constructor-arg name="Renderer" ref="RendererErrToUpper"/>
+  </bean>
+
+  <bean id="PrinterWithDateTimeErrToLower" class="edu.school21.printer.PrinterWithDateTimeImpl">
+    <constructor-arg name="Renderer" ref="RendererErrToLower"/>
+  </bean>
+
+
+
+
+
+
+</beans>

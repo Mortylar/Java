@@ -4,7 +4,7 @@ import edu.school21.renderer.Renderer;
 
 public class PrinterWithPrefixImpl implements Printer {
 
-    private static final String DEFAULT_PREFIX = "Hey, honourable, ";
+    private static final String DEFAULT_PREFIX = "Hey, honourable,";
 
     private Renderer renderer;
     private String prefix;
@@ -20,6 +20,6 @@ public class PrinterWithPrefixImpl implements Printer {
 
     @Override
     public void print(String text) {
-        renderer.render(prefix + text);
+        renderer.render(prefix + " " + text);
     }
 }
