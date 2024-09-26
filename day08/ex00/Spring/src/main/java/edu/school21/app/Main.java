@@ -4,6 +4,7 @@ import edu.school21.printer.Printer;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+@Generated
 public class Main {
 
     public static void main(String[] args) {
