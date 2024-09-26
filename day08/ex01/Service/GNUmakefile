@@ -8,7 +8,7 @@ build:
 	mvn clean compile
  
 run: build
-	mvn exec:java -Dexec.mainClass="edu.school21.app.Main"
+	mvn exec:java -Dexec.mainClass="school21.spring.service.application.Main"
 
 test:
 	mvn clean test
