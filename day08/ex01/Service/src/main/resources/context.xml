@@ -18,11 +18,33 @@
     <property name="driverClassName" value="${db.driver.name}"/>
   </bean>
 
-  <bean id="UsersRepositoryJdbc" class="school21.spring.service.repositories.UsersRepositoryJdbcImpl">
+  <bean id="DriverManagerDataSource"
+        class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+    <property name="url" value="${db.url}"/>
+    <property name="username" value="${db.user}"/>
+    <property name="password" value="${db.password}"/>
+    <property name="driverClassName" value="${db.driver.name}"/>
+  </bean>
+
+  <bean id="SpringUsersRepositoryJdbc"
+        class="school21.spring.service.repositories.UsersRepositoryJdbcImpl">
+    <constructor-arg name="DataSource" ref="DriverManagerDataSource"/>
+  </bean>
+
+  <bean id="HikariUsersRepositoryJdbc"
+        class="school21.spring.service.repositories.UsersRepositoryJdbcImpl">
     <constructor-arg name="DataSource" ref="HikariDataSource"/>
   </bean>
 
+  <bean id="HikariUsersRepositoryJdbcTemplate"
+        class="school21.spring.service.repositories.UsersRepositoryJdbcTemplateImpl">
+    <constructor-arg name="DataSource" ref="HikariDataSource"/>
+  </bean>
 
+  <bean id="SpringUsersRepositoryJdbcTemplate"
+        class="school21.spring.service.repositories.UsersRepositoryJdbcTemplateImpl">
+    <constructor-arg name="DataSource" ref="DriverManagerDataSource"/>
+  </bean>
 
 </beans>
 

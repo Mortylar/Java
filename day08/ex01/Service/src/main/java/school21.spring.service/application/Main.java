@@ -10,12 +10,21 @@ import school21.spring.service.repositories.UsersRepository;
 
 public class Main {
 
+    private static final String[] BEAN_NAMES = {
+        "SpringUsersRepositoryJdbc", "HikariUsersRepositoryJdbc",
+        "SpringUsersRepositoryJdbcTemplate",
+        "HikariUsersRepositoryJdbcTemplate"};
+
     public static void main(String[] args) {
         AbstractApplicationContext context =
             new ClassPathXmlApplicationContext("context.xml");
-        UsersRepository usersRepository =
-            context.getBean("UsersRepositoryJdbc", UsersRepository.class);
-        printList(usersRepository.findAll());
+        UsersRepository usersRepository;
+        for (int i = 0; i < BEAN_NAMES.length; ++i) {
+            String name = BEAN_NAMES[i];
+            usersRepository = context.getBean(name, UsersRepository.class);
+            System.out.printf("\nResult for bean %s:\n", name);
+            printList(usersRepository.findAll());
+        }
         context.close();
     }
 
