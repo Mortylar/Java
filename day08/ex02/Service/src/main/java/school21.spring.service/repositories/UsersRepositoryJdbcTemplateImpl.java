@@ -5,6 +5,7 @@ import java.util.Optional;
 import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Scope;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.EmptySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -12,6 +13,7 @@ import org.springframework.jdbc.core.namedparam.SimplePropertySqlParameterSource
 import org.springframework.stereotype.Component;
 import school21.spring.service.models.User;
 
+@Scope("singleton")
 @Component("UsersRepositoryTemplate")
 public class UsersRepositoryJdbcTemplateImpl implements UsersRepository {
 

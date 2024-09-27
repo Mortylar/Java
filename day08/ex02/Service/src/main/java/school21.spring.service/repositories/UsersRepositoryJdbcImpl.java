@@ -10,9 +10,11 @@ import java.util.Optional;
 import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import school21.spring.service.models.User;
 
+@Scope("singleton")
 @Component("UsersRepository")
 public class UsersRepositoryJdbcImpl implements UsersRepository {
 

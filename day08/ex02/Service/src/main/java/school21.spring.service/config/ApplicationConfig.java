@@ -1,4 +1,4 @@
-package school21.spring.service.beans;
+package school21.spring.service.config;
 
 import com.zaxxer.hikari.HikariDataSource;
 import javax.sql.DataSource;

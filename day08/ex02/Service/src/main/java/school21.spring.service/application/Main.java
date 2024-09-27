@@ -1,12 +1,13 @@
 package school21.spring.service.application;
 
+import java.io.Closeable;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.support.AbstractApplicationContext;
-import school21.spring.service.beans.ApplicationConfig;
+import school21.spring.service.config.ApplicationConfig;
 import school21.spring.service.models.User;
 import school21.spring.service.repositories.UsersRepository;
 import school21.spring.service.services.UsersService;
@@ -26,10 +27,8 @@ public class Main {
         usersRepository =
             (UsersRepository)context.getBean("UsersRepositoryTemplate");
         printList(usersRepository.findAll());
-        context.registerShutdownHook();
         context.close();
-        System.out.printf("Closed\n");
-        context.close();
+        // System.exit(0);
     }
 
     private static void printList(List<User> userList) {
