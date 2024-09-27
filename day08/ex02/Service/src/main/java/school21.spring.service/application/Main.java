@@ -23,7 +23,8 @@ public class Main {
             System.out.printf(e.getMessage());
         }
         UsersRepository usersRepository;
-        usersRepository = context.getBean(UsersRepository.class);
+        usersRepository =
+            (UsersRepository)context.getBean("UsersRepositoryTemplate");
         printList(usersRepository.findAll());
         context.registerShutdownHook();
         context.close();

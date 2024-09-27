@@ -3,12 +3,16 @@ package school21.spring.service.repositories;
 import java.util.List;
 import java.util.Optional;
 import javax.sql.DataSource;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.EmptySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SimplePropertySqlParameterSource;
+import org.springframework.stereotype.Component;
 import school21.spring.service.models.User;
 
+@Component("UsersRepositoryTemplate")
 public class UsersRepositoryJdbcTemplateImpl implements UsersRepository {
 
     private final int ID_INDEX = 1;
@@ -21,7 +25,9 @@ public class UsersRepositoryJdbcTemplateImpl implements UsersRepository {
 
     private NamedParameterJdbcTemplate template;
 
-    public UsersRepositoryJdbcTemplateImpl(DataSource dataSource) {
+    @Autowired
+    public UsersRepositoryJdbcTemplateImpl(@Qualifier("DriverManagerDataSource")
+                                           DataSource dataSource) {
         this.template = new NamedParameterJdbcTemplate(dataSource);
     }
 

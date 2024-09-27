@@ -17,8 +17,8 @@ public class UsersServiceImpl implements UsersService {
     private UsersRepository repository;
 
     @Autowired
-    //@Qualifier
-    public UsersServiceImpl(UsersRepository repository) {
+    public UsersServiceImpl(@Qualifier("UsersRepository")
+                            UsersRepository repository) {
         this.repository = repository;
     }
 

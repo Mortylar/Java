@@ -20,8 +20,8 @@ public class UsersRepositoryJdbcImpl implements UsersRepository {
     private Connection connection;
 
     @Autowired
-    @Qualifier(value = "HikariDataSource")
-    public UsersRepositoryJdbcImpl(DataSource dataSource) {
+    public UsersRepositoryJdbcImpl(@Qualifier("HikariDataSource")
+                                   DataSource dataSource) {
         this.ds = dataSource;
     }
 
