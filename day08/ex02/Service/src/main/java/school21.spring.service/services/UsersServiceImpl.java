@@ -3,15 +3,21 @@ package school21.spring.service.services;
 import java.util.Optional;
 import java.util.Random;
 import java.util.stream.Collectors;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
 import school21.spring.service.models.User;
 import school21.spring.service.repositories.UsersRepository;
 
+@Component("UsersService")
 public class UsersServiceImpl implements UsersService {
 
     private static final Long DEFAULT_ID = 1L;
 
     private UsersRepository repository;
 
+    @Autowired
+    //@Qualifier
     public UsersServiceImpl(UsersRepository repository) {
         this.repository = repository;
     }
@@ -34,6 +40,7 @@ public class UsersServiceImpl implements UsersService {
 
         return (random.ints(downBorder, upBorder + 1)
                     .filter(i -> isLetter(i))
+                    .limit(length)
                     .collect(StringBuilder::new, StringBuilder::appendCodePoint,
                              StringBuilder::append)
                     .toString());

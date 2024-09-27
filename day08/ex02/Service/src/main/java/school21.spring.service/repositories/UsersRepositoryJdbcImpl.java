@@ -8,13 +8,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import javax.sql.DataSource;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
 import school21.spring.service.models.User;
 
+@Component("UsersRepository")
 public class UsersRepositoryJdbcImpl implements UsersRepository {
 
     private DataSource ds;
     private Connection connection;
 
+    @Autowired
+    @Qualifier(value = "HikariDataSource")
     public UsersRepositoryJdbcImpl(DataSource dataSource) {
         this.ds = dataSource;
     }
@@ -25,7 +31,9 @@ public class UsersRepositoryJdbcImpl implements UsersRepository {
         String query = String.format("SELECT * FROM Users WHERE id = %d;", id);
         try {
             ResultSet resultLine = getResultSet(query);
-            resultLine.next();
+            if (!resultLine.next()) {
+                return Optional.ofNullable(user);
+            }
             user = extractUser(resultLine);
         } catch (SQLException e) {
             throw new RuntimeException(e.getMessage());
@@ -38,10 +46,12 @@ public class UsersRepositoryJdbcImpl implements UsersRepository {
     public Optional<User> findByEmail(String email) {
         User user = null;
         String query =
-            String.format("SELECT * FROM Users WHERE email = %s;", email);
+            String.format("SELECT * FROM Users WHERE email = '%s';", email);
         try {
             ResultSet resultLine = getResultSet(query);
-            resultLine.next();
+            if (!resultLine.next()) {
+                return Optional.ofNullable(user);
+            }
             user = extractUser(resultLine);
         } catch (SQLException e) {
             throw new RuntimeException(e.getMessage());

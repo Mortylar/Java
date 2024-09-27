@@ -9,15 +9,25 @@ import org.springframework.context.support.AbstractApplicationContext;
 import school21.spring.service.beans.ApplicationConfig;
 import school21.spring.service.models.User;
 import school21.spring.service.repositories.UsersRepository;
+import school21.spring.service.services.UsersService;
 
 public class Main {
 
     public static void main(String[] args) {
         AbstractApplicationContext context =
             new AnnotationConfigApplicationContext(ApplicationConfig.class);
+        UsersService service = (UsersService)context.getBean("UsersService");
+        try {
+            System.out.printf("\nPassword = %s\n", service.signUp("Aboba"));
+        } catch (Exception e) {
+            System.out.printf(e.getMessage());
+        }
         UsersRepository usersRepository;
         usersRepository = context.getBean(UsersRepository.class);
         printList(usersRepository.findAll());
+        context.registerShutdownHook();
+        context.close();
+        System.out.printf("Closed\n");
         context.close();
     }
 
