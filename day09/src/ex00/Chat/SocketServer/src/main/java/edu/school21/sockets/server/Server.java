@@ -32,6 +32,7 @@ public class Server {
         try {
             while (true) {
                 Socket client = server.accept();
+                System.out.printf("\nAccepted user\n");
                 try {
                     signUpList.add(new ServerSignUpLogic(client));
                 } catch (Exception e) {
@@ -60,6 +61,7 @@ class ServerSignUpLogic extends Thread {
     private PrintWriter outStream;
 
     public ServerSignUpLogic(Socket client) throws IOException {
+        System.out.printf("\nCreating new thread\n");
         this.client = client;
         inStream =
             new BufferedReader(new InputStreamReader(client.getInputStream()));
@@ -71,24 +73,26 @@ class ServerSignUpLogic extends Thread {
 
     @Override
     public void run() {
+        System.out.printf("\nCreating new user\n");
         User user = new User();
 
         try {
-            outStream.printf("\nHell0 form Server!!\n");
+            sendMessage("Hell0 form Server!!\n");
+            System.out.printf("\nSend message\n");
             String answer = readAnswer(SIGN_UP);
 
-            outStream.printf("\nEnter userName:\n");
+            sendMessage("Enter userName:\n");
             user.setUserName(readAnswer());
 
-            outStream.printf("\nEnter password:\n");
+            sendMessage("Enter password:\n");
             user.setPassword(readAnswer());
 
-            outStream.printf("\nSuccesful!\n");
+            sendMessage("Succesful!\n");
         } catch (IOException e) {
             System.err.printf("\n%s\n", e.getMessage());
         }
         try {
-            client.close();
+            close();
         } catch (IOException e) {
             throw new RuntimeException(e.getMessage());
         }
@@ -100,11 +104,22 @@ class ServerSignUpLogic extends Thread {
             if (answer.equals(template)) {
                 return answer;
             }
-            outStream.printf("\nUnknown comand. Try again.\n");
+            sendMessage("Unknown comand. Try again.\n");
         }
     }
 
     private String readAnswer() throws IOException {
         return inStream.readLine();
+    }
+
+    private void sendMessage(String message) {
+        outStream.println(message);
+        outStream.flush();
+    }
+
+    private void close() throws IOException {
+        inStream.close();
+        outStream.close();
+        client.close();
     }
 }

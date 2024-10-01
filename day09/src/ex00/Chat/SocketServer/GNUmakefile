@@ -5,10 +5,10 @@ COVERAGE_FILES=$(shell find . -name "index.html")
 CLANG_CONFIG=../../.clang-format
 
 build:
-	mvn clean compile
+	mvn clean package
  
 run: build
-	mvn exec:java -Dexec.mainClass="school21.spring.service.application.Main"
+	java -jar target/SocketServer.jar -p=1234
 
 test:
 	mvn clean test

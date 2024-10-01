@@ -31,13 +31,24 @@ public class Client {
                                     socket.getOutputStream())),
                                 true);
             while (socket.isConnected()) {
-                System.out.print(inStream.readLine());
-                // TODO
-                outStream.print(console.readLine());
+                System.out.printf("\nIn while\n");
+                System.out.println(inStream.readLine());
+                System.out.flush();
+                if (socket.isClosed()) {
+                    continue;
+                }
+                outStream.print(console.readLine() + "\n");
+                outStream.flush();
             }
+            close();
         } catch (IOException e) {
             System.out.printf("\n%s\n", e.getMessage());
             socket.close();
         }
+    }
+    private void close() throws IOException {
+        console.close();
+        inStream.close();
+        outStream.close();
     }
 }
