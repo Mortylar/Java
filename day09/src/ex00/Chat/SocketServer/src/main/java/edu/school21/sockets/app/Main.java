@@ -9,19 +9,20 @@ import com.beust.jcommander.Parameters;
 @Parameters(separators = "=")
 public class Main {
 
+    private static final String PROGRAM_NAME = "SocketServer";
+
     @Parameter(names = {"--port", "-p"}, description = "Port", required = true,
-               validateWith = PortValidator.class)
+               validateWith = PortValidator.class, order = 0)
     private static int port;
 
-    @Parameter(names = {"--help", "-h"}, help = true)
+    @Parameter(names = {"--help", "-h"}, help = true, order = 2)
     private static boolean help;
 
     public static void main(String[] args) {
         Main main = new Main();
-        // System.out.printf("\n\n%s\n\n", args[0]);
         JCommander jc = JCommander.newBuilder().addObject(main).build();
+        jc.setProgramName(PROGRAM_NAME);
         try {
-            // jc = JCommander.newBuilder().addObject(main).build();
             jc.parse(args);
             if (help) {
                 jc.usage();
