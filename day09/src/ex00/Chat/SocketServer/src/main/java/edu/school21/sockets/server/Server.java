@@ -67,7 +67,7 @@ class ServerSignUpLogic extends Thread {
                                         client.getOutputStream())),
                                     true);
         start();
-    } // TODO Exception -> catch out and close client socket
+    }
 
     @Override
     public void run() {
