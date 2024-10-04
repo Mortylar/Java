@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Configuration
 @PropertySource("db.properties")
@@ -26,5 +27,10 @@ public class SocketsApplicationConfig {
         ds.setPassword(env.getProperty("db.password"));
         ds.setDriverClassName(env.getProperty("db.driver.name"));
         return ds;
+    }
+
+    @Bean
+    public BCryptPasswordEncoder getEncoder() {
+        return new BCryptPasswordEncoder();
     }
 }
