@@ -30,4 +30,12 @@ public class UsersServiceImpl implements UsersService {
         repository.save(new User(DEFAULT_ID, name, encoder.encode(password)));
         return true;
     }
+
+    @Override
+    public boolean signIn(String name, String password) {
+        return (
+            repository.findByName(name)
+                .filter(u -> u.getPassword().equals(encoder.encode(password)))
+                .isPresent()); // TODO check
+    }
 }
