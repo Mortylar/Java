@@ -4,11 +4,14 @@ import edu.school21.sockets.models.User;
 import java.util.List;
 import java.util.Optional;
 import javax.sql.DataSource;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.EmptySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SimplePropertySqlParameterSource;
+import org.springframework.stereotype.Repository;
 
+@Repository("UsersRepository")
 public class UsersRepositoryImpl implements UsersRepository {
 
     private final int ID_INDEX = 1;
@@ -23,6 +26,7 @@ public class UsersRepositoryImpl implements UsersRepository {
 
     private NamedParameterJdbcTemplate template;
 
+    @Autowired
     public UsersRepositoryImpl(DataSource dataSource) {
         this.template = new NamedParameterJdbcTemplate(dataSource);
     }
@@ -30,8 +34,13 @@ public class UsersRepositoryImpl implements UsersRepository {
     @Override
     public Optional<User> findById(Long id) {
         String query = String.format("SELECT * FROM Users WHERE id = %d;", id);
-        User user = template.queryForObject(
-            query, new EmptySqlParameterSource(), mapRow);
+        User user;
+        try {
+            user = template.queryForObject(query, new EmptySqlParameterSource(),
+                                           mapRow);
+        } catch (Exception e) {
+            return Optional.empty();
+        }
         return Optional.ofNullable(user);
     }
 
@@ -39,8 +48,13 @@ public class UsersRepositoryImpl implements UsersRepository {
     public Optional<User> findByName(String name) {
         String query =
             String.format("SELECT * FROM Users WHERE userName = '%s';", name);
-        User user = template.queryForObject(
-            query, new EmptySqlParameterSource(), mapRow);
+        User user;
+        try {
+            user = template.queryForObject(query, new EmptySqlParameterSource(),
+                                           mapRow);
+        } catch (Exception e) {
+            return Optional.empty();
+        }
         return Optional.ofNullable(user);
     }
 

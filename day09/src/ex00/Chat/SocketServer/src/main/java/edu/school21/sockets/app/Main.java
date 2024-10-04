@@ -5,7 +5,10 @@ import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.ParameterException;
 import com.beust.jcommander.Parameters;
+import edu.school21.sockets.config.SocketsApplicationConfig;
 import edu.school21.sockets.server.Server;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.support.AbstractApplicationContext;
 
 @Parameters(separators = "=")
 public class Main {
@@ -33,7 +36,10 @@ public class Main {
             jc.usage();
             System.exit(-1);
         }
-        Server server = new Server(port);
-        server.run();
+        AbstractApplicationContext context =
+            new AnnotationConfigApplicationContext(
+                SocketsApplicationConfig.class);
+        Server server = (Server)context.getBean("Server");
+        server.run(port);
     }
 }

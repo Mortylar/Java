@@ -1,6 +1,7 @@
 package edu.school21.sockets.server;
 
 import edu.school21.sockets.models.User;
+import edu.school21.sockets.services.UsersService;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -11,13 +12,19 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component("Server")
 public class Server {
 
     private List<ServerSignUpLogic> signUpList;
     private ServerSocket server;
+    @Autowired private UsersService service;
 
-    public Server(int port) {
+    public Server(UsersService service) { this.service = service; }
+
+    public void run(int port) {
         try {
             server = new ServerSocket(port);
             System.out.printf("\nServer running in %d port.\n", port);
@@ -26,15 +33,16 @@ public class Server {
             System.exit(-1);
         }
         signUpList = new ArrayList<ServerSignUpLogic>();
+        run();
     }
 
     public void run() {
         try {
             while (true) {
                 Socket client = server.accept();
-                System.out.printf("\nAccepted user\n");
+                System.out.printf("Accepted client\n");
                 try {
-                    signUpList.add(new ServerSignUpLogic(client));
+                    signUpList.add(new ServerSignUpLogic(client, service));
                 } catch (Exception e) {
                     System.err.printf("\n%s\n", e.getMessage());
                     client.close();
@@ -56,11 +64,14 @@ class ServerSignUpLogic extends Thread {
     private static final String SIGN_UP = "signUp";
 
     private Socket client;
+    private UsersService service;
 
     private BufferedReader inStream;
     private PrintWriter outStream;
 
-    public ServerSignUpLogic(Socket client) throws IOException {
+    public ServerSignUpLogic(Socket client, UsersService service)
+        throws IOException {
+        this.service = service;
         this.client = client;
         inStream =
             new BufferedReader(new InputStreamReader(client.getInputStream()));
@@ -72,21 +83,17 @@ class ServerSignUpLogic extends Thread {
 
     @Override
     public void run() {
-        System.out.printf("\nCreating new user\n");
-        User user = new User();
-
         try {
             sendMessage("Hell0 form Server!!");
             String answer = readAnswer(SIGN_UP);
-
-            sendMessage("Enter userName:");
-            user.setUserName(readAnswer());
-
-            sendMessage("Enter password:");
-            user.setPassword(readAnswer());
-
-            sendMessage("Succesful!");
+            if (signUp()) {
+                sendMessage("Succesful!");
+            } else {
+                sendMessage("Failure.");
+            }
         } catch (IOException e) {
+            System.err.printf("\n%s\n", e.getMessage());
+        } catch (Exception e) {
             System.err.printf("\n%s\n", e.getMessage());
         }
         try {
@@ -99,6 +106,9 @@ class ServerSignUpLogic extends Thread {
     private String readAnswer(String template) throws IOException {
         while (true) {
             String answer = inStream.readLine();
+            if (null == answer) {
+                throw new IOException("Connection lost");
+            }
             if (answer.equals(template)) {
                 return answer;
             }
@@ -116,9 +126,26 @@ class ServerSignUpLogic extends Thread {
     }
 
     private void close() throws IOException {
-        System.out.printf("\nClose\n");
+        System.out.printf("Closing client connection..\n");
         inStream.close();
         outStream.close();
         client.close();
+        System.out.printf("Closed.\n");
+    }
+
+    private boolean signUp() throws IOException {
+        String userName;
+        String password;
+
+        sendMessage("Enter userName:");
+        userName = readAnswer();
+
+        sendMessage("Enter password:");
+        password = readAnswer();
+
+        if ((null == userName) || (null == password)) {
+            return false;
+        }
+        return service.signUp(userName, password);
     }
 }
