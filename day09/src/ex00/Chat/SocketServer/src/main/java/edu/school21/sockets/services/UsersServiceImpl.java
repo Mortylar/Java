@@ -24,14 +24,9 @@ public class UsersServiceImpl implements UsersService {
 
     @Override
     public boolean signUp(String name, String password) {
-
-        System.out.printf("\nPassword =%s <=> %s\n", password,
-                          encoder.encode(password));
         if (repository.findByName(name).isPresent()) {
             return false;
         }
-        System.out.printf("\nPassword =%s <=> %s\n", password,
-                          encoder.encode(password));
         repository.save(new User(DEFAULT_ID, name, encoder.encode(password)));
         return true;
     }
