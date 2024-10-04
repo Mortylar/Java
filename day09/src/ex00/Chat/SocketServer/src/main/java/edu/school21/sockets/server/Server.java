@@ -61,7 +61,6 @@ class ServerSignUpLogic extends Thread {
     private PrintWriter outStream;
 
     public ServerSignUpLogic(Socket client) throws IOException {
-        System.out.printf("\nCreating new thread\n");
         this.client = client;
         inStream =
             new BufferedReader(new InputStreamReader(client.getInputStream()));
@@ -77,17 +76,16 @@ class ServerSignUpLogic extends Thread {
         User user = new User();
 
         try {
-            sendMessage("Hell0 form Server!!\n");
-            System.out.printf("\nSend message\n");
+            sendMessage("Hell0 form Server!!");
             String answer = readAnswer(SIGN_UP);
 
-            sendMessage("Enter userName:\n");
+            sendMessage("Enter userName:");
             user.setUserName(readAnswer());
 
-            sendMessage("Enter password:\n");
+            sendMessage("Enter password:");
             user.setPassword(readAnswer());
 
-            sendMessage("Succesful!\n");
+            sendMessage("Succesful!");
         } catch (IOException e) {
             System.err.printf("\n%s\n", e.getMessage());
         }
@@ -104,7 +102,7 @@ class ServerSignUpLogic extends Thread {
             if (answer.equals(template)) {
                 return answer;
             }
-            sendMessage("Unknown comand. Try again.\n");
+            sendMessage("Unknown comand. Try again.");
         }
     }
 
@@ -118,6 +116,7 @@ class ServerSignUpLogic extends Thread {
     }
 
     private void close() throws IOException {
+        System.out.printf("\nClose\n");
         inStream.close();
         outStream.close();
         client.close();

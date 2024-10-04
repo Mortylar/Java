@@ -30,13 +30,13 @@ public class Client {
                 new PrintWriter(new BufferedWriter(new OutputStreamWriter(
                                     socket.getOutputStream())),
                                 true);
-            while (socket.isConnected()) {
-                System.out.printf("\nIn while\n");
-                System.out.println(inStream.readLine());
-                System.out.flush();
-                if (socket.isClosed()) {
-                    continue;
+            while (!socket.isClosed()) {
+                String message = inStream.readLine();
+                if (null == message) {
+                    break;
                 }
+                System.out.println(message);
+                System.out.flush();
                 outStream.print(console.readLine() + "\n");
                 outStream.flush();
             }
