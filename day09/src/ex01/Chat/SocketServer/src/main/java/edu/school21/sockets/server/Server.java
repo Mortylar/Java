@@ -1,6 +1,7 @@
 package edu.school21.sockets.server;
 
 import edu.school21.sockets.models.User;
+import edu.school21.sockets.services.MessagesService;
 import edu.school21.sockets.services.UsersService;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -18,11 +19,15 @@ import org.springframework.stereotype.Component;
 @Component("Server")
 public class Server {
 
-    private List<ServerSignUpLogic> signUpList;
+    protected static List<ServerLogic> logicList;
     private ServerSocket server;
-    @Autowired private UsersService service;
+    @Autowired private UsersService userService;
+    @Autowired private MessagesService messageService;
 
-    public Server(UsersService service) { this.service = service; }
+    public Server(UsersService userService, MessagesService messageService) {
+        this.userService = userService;
+        this.messageService = messageService;
+    }
 
     public void run(int port) {
         try {
@@ -32,7 +37,7 @@ public class Server {
             System.err.printf("\n%s\nExiting..\n", e.getMessage());
             System.exit(-1);
         }
-        signUpList = new ArrayList<ServerSignUpLogic>();
+        logicList = new ArrayList<ServerLogic>();
         run();
     }
 
@@ -42,7 +47,8 @@ public class Server {
                 Socket client = server.accept();
                 System.out.printf("Accepted client\n");
                 try {
-                    signUpList.add(new ServerSignUpLogic(client, service));
+                    logicList.add(
+                        new ServerLogic(client, userService, messageService));
                 } catch (Exception e) {
                     System.err.printf("\n%s\n", e.getMessage());
                     client.close();
@@ -59,19 +65,29 @@ public class Server {
     }
 }
 
-class ServerSignUpLogic extends Thread {
+class ServerLogic extends Thread {
+
+    private static final Long DEFAULT_ID = 1L;
 
     private static final String SIGN_UP = "signUp";
+    private static final String SIGN_IN = "signIn";
+    private static final String EXIT = "exit";
+    // private static final String SIGN_UP = "signUp";
+    // private static final String SIGN_UP = "signUp";
 
     private Socket client;
-    private UsersService service;
+    // private Server server;
+    private User user;
+    private UsersService userService;
+    private MessagesService messageService;
 
     private BufferedReader inStream;
     private PrintWriter outStream;
 
-    public ServerSignUpLogic(Socket client, UsersService service)
-        throws IOException {
-        this.service = service;
+    public ServerLogic(Socket client, UsersService userService,
+                       MessagesService messageService) throws IOException {
+        this.userService = userService;
+        this.messageService = messageService;
         this.client = client;
         inStream =
             new BufferedReader(new InputStreamReader(client.getInputStream()));
@@ -85,12 +101,10 @@ class ServerSignUpLogic extends Thread {
     public void run() {
         try {
             sendMessage("Hell0 form Server!!");
-            String answer = readAnswer(SIGN_UP);
-            if (signUp()) {
-                sendMessage("Succesful!");
-            } else {
-                sendMessage("Failure.");
+            if (autorization()) {
+                messaging();
             }
+
         } catch (IOException e) {
             System.err.printf("\n%s\n", e.getMessage());
         } catch (Exception e) {
@@ -103,14 +117,27 @@ class ServerSignUpLogic extends Thread {
         }
     }
 
-    private String readAnswer(String template) throws IOException {
+    private boolean autorization() throws IOException {
+        String answer = readAnswer(new String[] {SIGN_UP, SIGN_IN, EXIT});
+        if (answer.equals(EXIT)) {
+            return false;
+        }
+        if (answer.equals(SIGN_UP)) {
+            return signUp();
+        }
+        return signIn();
+    }
+
+    private String readAnswer(String[] templates) throws IOException {
         while (true) {
             String answer = inStream.readLine();
             if (null == answer) {
                 throw new IOException("Connection lost");
             }
-            if (answer.equals(template)) {
-                return answer;
+            for (int i = 0; i < templates.length; ++i) {
+                if (answer.equals(templates[i])) {
+                    return answer;
+                }
             }
             sendMessage("Unknown comand. Try again.");
         }
@@ -120,9 +147,15 @@ class ServerSignUpLogic extends Thread {
         return inStream.readLine();
     }
 
-    private void sendMessage(String message) {
+    private void sendMessage(String message) { // TODO ****
         outStream.println(message);
         outStream.flush();
+    }
+
+    private void notifyAll(String message) {
+        for (ServerLogic current : Server.logicList) {
+            current.sendMessage(message);
+        }
     }
 
     private void close() throws IOException {
@@ -134,6 +167,20 @@ class ServerSignUpLogic extends Thread {
     }
 
     private boolean signUp() throws IOException {
+        if (!readUser()) {
+            return false;
+        }
+        return userService.signUp(user.getUserName(), user.getPassword());
+    }
+
+    private boolean signIn() throws IOException {
+        if (!readUser()) {
+            return false;
+        }
+        return userService.signIn(user.getUserName(), user.getPassword());
+    }
+
+    private boolean readUser() throws IOException {
         String userName;
         String password;
 
@@ -146,6 +193,21 @@ class ServerSignUpLogic extends Thread {
         if ((null == userName) || (null == password)) {
             return false;
         }
-        return service.signUp(userName, password);
+        user = new User(DEFAULT_ID, userName, password);
+        return true;
+    }
+
+    private void messaging() throws IOException {
+        sendMessage("Start messaging");
+        while (true) {
+            String message = readAnswer();
+            if (message.equals(EXIT)) {
+                sendMessage("You have left the chat.");
+                return;
+            }
+            if (messageService.load(user.getUserName(), message)) {
+                notifyAll(String.format("%s: %s", user.getUserName(), message));
+            }
+        }
     }
 }
