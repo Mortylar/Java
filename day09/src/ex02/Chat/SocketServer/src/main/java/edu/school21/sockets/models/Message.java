@@ -1,5 +1,6 @@
 package edu.school21.sockets.models;
 
+import edu.school21.sockets.models.Chatroom;
 import edu.school21.sockets.models.User;
 import java.util.Calendar;
 import lombok.AllArgsConstructor;
@@ -15,6 +16,7 @@ public class Message {
 
     private Long id;
     private User sender;
+    private Chatroom room;
     private String text;
     private Calendar time;
 
