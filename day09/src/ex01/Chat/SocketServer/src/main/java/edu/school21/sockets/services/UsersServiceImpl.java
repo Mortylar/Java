@@ -33,9 +33,8 @@ public class UsersServiceImpl implements UsersService {
 
     @Override
     public boolean signIn(String name, String password) {
-        return (
-            repository.findByName(name)
-                .filter(u -> u.getPassword().equals(encoder.encode(password)))
-                .isPresent());
+        return (repository.findByName(name)
+                    .filter(u -> encoder.matches(password, u.getPassword()))
+                    .isPresent());
     }
 }

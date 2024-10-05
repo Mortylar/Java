@@ -72,11 +72,8 @@ class ServerLogic extends Thread {
     private static final String SIGN_UP = "signUp";
     private static final String SIGN_IN = "signIn";
     private static final String EXIT = "exit";
-    // private static final String SIGN_UP = "signUp";
-    // private static final String SIGN_UP = "signUp";
 
     private Socket client;
-    // private Server server;
     private User user;
     private UsersService userService;
     private MessagesService messageService;
@@ -103,8 +100,9 @@ class ServerLogic extends Thread {
             sendMessage("Hell0 form Server!!");
             if (autorization()) {
                 messaging();
+            } else {
+                sendMessage("Incorrect input data.");
             }
-
         } catch (IOException e) {
             System.err.printf("\n%s\n", e.getMessage());
         } catch (Exception e) {
@@ -120,6 +118,7 @@ class ServerLogic extends Thread {
     private boolean autorization() throws IOException {
         String answer = readAnswer(new String[] {SIGN_UP, SIGN_IN, EXIT});
         if (answer.equals(EXIT)) {
+            sendMessage("Exiting..");
             return false;
         }
         if (answer.equals(SIGN_UP)) {
@@ -147,7 +146,7 @@ class ServerLogic extends Thread {
         return inStream.readLine();
     }
 
-    private void sendMessage(String message) { // TODO ****
+    private void sendMessage(String message) {
         outStream.println(message);
         outStream.flush();
     }
