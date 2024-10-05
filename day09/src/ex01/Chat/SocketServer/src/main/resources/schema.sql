@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS Users (
 
 CREATE TABLE IF NOT EXISTS Messages (
         id SERIAL PRIMARY KEY NOT null,
-        sender INTEGER,
+        sender_id INTEGER,
         message VARCHAR,
         sending_time TIMESTAMP,
-        CONSTRAINT fk_Messages_sender FOREIGN KEY (sender) REFERENCES Users(id));
+        CONSTRAINT fk_Messages_sender FOREIGN KEY (sender_id) REFERENCES Users(id));
