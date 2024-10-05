@@ -15,10 +15,14 @@ public class Client {
     private BufferedReader console;
     private BufferedReader inStream;
     private PrintWriter outStream;
+    protected static boolean isActiveConnection = false;
 
     public Client(String ip, int port)
         throws UnknownHostException, IOException {
         socket = new Socket(ip, port);
+        if (socket.isConnected()) {
+            isActiveConnection = true;
+        }
     }
 
     public void run() throws IOException, InterruptedException {
@@ -34,16 +38,6 @@ public class Client {
             ServerWriter writer = new ServerWriter(socket, outStream);
             listener.join();
             writer.join();
-            // while (!socket.isClosed()) {
-            /*  String message = inStream.readLine();
-              if (null == message) {
-                  break;
-              }
-              System.out.println(message);
-              System.out.flush();
-              outStream.print(console.readLine() + "\n");
-              outStream.flush();*/
-            // }
             close();
         } catch (IOException e) {
             System.out.printf("\n%s\n", e.getMessage());
@@ -70,15 +64,17 @@ class ServerListener extends Thread {
 
     @Override
     public void run() {
-        while (!client.isClosed()) {
+        while (!client.isClosed() || Client.isActiveConnection) {
             try {
                 String message = server.readLine();
                 if (null == message) {
+                    Client.isActiveConnection = false;
                     return;
                 }
                 System.out.println(message);
             } catch (IOException e) {
                 System.err.printf("\nError: %s\n", e.getMessage());
+                Client.isActiveConnection = false;
                 break;
             }
         }
@@ -102,16 +98,15 @@ class ServerWriter extends Thread {
 
     @Override
     public void run() {
-        while (!client.isClosed()) {
+        while (Client.isActiveConnection) {
             try {
-                System.out.print("\n");
                 String message = console.readLine();
                 if (null == message) {
                     break;
                 }
                 server.println(message);
                 server.flush();
-                if (message.equals(EXIT)) {
+                if (!Client.isActiveConnection) {
                     return;
                 }
             } catch (IOException e) {
