@@ -1,11 +1,10 @@
 package schedule;
 
-
 public class Schedule {
-  
-	private Students students_;
-	private Timetable timetable_;
-	private Attendance attendance_;
+
+    private Students students_;
+    private Timetable timetable_;
+    private Attendance attendance_;
 
     public Schedule() {
         students_ = new Students();
@@ -21,12 +20,12 @@ public class Schedule {
     private void createStudentsList() {
         students_.enrollment("alelyka");
         students_.enrollment("vladiput");
-				students_.enrollment("valstain");
+        students_.enrollment("valstain");
         students_.enrollment("joba");
         students_.enrollment("xijin");
         students_.enrollment("emmacro");
-				students_.expulsion("valstain");
-				students_.enrollment("dimoniva");
+        students_.expulsion("valstain");
+        students_.enrollment("dimoniva");
         students_.enrollment("ankara");
     }
 
@@ -70,7 +69,6 @@ public class Schedule {
         attendance_.register("dimoniva", 20, 13, -1);
         attendance_.register("ankara", 20, 13, -1);
 
-
         attendance_.register("alelyka", 26, 13, -1);
         attendance_.register("vladiput", 26, 13, 1);
         attendance_.register("joba", 26, 13, -1);
@@ -80,9 +78,7 @@ public class Schedule {
         attendance_.register("ankara", 26, 13, -1);
 
         attendance_.register("vladiput", 13, 15, 1);
-
     }
-
 
     public void print() {
         System.out.print("\n");
@@ -99,21 +95,19 @@ public class Schedule {
         printFullSchedule();
     }
 
-    private void printSeparator() {
-        System.out.print(".\n");
-    }
-
+    private void printSeparator() { System.out.print(".\n"); }
 
     private void printAttendance() {
         for (int i = 0; i < students_.getStudentsCount(); ++i) {
             String name = students_.getName(i);
-            for (int classID = 0; classID < timetable_.getClassesCount(); ++classID) {
+            for (int classID = 0; classID < timetable_.getClassesCount();
+                 ++classID) {
                 int day = timetable_.getClassDay(classID);
                 int time = timetable_.getClassTime(classID);
                 int status = attendance_.getStatus(name, day, time);
                 if (status == -1) {
                     System.out.printf("%s %d %d NOT_HERE\n", name, time, day);
-                } else if (status == 1) { 
+                } else if (status == 1) {
                     System.out.printf("%s %d %d HERE\n", name, time, day);
                 }
             }
@@ -122,44 +116,46 @@ public class Schedule {
 
     private void printFullSchedule() {
         printHeader();
-				printStudentsInfo();
+        printStudentsInfo();
     }
 
     private void printHeader() {
-		    System.out.printf("%10s", "");
+        System.out.printf("%10s", "");
 
-        for (int classID = 0; classID < timetable_.getClassesCount(); ++classID) {
+        for (int classID = 0; classID < timetable_.getClassesCount();
+             ++classID) {
             int day = timetable_.getClassDay(classID);
-						int hour = timetable_.getClassTime(classID);
-						int minute = timetable_.getClassMinute(classID);
-						String dayOfWeek = timetable_.getClassDayOfWeek(classID);
+            int hour = timetable_.getClassTime(classID);
+            int minute = timetable_.getClassMinute(classID);
+            String dayOfWeek = timetable_.getClassDayOfWeek(classID);
             System.out.printf("%2d:%02d %s %2d|", hour, minute, dayOfWeek, day);
-				}
-				System.out.print("\n");
-		}
+        }
+        System.out.print("\n");
+    }
 
-		private void printStudentsInfo() {
-		    for (int studentID = 0; studentID < students_.getStudentsCount(); ++studentID) {
-			      String studentName = students_.getName(studentID);
-				    printStudentAttendance(studentName);
-			  }
-		}
+    private void printStudentsInfo() {
+        for (int studentID = 0; studentID < students_.getStudentsCount();
+             ++studentID) {
+            String studentName = students_.getName(studentID);
+            printStudentAttendance(studentName);
+        }
+    }
 
-		private void printStudentAttendance(String name) {
-			  System.out.printf("%10s", name);
-		    for (int classID = 0; classID < timetable_.getClassesCount(); ++classID) {
-				    String statusString = new String();
-			      int status = attendance_.getStatus(name, timetable_.getClassDay(classID),
-                                                     timetable_.getClassTime(classID));
-				    if (status == 1) {
-				        statusString = "1";
-				    } else if (status == -1) {
-				        statusString = "-1";
-				    }
-						System.out.printf("%11s|", statusString);
-			  }
-			  System.out.print("\n");
-		}
-
-
+    private void printStudentAttendance(String name) {
+        System.out.printf("%10s", name);
+        for (int classID = 0; classID < timetable_.getClassesCount();
+             ++classID) {
+            String statusString = new String();
+            int status =
+                attendance_.getStatus(name, timetable_.getClassDay(classID),
+                                      timetable_.getClassTime(classID));
+            if (status == 1) {
+                statusString = "1";
+            } else if (status == -1) {
+                statusString = "-1";
+            }
+            System.out.printf("%11s|", statusString);
+        }
+        System.out.print("\n");
+    }
 }

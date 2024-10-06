@@ -8,11 +8,10 @@ public class Timetable {
 
     ArrayList<DateTime> dateTime_;
 
-    public Timetable() {
-        dateTime_ = new ArrayList<DateTime>();
-    }
+    public Timetable() { dateTime_ = new ArrayList<DateTime>(); }
 
-    public void addClass(int day, int hour, int minute) throws IllegalArgumentException {
+    public void addClass(int day, int hour, int minute)
+        throws IllegalArgumentException {
         if (isValidData(day, hour, minute)) {
             dateTime_.add(new DateTime(day, hour, minute));
         } else {
@@ -22,11 +21,12 @@ public class Timetable {
     }
 
     public void addClass(String dayOfWeek, int hour) {
-        GregorianCalendar calendar = new GregorianCalendar(2020, Calendar.SEPTEMBER, 1);
+        GregorianCalendar calendar =
+            new GregorianCalendar(2020, Calendar.SEPTEMBER, 1);
         int weekCode = getNumberDayOfWeek(dayOfWeek);
-				final int SEPTEMBER_DAYS_LIMIT = 30;
-				final int DAYS_IN_WEEK = 7;
-		
+        final int SEPTEMBER_DAYS_LIMIT = 30;
+        final int DAYS_IN_WEEK = 7;
+
         for (int i = 1; i < SEPTEMBER_DAYS_LIMIT - 1; ++i) {
             if (calendar.get(Calendar.DAY_OF_WEEK) == weekCode) {
                 addClass(i, hour, 0);
@@ -45,30 +45,28 @@ public class Timetable {
         return dateTime_.get(classID).getHour();
     }
 
-		public int getClassMinute(int classID) {
-		    return dateTime_.get(classID).getMinute();
-		}
-
-		public String getClassDayOfWeek(int classID) {
-		    return dateTime_.get(classID).getDayOfWeekName();
-		}
-
-    public int getClassesCount() {
-        return dateTime_.size();
+    public int getClassMinute(int classID) {
+        return dateTime_.get(classID).getMinute();
     }
 
+    public String getClassDayOfWeek(int classID) {
+        return dateTime_.get(classID).getDayOfWeekName();
+    }
+
+    public int getClassesCount() { return dateTime_.size(); }
+
     public void print() {
-        for(int i = 0; i < dateTime_.size(); ++i) {
+        for (int i = 0; i < dateTime_.size(); ++i) {
             dateTime_.get(i).print();
         }
     }
 
     private boolean isValidData(int day, int hour, int minute) {
         boolean isValid = true;
-				final int DAYS_IN_SEPTEMBER = 30;
-				final int MINUTE_LIMIT = 60;
-				final int START_CLASS_HOUR = 13;
-				final int FINISH_CLASS_HOUR = 18;
+        final int DAYS_IN_SEPTEMBER = 30;
+        final int MINUTE_LIMIT = 60;
+        final int START_CLASS_HOUR = 13;
+        final int FINISH_CLASS_HOUR = 18;
 
         if ((day <= 0) || (day > DAYS_IN_SEPTEMBER)) {
             isValid = false;
@@ -102,25 +100,23 @@ public class Timetable {
         return res;
     }
 
+    public class DateTime implements Comparable<DateTime> {
 
-
-    public class DateTime implements Comparable<DateTime>{
-	  
         static final int MINUTE_IN_HOUR = 60;
-        static final int MINUTE_IN_DAY = 60*24;
-				static final int CURRENT_YEAR = 2020;
-		
+        static final int MINUTE_IN_DAY = 60 * 24;
+        static final int CURRENT_YEAR = 2020;
+
         private GregorianCalendar calendar_;
         private int absMinuteData_;
 
-
-
         public DateTime(int day, int hour, int minute) {
-            calendar_ = new GregorianCalendar(CURRENT_YEAR, Calendar.SEPTEMBER, 1);
+            calendar_ =
+                new GregorianCalendar(CURRENT_YEAR, Calendar.SEPTEMBER, 1);
             calendar_.add(Calendar.DAY_OF_MONTH, day - 1);
             calendar_.set(Calendar.HOUR_OF_DAY, hour);
             calendar_.set(Calendar.MINUTE, minute);
-            absMinuteData_ = minute + MINUTE_IN_HOUR * hour + MINUTE_IN_DAY * day;
+            absMinuteData_ =
+                minute + MINUTE_IN_HOUR * hour + MINUTE_IN_DAY * day;
         }
 
         public int compareTo(DateTime other) {
@@ -133,30 +129,19 @@ public class Timetable {
             return compare_number;
         }
 
+        public int getYear() { return calendar_.get(Calendar.YEAR); }
 
-        public int getYear() {
-            return calendar_.get(Calendar.YEAR);
-        }
+        public int getMonth() { return calendar_.get(Calendar.MONTH); }
 
-        public int getMonth() {
-            return calendar_.get(Calendar.MONTH);
-        }
-
-        public int getDay() {
-            return calendar_.get(Calendar.DAY_OF_MONTH);
-        }
+        public int getDay() { return calendar_.get(Calendar.DAY_OF_MONTH); }
 
         public int getDayOfWeek() {
             return calendar_.get(Calendar.DAY_OF_WEEK);
         }
 
-        public int getHour() {
-            return calendar_.get(Calendar.HOUR_OF_DAY);
-        }
+        public int getHour() { return calendar_.get(Calendar.HOUR_OF_DAY); }
 
-        public int getMinute() {
-            return calendar_.get(Calendar.MINUTE);
-        }
+        public int getMinute() { return calendar_.get(Calendar.MINUTE); }
 
         public void print() {
             System.out.printf("%d  %s\n", getDay(), getDayOfWeekName());
@@ -182,7 +167,5 @@ public class Timetable {
             }
             return dayName;
         }
-
     }
-
 }

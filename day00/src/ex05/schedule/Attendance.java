@@ -4,34 +4,32 @@ import java.util.*;
 
 public class Attendance {
 
-
     private static final int HOURS_IN_DAY = 24;
 
     Students studentsList_;
     ArrayList<IndividualAttendance> attendance_;
 
     public Attendance(Students studentsList) {
-	      studentsList_ = studentsList;
-		    attendance_ = new ArrayList<IndividualAttendance>();
-		    initAttendanceList();
-	  }
-
-
-    public void register(String name, int day, int hours, int status) {
-        (attendance_.get(getStudentID(name))).register(getAbsHours(day, hours), status);
+        studentsList_ = studentsList;
+        attendance_ = new ArrayList<IndividualAttendance>();
+        initAttendanceList();
     }
 
-    public int getStatus(String name, int day, int time) { 
-        return (attendance_.get(getStudentID(name))).getStatus(getAbsHours(day, time));
+    public void register(String name, int day, int hours, int status) {
+        (attendance_.get(getStudentID(name)))
+            .register(getAbsHours(day, hours), status);
+    }
+
+    public int getStatus(String name, int day, int time) {
+        return (attendance_.get(getStudentID(name)))
+            .getStatus(getAbsHours(day, time));
     }
 
     private int getAbsHours(int day, int hours) {
-        return day* HOURS_IN_DAY + hours;
+        return day * HOURS_IN_DAY + hours;
     }
 
-    private int getStudentID(String name) {
-        return studentsList_.getID(name);
-    }
+    private int getStudentID(String name) { return studentsList_.getID(name); }
 
     private void initAttendanceList() {
         int key = 0;
@@ -41,7 +39,6 @@ public class Attendance {
             name = studentsList_.getName(++key);
         }
     }
-
 
     class IndividualAttendance {
 
@@ -64,6 +61,5 @@ public class Attendance {
             }
             return status;
         }
-
     }
 }

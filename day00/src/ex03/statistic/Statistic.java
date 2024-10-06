@@ -14,56 +14,54 @@ public class Statistic {
     private ArrayList<Integer> minimumGrade_;
     private Scanner scanner_;
 
-
     public Statistic() {
-	    scanner_ = new Scanner(System.in);
-      minimumGrade_ = new ArrayList<>();
+        scanner_ = new Scanner(System.in);
+        minimumGrade_ = new ArrayList<>();
     }
-
 
     private int readWeekPreamble(int weekId) {
         String targetStr = "Week " + weekId;
-		    String endStr = String.valueOf(END_INPUT);
+        String endStr = String.valueOf(END_INPUT);
         String inputString = scanner_.nextLine();
 
-		    if (inputString.equals(endStr)) {
-					return END_INPUT;
-				}
+        if (inputString.equals(endStr)) {
+            return END_INPUT;
+        }
 
-		    if ((!inputString.equals(targetStr)) || (weekId > MAX_WEEK_NUMBER)) {
-		        System.err.println("Illegal Argument");
-			      System.exit(-1);
-		    }
-		    return 0;
-	  }
+        if ((!inputString.equals(targetStr)) || (weekId > MAX_WEEK_NUMBER)) {
+            System.err.println("Illegal Argument");
+            System.exit(-1);
+        }
+        return 0;
+    }
 
     private int readGradeAndGetMinimum() {
         int minGrade = 9;
-		    for (int i = 0; i < GRADE_IN_WEEK; ++i) {
-		        int thisGrade = scanner_.nextInt();
-			      if (thisGrade < minGrade) minGrade = thisGrade;
-		    }
-		    scanner_.nextLine();
-		    return minGrade;
-	}
+        for (int i = 0; i < GRADE_IN_WEEK; ++i) {
+            int thisGrade = scanner_.nextInt();
+            if (thisGrade < minGrade)
+                minGrade = thisGrade;
+        }
+        scanner_.nextLine();
+        return minGrade;
+    }
 
     private void collectStatistic() {
         int weekId = 1;
-	      while(readWeekPreamble(weekId) != END_INPUT) {
-		        minimumGrade_.add(readGradeAndGetMinimum());
-			      ++weekId;
-		    }
-	  }
+        while (readWeekPreamble(weekId) != END_INPUT) {
+            minimumGrade_.add(readGradeAndGetMinimum());
+            ++weekId;
+        }
+    }
 
-	  public void printStatistic() {
-		    collectStatistic();
-	      for (int i = 0; i < minimumGrade_.size(); ++i) {
-			      System.out.printf("Week %d ", i + 1);
-			      for (int j = 0; j < minimumGrade_.get(i); ++j) {
-		            System.out.print("=");
-		        }
-		        System.out.println(">");
-		   }
-	  }
-
+    public void printStatistic() {
+        collectStatistic();
+        for (int i = 0; i < minimumGrade_.size(); ++i) {
+            System.out.printf("Week %d ", i + 1);
+            for (int j = 0; j < minimumGrade_.get(i); ++j) {
+                System.out.print("=");
+            }
+            System.out.println(">");
+        }
+    }
 }
