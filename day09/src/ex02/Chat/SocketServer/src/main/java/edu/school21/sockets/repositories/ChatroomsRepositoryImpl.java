@@ -1,6 +1,8 @@
 package edu.school21.sockets.repositories;
 
 import edu.school21.sockets.models.Chatroom;
+import edu.school21.sockets.models.Message;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import javax.sql.DataSource;
@@ -16,7 +18,8 @@ public class ChatroomsRepositoryImpl implements ChatroomsRepository {
 
     private final RowMapper<Chatroom> mapRow = (rs, rowNum) -> {
         Chatroom room =
-            new Chatroom(rs.getLong(ID_INDEX), rs.getString(NAME_INDEX));
+            new Chatroom(rs.getLong(ID_INDEX), rs.getString(NAME_INDEX),
+                         new ArrayList<Message>());
         return room;
     };
 
@@ -48,5 +51,29 @@ public class ChatroomsRepositoryImpl implements ChatroomsRepository {
         } catch (Exception e) {
             return Optional.empty();
         }
+    }
+
+    @Override
+    public List<Chatroom> findAll() {
+        String query = String.format("SELECT * FROM Chatrooms;");
+        return this.template.query(query, mapRow);
+    }
+
+    @Override
+    public void save(Chatroom room) {
+        String query = "INSERT INTO Chatrooms(name) VALUES(?);";
+        this.template.update(room.getName());
+    }
+
+    @Override
+    public void update(Chatroom room) {
+        String query = "UPDATE Chatrooms SET name = ? WHERE id = ?;";
+        this.template.update(room.getName(), room.getId());
+    }
+
+    @Override
+    public void delete(Long id) {
+        String query = "DELETE FROM Chatrooms WHERE id = ?;";
+        this.template.update(query, id);
     }
 }

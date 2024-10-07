@@ -12,7 +12,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Message {
+public class Chatroom {
 
     private Long id;
     private String name;
