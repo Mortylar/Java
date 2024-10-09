@@ -47,14 +47,14 @@ public class Server {
         run();
     }
 
-    public void run() {
+    private void run() {
         try {
             while (true) {
                 Socket client = server.accept();
                 System.out.printf("Accepted client\n");
                 try {
-                    logicList.add(
-                        new ServerLogic(client, userService, messageService));
+                    logicList.add(new ServerLogic(
+                        client, userService, messageService, chatroomService));
                 } catch (Exception e) {
                     System.err.printf("\n%s\n", e.getMessage());
                     client.close();
@@ -75,22 +75,27 @@ class ServerLogic extends Thread {
 
     private static final Long DEFAULT_ID = 1L;
 
-    private static final String SIGN_UP = "signUp";
-    private static final String SIGN_IN = "signIn";
-    private static final String EXIT = "exit";
+    private static final String SIGN_UP = "2";
+    private static final String SIGN_IN = "1";
+    private static final String EXIT = "3";
 
     private Socket client;
     private User user;
     private UsersService userService;
     private MessagesService messageService;
+    private ChatroomsService chatroomService;
+
+    private List<Chatroom> roomList = new ArrayList<Chatroom>();
 
     private BufferedReader inStream;
     private PrintWriter outStream;
 
     public ServerLogic(Socket client, UsersService userService,
-                       MessagesService messageService) throws IOException {
+                       MessagesService messageService,
+                       ChatroomsService chatroomService) throws IOException {
         this.userService = userService;
         this.messageService = messageService;
+        this.chatroomService = chatroomService;
         this.client = client;
         inStream =
             new BufferedReader(new InputStreamReader(client.getInputStream()));
@@ -104,7 +109,7 @@ class ServerLogic extends Thread {
     public void run() {
         try {
             sendMessage("Hell0 form Server!!");
-            if (autorization()) {
+            if (authorization()) {
                 messaging();
             } else {
                 sendMessage("Incorrect input data.");
@@ -121,11 +126,12 @@ class ServerLogic extends Thread {
         }
     }
 
-    private boolean autorization() throws IOException {
+    private boolean authorization() throws Exception {
+        printAuthorizationMessage();
         String answer = readAnswer(new String[] {SIGN_UP, SIGN_IN, EXIT});
         if (answer.equals(EXIT)) {
             sendMessage("Exiting..");
-            return false;
+            throw new Exception("Client exit");
         }
         if (answer.equals(SIGN_UP)) {
             return signUp();
@@ -210,9 +216,17 @@ class ServerLogic extends Thread {
                 sendMessage("You have left the chat.");
                 return;
             }
-            if (messageService.load(user.getUserName(), null, message)) { // TODO
+            if (messageService.load(user.getUserName(), "def",
+                                    message)) { // TODO
                 notifyAll(String.format("%s: %s", user.getUserName(), message));
             }
         }
+    }
+
+    private void printAuthorizationMessage() {
+        outStream.println("1. SingIn");
+        outStream.println("2. SingUp");
+        outStream.println("3. Exit");
+        outStream.flush();
     }
 }
