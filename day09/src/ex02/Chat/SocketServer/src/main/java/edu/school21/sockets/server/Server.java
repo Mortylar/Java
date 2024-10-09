@@ -1,6 +1,9 @@
 package edu.school21.sockets.server;
 
+import edu.school21.sockets.models.Chatroom;
+import edu.school21.sockets.models.Message;
 import edu.school21.sockets.models.User;
+import edu.school21.sockets.services.ChatroomsService;
 import edu.school21.sockets.services.MessagesService;
 import edu.school21.sockets.services.UsersService;
 import java.io.BufferedReader;
@@ -23,10 +26,13 @@ public class Server {
     private ServerSocket server;
     @Autowired private UsersService userService;
     @Autowired private MessagesService messageService;
+    @Autowired private ChatroomsService chatroomService;
 
-    public Server(UsersService userService, MessagesService messageService) {
+    public Server(UsersService userService, MessagesService messageService,
+                  ChatroomsService chatroomService) {
         this.userService = userService;
         this.messageService = messageService;
+        this.chatroomService = chatroomService;
     }
 
     public void run(int port) {
@@ -204,7 +210,7 @@ class ServerLogic extends Thread {
                 sendMessage("You have left the chat.");
                 return;
             }
-            if (messageService.load(user.getUserName(), message)) {
+            if (messageService.load(user.getUserName(), null, message)) { // TODO
                 notifyAll(String.format("%s: %s", user.getUserName(), message));
             }
         }
