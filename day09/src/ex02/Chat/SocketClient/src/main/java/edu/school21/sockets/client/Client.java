@@ -1,5 +1,6 @@
 package edu.school21.sockets.client;
 
+import com.google.gson.Gson;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -15,11 +16,13 @@ public class Client {
     private BufferedReader console;
     private BufferedReader inStream;
     private PrintWriter outStream;
+    private Gson gson;
     protected static boolean isActiveConnection = false;
 
     public Client(String ip, int port)
         throws UnknownHostException, IOException {
         socket = new Socket(ip, port);
+        gson = new Gson();
         if (socket.isConnected()) {
             isActiveConnection = true;
         }
@@ -55,10 +58,12 @@ class ServerListener extends Thread {
 
     private Socket client;
     private BufferedReader server;
+    private Gson gson;
 
     public ServerListener(Socket client, BufferedReader server) {
         this.client = client;
         this.server = server;
+        this.gson = new Gson();
         start();
     }
 
@@ -66,12 +71,13 @@ class ServerListener extends Thread {
     public void run() {
         while (!client.isClosed() || Client.isActiveConnection) {
             try {
-                String message = server.readLine();
-                if (null == message) {
+                String[] messages =
+                    gson.fromJson(server.readLine(), String[].class);
+                if (null == messages) {
                     Client.isActiveConnection = false;
                     return;
                 }
-                System.out.println(message);
+                System.out.println(String.join("", messages));
             } catch (IOException e) {
                 System.err.printf("\nError: %s\n", e.getMessage());
                 Client.isActiveConnection = false;
@@ -88,11 +94,13 @@ class ServerWriter extends Thread {
     private Socket client;
     private BufferedReader console;
     private PrintWriter server;
+    private Gson gson;
 
     public ServerWriter(Socket client, PrintWriter server) {
         this.client = client;
         this.server = server;
         this.console = new BufferedReader(new InputStreamReader(System.in));
+        this.gson = new Gson();
         start();
     }
 
@@ -104,8 +112,7 @@ class ServerWriter extends Thread {
                 if (null == message) {
                     break;
                 }
-                server.println(message);
-                server.flush();
+                sendMessage(message);
                 if (!Client.isActiveConnection) {
                     return;
                 }
@@ -115,5 +122,10 @@ class ServerWriter extends Thread {
                 break;
             }
         }
+    }
+
+    private void sendMessage(String message) {
+        server.println(gson.toJson(message, String.class));
+        server.flush();
     }
 }
