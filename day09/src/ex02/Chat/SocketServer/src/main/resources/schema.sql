@@ -7,6 +7,12 @@ CREATE TABLE IF NOT EXISTS Users (
         userName VARCHAR NOT null,
         password VARCHAR);
 
+
+CREATE TABLE IF NOT EXISTS Chatrooms (
+        id SERIAL PRIMARY KEY NOT null,
+        name VARCHAR);
+
+
 CREATE TABLE IF NOT EXISTS Messages (
         id SERIAL PRIMARY KEY NOT null,
         sender_id INTEGER,
@@ -15,7 +21,3 @@ CREATE TABLE IF NOT EXISTS Messages (
         sending_time TIMESTAMP,
         CONSTRAINT fk_Messages_sender FOREIGN KEY (sender_id) REFERENCES Users(id),
         CONSTRAINT fk_Messages_chatroom FOREIGN KEY (chatroom_id) REFERENCES Chatrooms(id));
-
-CREATE TABLE IF NOT EXISTS Chatrooms (
-        id SERIAL PRIMARY KEY NOT null,
-        name VARCHAR);

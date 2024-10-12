@@ -16,7 +16,10 @@ import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Stream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -24,6 +27,7 @@ import org.springframework.stereotype.Component;
 public class Server {
 
     protected static List<ServerLogic> logicList;
+    protected static Map<String, List<String>> visitedRooms;
     private ServerSocket server;
     @Autowired private UsersService userService;
     @Autowired private MessagesService messageService;
@@ -34,6 +38,7 @@ public class Server {
         this.userService = userService;
         this.messageService = messageService;
         this.chatroomService = chatroomService;
+        this.visitedRooms = new HashMap<String, List<String>>();
     }
 
     public void run(int port) {
@@ -75,12 +80,14 @@ public class Server {
 class ServerLogic extends Thread {
 
     private static final Long DEFAULT_ID = 1L;
+    private static final int LAST_MESSAGES_COUNT = 30;
 
-    private static final String SIGN_IN = "\"1\"";
-    private static final String CREATE_ROOM = "\"1\"";
-    private static final String SIGN_UP = "\"2\"";
-    private static final String CHOOSE_ROOM = "\"2\"";
-    private static final String EXIT = "\"3\"";
+    private static final int SIGN_IN = 1;
+    private static final int CREATE_ROOM = 1;
+    private static final int SIGN_UP = 2;
+    private static final int CHOOSE_ROOM = 2;
+    private static final int EXIT = 3;
+    private static final String EXIT_MESSAGE = "Exit";
 
     private Socket client;
     private User user;
@@ -88,8 +95,6 @@ class ServerLogic extends Thread {
     private UsersService userService;
     private MessagesService messageService;
     private ChatroomsService chatroomService;
-
-    private List<Chatroom> roomList = new ArrayList<Chatroom>();
 
     private BufferedReader inStream;
     private PrintWriter outStream;
@@ -116,8 +121,15 @@ class ServerLogic extends Thread {
         try {
             sendMessage(new String[] {"Hell0 form Server!!"});
             if (authorization()) {
+                // setRoom();
+                if (isAlreadyConnected()) {
+                    String message = String.format(
+                        "User %s is already connected.\n", user.getUserName());
+                    sendMessage(new String[] {message});
+                    throw new Exception(message);
+                }
                 setRoom();
-                // messaging();
+                messaging();
             } else {
                 sendMessage(new String[] {"Incorrect input data."});
             }
@@ -135,27 +147,28 @@ class ServerLogic extends Thread {
 
     private boolean authorization() throws Exception {
         printAuthorizationMessage();
-        String answer = readAnswer(new String[] {SIGN_UP, SIGN_IN, EXIT});
-        if (answer.equals(EXIT)) {
+        int answer = readAnswer(new int[] {SIGN_UP, SIGN_IN, EXIT});
+        if (answer == EXIT) {
             sendMessage(new String[] {"Exiting.."});
             throw new Exception("Client exit");
         }
-        if (answer.equals(SIGN_UP)) {
+        if (answer == SIGN_UP) {
             return signUp();
         }
         return signIn();
     }
 
-    private String readAnswer(String[] templates) throws IOException {
+    private int readAnswer(int[] templates) throws IOException {
         while (true) {
-            String answer = inStream.readLine();
-            if (null == answer) {
-                throw new IOException("Connection lost");
-            }
-            for (int i = 0; i < templates.length; ++i) {
-                if (answer.equals(templates[i])) {
-                    return answer;
+            try {
+                int answer = gson.fromJson(inStream.readLine(), int.class);
+                for (int i = 0; i < templates.length; ++i) {
+                    if (answer == templates[i]) {
+                        return answer;
+                    }
                 }
+            } catch (Exception e) {
+                System.out.printf("\n%s\n", e.getMessage());
             }
             sendMessage(new String[] {"Unknown comand. Try again."});
         }
@@ -172,19 +185,22 @@ class ServerLogic extends Thread {
 
     private void notifyAll(String[] message) {
         for (ServerLogic current : Server.logicList) {
-            current.sendMessage(message);
+            if (this.room.getName().equals(current.room.getName())) {
+                current.sendMessage(message);
+            }
         }
     }
 
     private void close() throws IOException {
         System.out.printf("Closing client connection..\n");
+        Server.logicList.remove(this);
         inStream.close();
         outStream.close();
         client.close();
         System.out.printf("Closed.\n");
     }
 
-    private boolean signUp() throws IOException {
+    private boolean signUp() throws IOException { // TODO reg
         if (!readUser()) {
             return false;
         }
@@ -216,15 +232,21 @@ class ServerLogic extends Thread {
     }
 
     private void messaging() throws IOException {
-        sendMessage(new String[] {"Start messaging"});
+        sendMessage(new String[] {"Start messaging\n",
+                                  (this.room.getName() + "---\n")});
+        if (isVisitedRoom()) {
+            printNMessages(LAST_MESSAGES_COUNT);
+        }
+        addToVisited();
+
         while (true) {
             String message = readAnswer();
-            if (message.equals(EXIT)) {
+            if (message.equalsIgnoreCase(EXIT_MESSAGE)) {
                 sendMessage(new String[] {"You have left the chat."});
                 return;
             }
-            if (messageService.load(user.getUserName(), "def",
-                                    message)) { // TODO
+            if (messageService.load(user.getUserName(), room.getName(),
+                                    message)) {
                 notifyAll(new String[] {
                     String.format("%s: %s", user.getUserName(), message)});
             }
@@ -243,28 +265,91 @@ class ServerLogic extends Thread {
         sendMessage(message);
     }
 
-    private boolean setRoom() {
+    private boolean setRoom() throws IOException, Exception {
         printRoomMessage();
-        String answer =
-            readAnswer(new String[] {CREATE_ROOM, CHOOSE_ROOM, EXIT});
-        if (answer.equals(EXIT)) {
+        int answer = readAnswer(new int[] {CREATE_ROOM, CHOOSE_ROOM, EXIT});
+        if (answer == EXIT) {
             sendMessage(new String[] {"Exiting.."});
             throw new Exception("Client exit");
         }
-        if (answer.equals(CREATE_ROOM)) {
+        if (answer == CREATE_ROOM) {
             return createRoom();
         }
         return chooseRoom();
     }
 
-    private boolean createRoom() {
+    private boolean createRoom() throws IOException {
         sendMessage(new String[] {"Enter room name:"});
         String roomName = readAnswer();
         if (null == roomName) {
             return false;
         }
         this.room =
-            new Chatroom(DEFAULT_ID, roomName, new ArrayList<Messages>());
+            new Chatroom(DEFAULT_ID, roomName, new ArrayList<Message>());
         return chatroomService.load(roomName);
+    }
+
+    private boolean chooseRoom() throws IOException, Exception {
+        List<Chatroom> roomsList = chatroomService.findAll();
+        String[] arr =
+            Stream
+                .concat(roomsList.stream().map(i -> String.format("%s\n", i)),
+                        Stream.of(
+                            String.format("%d. Exit\n", 1 + roomsList.size())))
+                .toArray(String[] ::new);
+        sendMessage(arr);
+        String ans = readAnswer();
+        if (ans.equals(String.valueOf(1 + roomsList.size()))) {
+            sendMessage(new String[] {"You have left the chat."});
+            throw new Exception("User have left the chat");
+        }
+        this.room = roomsList.get(Integer.parseInt(ans) - 1);
+        return true;
+    }
+
+    private void addToVisited() {
+        String name = this.user.getUserName();
+        if (!Server.visitedRooms.containsKey(name)) {
+            Server.visitedRooms.put(name, new ArrayList<String>());
+            Server.visitedRooms.get(name).add(this.room.getName());
+            return;
+        }
+        List<String> rooms = Server.visitedRooms.get(name);
+        if (!rooms.contains(this.room.getName())) {
+            rooms.add(this.room.getName());
+        }
+    }
+
+    private boolean isVisitedRoom() {
+        String name = this.user.getUserName();
+        if (!Server.visitedRooms.containsKey(name)) {
+            return false;
+        }
+        if (Server.visitedRooms.get(name).contains(this.room.getName())) {
+            return true;
+        }
+        return false;
+    }
+
+    private void printNMessages(int count) {
+        List<Message> mList =
+            messageService.findNLastInRoom(room.getName(), count);
+        String[] arr =
+            mList.stream()
+                .map(m
+                     -> String.format("%s: %s\n", m.getSender().getUserName(),
+                                      m.getText()))
+                .toArray(String[] ::new);
+        sendMessage(arr);
+    }
+
+    private boolean isAlreadyConnected() {
+        for (ServerLogic current : Server.logicList) {
+            if ((current != this) &&
+                (current.user.getUserName().equals(this.user.getUserName()))) {
+                return true;
+            }
+        }
+        return false;
     }
 }

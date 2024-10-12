@@ -63,13 +63,15 @@ public class ChatroomsRepositoryImpl implements ChatroomsRepository {
     @Override
     public void save(Chatroom room) {
         String query = "INSERT INTO Chatrooms(name) VALUES(?);";
-        this.template.update(room.getName());
+        System.out.printf("\nQuery = %s\n", query);
+        System.out.printf("\nname = %s\n", room.getName());
+        this.template.update(query, room.getName());
     }
 
     @Override
     public void update(Chatroom room) {
         String query = "UPDATE Chatrooms SET name = ? WHERE id = ?;";
-        this.template.update(room.getName(), room.getId());
+        this.template.update(query, room.getName(), room.getId());
     }
 
     @Override

@@ -17,4 +17,9 @@ public class Chatroom {
     private Long id;
     private String name;
     private List<Message> messages;
+
+    @Override
+    public String toString() {
+        return String.format("%d. %s", id, name);
+    }
 }

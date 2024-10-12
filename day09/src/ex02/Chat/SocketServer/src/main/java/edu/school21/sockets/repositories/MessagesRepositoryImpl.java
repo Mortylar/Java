@@ -23,6 +23,8 @@ public class MessagesRepositoryImpl implements MessagesRepository {
     private final int TEXT_INDEX = 4;
     private final int TIME_INDEX = 5;
 
+    private static final Long DEFAULT_ID = 1L;
+
     private final RowMapper<Message> mapRow = (rs, rowNum) -> {
         User user =
             new User(rs.getLong(SENDER_ID_INDEX), new String(), new String());
@@ -34,6 +36,16 @@ public class MessagesRepositoryImpl implements MessagesRepository {
         Message message = new Message(rs.getLong(ID_INDEX), user, room,
                                       rs.getString(TEXT_INDEX), time);
         return message;
+    };
+
+    private final RowMapper<Message> miniMapRow = (rs, rowNum) -> {
+        User sender =
+            new User(DEFAULT_ID, rs.getString("userName"), new String());
+        Calendar time = Calendar.getInstance();
+        Chatroom room = new Chatroom();
+        time.setTimeInMillis(rs.getTimestamp("time").getTime());
+        return new Message(DEFAULT_ID, sender, room, rs.getString("message"),
+                           time);
     };
 
     private JdbcTemplate template;
@@ -63,8 +75,8 @@ public class MessagesRepositoryImpl implements MessagesRepository {
     @Override
     public void save(Message message) {
         String query =
-            "INSERT INTO messages(sender_id, chatroom_id, message, sending_time) "
-            + "VALUES(?, ?, ?);";
+            "INSERT INTO Messages(sender_id, chatroom_id, message, sending_time) "
+            + "VALUES(?, ?, ?, ?);";
         this.template.update(
             query, message.getSender().getId(), message.getRoom().getId(),
             message.getText(),
@@ -86,5 +98,24 @@ public class MessagesRepositoryImpl implements MessagesRepository {
     public void delete(Long id) {
         String query = "DELETE FROM messages WHERE id = ?;";
         this.template.update(query, id);
+    }
+
+    @Override
+    public List<Message> findNLastInRoom(String room, int count) {
+        String query = "WITH mini_message AS (\n"
+                       + "SELECT mc.sender_id, mc.message, mc.sending_time\n"
+                       + "FROM (SELECT * FROM Messages\n"
+                       + "      JOIN Chatrooms\n"
+                       + "      ON Chatrooms.id = chatroom_id) AS mc\n"
+                       + "WHERE mc.name = ?)\n" // TODO room name
+                       + "\n"
+                       + "SELECT Users.userName AS userName,\n"
+                       + "       mini_message.message AS message,\n"
+                       + "       mini_message.sending_time AS time\n"
+                       + "FROM mini_message\n"
+                       + "JOIN Users ON mini_message.sender_id = Users.id\n"
+                       + "ORDER BY time LIMIT ?;\n"; // TODO count
+
+        return this.template.query(query, miniMapRow, room, count);
     }
 }

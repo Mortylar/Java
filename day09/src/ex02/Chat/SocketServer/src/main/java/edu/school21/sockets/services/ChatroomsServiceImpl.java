@@ -4,6 +4,7 @@ import edu.school21.sockets.models.Chatroom;
 import edu.school21.sockets.models.Message;
 import edu.school21.sockets.repositories.ChatroomsRepository;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,5 +29,10 @@ public class ChatroomsServiceImpl implements ChatroomsService {
         chatroomRepository.save(
             new Chatroom(DEFAULT_ID, name, new ArrayList<Message>()));
         return true;
+    }
+
+    @Override
+    public List<Chatroom> findAll() {
+        return chatroomRepository.findAll();
     }
 }
