@@ -153,7 +153,9 @@ class ServerLogic extends Thread {
 
     private void notifyAll(String message) {
         for (ServerLogic current : Server.logicList) {
-            current.sendMessage(message);
+            if (current.user != null) {
+                current.sendMessage(message);
+            }
         }
     }
 
