@@ -107,14 +107,14 @@ public class MessagesRepositoryImpl implements MessagesRepository {
                        + "FROM (SELECT * FROM Messages\n"
                        + "      JOIN Chatrooms\n"
                        + "      ON Chatrooms.id = chatroom_id) AS mc\n"
-                       + "WHERE mc.name = ?)\n" // TODO room name
+                       + "WHERE mc.name = ?)\n"
                        + "\n"
                        + "SELECT Users.userName AS userName,\n"
                        + "       mini_message.message AS message,\n"
                        + "       mini_message.sending_time AS time\n"
                        + "FROM mini_message\n"
                        + "JOIN Users ON mini_message.sender_id = Users.id\n"
-                       + "ORDER BY time LIMIT ?;\n"; // TODO count
+                       + "ORDER BY time LIMIT ?;\n";
 
         return this.template.query(query, miniMapRow, room, count);
     }

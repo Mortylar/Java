@@ -14,8 +14,8 @@ public class Main {
     private static final String PROGRAM_NAME = "SocketClient";
     private static final String SERVER_ADDRESS = "localhost";
 
-    @Parameter(names = {"--port", "-p"}, description = "Port", required = true,
-               validateWith = PortValidator.class, order = 0)
+    @Parameter(names = {"--server-port", "-p"}, description = "Port",
+               required = true, validateWith = PortValidator.class, order = 0)
     private static int port;
 
     @Parameter(names = {"--help", "-h"}, help = true, order = 2)

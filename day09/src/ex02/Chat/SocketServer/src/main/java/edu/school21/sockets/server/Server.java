@@ -121,7 +121,6 @@ class ServerLogic extends Thread {
         try {
             sendMessage(new String[] {"Hell0 form Server!!"});
             if (authorization()) {
-                // setRoom();
                 if (isAlreadyConnected()) {
                     String message = String.format(
                         "User %s is already connected.\n", user.getUserName());
@@ -185,8 +184,10 @@ class ServerLogic extends Thread {
 
     private void notifyAll(String[] message) {
         for (ServerLogic current : Server.logicList) {
-            if (this.room.getName().equals(current.room.getName())) {
-                current.sendMessage(message);
+            if ((null != current.room) && (null != current.user)) {
+                if (this.room.getName().equals(current.room.getName())) {
+                    current.sendMessage(message);
+                }
             }
         }
     }
@@ -200,7 +201,7 @@ class ServerLogic extends Thread {
         System.out.printf("Closed.\n");
     }
 
-    private boolean signUp() throws IOException { // TODO reg
+    private boolean signUp() throws IOException {
         if (!readUser()) {
             return false;
         }
@@ -345,9 +346,11 @@ class ServerLogic extends Thread {
 
     private boolean isAlreadyConnected() {
         for (ServerLogic current : Server.logicList) {
-            if ((current != this) &&
-                (current.user.getUserName().equals(this.user.getUserName()))) {
-                return true;
+            if ((current != this) && (null != current.user)) {
+                if (current.user.getUserName().equals(
+                        this.user.getUserName())) {
+                    return true;
+                }
             }
         }
         return false;
